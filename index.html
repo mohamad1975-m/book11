@@ -1,106 +1,93 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>کتاب‌های کمک‌درسی تاریخ</title>
-    <style>
-        /* 🎨 تنظیمات کلی صفحه */
-        @font-face {
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کتاب‌های کمک‌درسی - تاریخ</title>
+<style>
+  @font-face {
     font-family: 'iranyekan';
     src: url('iranyekanweblight.woff') format('woff');
-        }
-        body {
-            font-family: 'Vazir', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
+  }
+  body {
+    font-family: 'iranyekan', sans-serif;
+    background: #111;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    padding: 15px;
+    background: #222;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .book-list {
+    max-width: 600px;
+    margin: 30px auto;
+    text-align: right;
+  }
+  .book-item {
+    background: #1c1c1c;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    transition: background 0.3s;
+  }
+  .book-item:hover {
+    background: #333;
+  }
+  .book-link {
+    color: #ff6600;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+  }
+  .book-link:hover {
+    text-decoration: underline;
+  }
 
-        /* 🟢 هدر صفحه */
-        header {
-            background-color: #4a90e2;
-            color: white;
-            padding: 20px;
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        /* 📚 لیست کتاب‌ها */
-        .book-list {
-            max-width: 500px;
-            margin: 30px auto;
-            padding: 0;
-            list-style: none;
-        }
-
-        /* 🔵 استایل هر گزینه کتاب */
-        .book-item {
-          
-            background-color: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        /* افکت هاور برای گزینه‌ها */
-        .book-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        /* 🔗 لینک کتاب‌ها */
-        .book-item a {
-            text-decoration: none;
-            color: #4a90e2;
-            font-weight: bold;
-        }
-
-        /* 📱 ریسپانسیو برای موبایل */
-        @media (max-width: 500px) {
-            header {
-                font-size: 18px; /* کوچیک شدن فونت هدر در موبایل */
-            }
-            .book-item {
-                font-size: 14px; /* کوچیک شدن فونت گزینه‌ها در موبایل */
-            }
-        }
-    </style>
+  /* موبایل */
+  @media (max-width: 480px) {
+    header {
+      font-size: 16px;
+      padding: 10px;
+    }
+    .book-link {
+      font-size: 14px;
+    }
+  }
+</style>
 </head>
 <body>
 
-    <!-- 🟢 شروع هدر -->
-    <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
-    <!-- 🔴 پایان هدر -->
+<header>کتاب‌های کمک‌درسی - تاریخ</header>
 
-    <!-- 📖 شروع لیست کتاب‌ها -->
-    <ul class="book-list">
-        <!-- کتاب 1 -->
-        <li class="book-item">
-            <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">
-                ماجرای بیست – خیلی سبز
-            </a>
-        </li>
-
-        <!-- کتاب 2 -->
-        <li class="book-item">
-            <a href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">
-                ماجراهای من و درسام – خیلی سبز
-            </a>
-        </li>
-
-        <!-- کتاب 3 -->
-        <li class="book-item">
-            <a href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">
-                شب امتحان – خیلی سبز
-            </a>
-        </li>
-    </ul>
-    <!-- 🔴 پایان لیست کتاب‌ها -->
+<div class="book-list">
+  <div class="book-item">
+    <a class="book-link" href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">
+      ماجرای بیست - خیلی سبز
+    </a>
+  </div>
+  <div class="book-item">
+    <a class="book-link" href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">
+      ماجراهای من و درسام - خیلی سبز
+    </a>
+  </div>
+  <div class="book-item">
+    <a class="book-link" href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">
+      شب امتحان - خیلی سبز
+    </a>
+  </div>
+</div>
 
 </body>
 </html>
+
+
+
+
+
+
+
