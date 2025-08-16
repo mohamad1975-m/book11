@@ -1,50 +1,48 @@
 export default async function handler(req, res) {
   try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Method not allowed" });
-    }
-
     const { slug = "index" } = req.query || {};
-    const { ua } = req.body || {};
-
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
     if (!url || !token) {
-      return res.status(500).json({
-        error:
-          "Missing Upstash config (set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in Vercel).",
-      });
+      return res.status(500).json({ error: "Missing Upstash config" });
     }
 
-    // شیء لاگ جدید با مقادیر پیش‌فرض
-    const logEntry = {
-      slug: slug || "index",
-      ua: ua || "-",
-      time: Date.now(), // زمان درست به میلی‌ثانیه
-    };
+    // از body می‌گیریم: UA و UA-CH (در صورت وجود)
+    let body = {};
+    try {
+      body = await (req.json ? req.json() : new Promise((r) => {
+        let data = ""; req.on("data", c => data += c);
+        req.on("end", () => { try{ r(JSON.parse(data||"{}")); } catch{ r({}) } });
+      }));
+    } catch {
+      body = {};
+    }
 
-    // ذخیره در لیست Redis (برای هر slug جداگانه)
-    const r = await fetch(`${url}/lpush/logs:${slug}`, {
+    const time = new Date().toISOString();
+    const ua = req.headers["user-agent"] || body.ua || "unknown";
+    const uaCH = body.uaCH || null;      // اطلاعات دقیق‌تر از کلاینت (اختیاری)
+
+    // لاگ را ذخیره می‌کنیم
+    const log = { time, slug, ua, uaCH };
+
+    await fetch(`${url}/lpush/logs:${slug}`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: JSON.stringify(logEntry),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(log),
     });
 
-    if (!r.ok) {
-      const txt = await r.text();
-      return res.status(500).json({ error: "Upstash error", details: txt });
-    }
-
-    // نگه داشتن فقط 200 تا آخرین بازدید
-    await fetch(`${url}/ltrim/logs:${slug}/0/199`, {
+    // 500 رکورد آخر
+    await fetch(`${url}/ltrim/logs:${slug}/0/499`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    return res.status(200).json({ logged: true });
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({ ok: true });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ error: "Server error", details: String(err) });
+    return res.status(500).json({ error: "Server error", details: String(err) });
   }
 }
