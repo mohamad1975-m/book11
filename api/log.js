@@ -17,6 +17,7 @@ export default async function handler(req, res) {
       });
     }
 
+    // شیء لاگ جدید
     const logEntry = {
       slug,
       ua: ua || null,
@@ -35,9 +36,8 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Upstash error", details: txt });
     }
 
-    // نگه داشتن فقط 50 لاگ آخر
+    // نگه داشتن فقط 50 تا
     await fetch(`${url}/ltrim/logs:${slug}/0/49`, {
-      method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
 
