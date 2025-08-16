@@ -82,6 +82,7 @@
         <th>صفحه</th>
         <th>زمان</th>
         <th>مرورگر</th>
+        <th>سیستم‌عامل</th>
         <th>دستگاه</th>
         <th>User-Agent کامل</th>
       </tr>
@@ -102,20 +103,35 @@
       if (ua.includes("edg")) return "Microsoft Edge";
       if (ua.includes("chrome")) return "Google Chrome";
       if (ua.includes("firefox")) return "Mozilla Firefox";
-      if (ua.includes("safari")) return "Safari";
+      if (ua.includes("safari") && !ua.includes("chrome")) return "Safari";
       if (ua.includes("opera") || ua.includes("opr")) return "Opera";
       return "ناشناخته";
+    }
+
+    // 📌 شناسایی سیستم عامل
+    function detectOS(ua) {
+      if (!ua) return "-";
+      ua = ua.toLowerCase();
+      if (ua.includes("windows nt 10")) return "Windows 10";
+      if (ua.includes("windows nt 11")) return "Windows 11";
+      if (ua.includes("windows nt 6.1")) return "Windows 7";
+      if (ua.includes("mac os x")) return "macOS";
+      if (ua.includes("android")) {
+        const match = ua.match(/android\s+([\d.]+)/);
+        return match ? "Android " + match[1] : "Android";
+      }
+      if (ua.includes("iphone") || ua.includes("ipad")) return "iOS";
+      if (ua.includes("linux")) return "Linux";
+      return "نامشخص";
     }
 
     // 📌 شناسایی دستگاه از UA
     function detectDevice(ua) {
       if (!ua) return "-";
       ua = ua.toLowerCase();
-      if (ua.includes("android")) return "📱 Android";
-      if (ua.includes("iphone") || ua.includes("ipad")) return "📱 iOS";
-      if (ua.includes("windows")) return "💻 Windows Desktop";
-      if (ua.includes("macintosh")) return "💻 macOS";
-      if (ua.includes("linux")) return "💻 Linux";
+      if (ua.includes("android")) return "📱 Android Device";
+      if (ua.includes("iphone") || ua.includes("ipad")) return "📱 iOS Device";
+      if (ua.includes("windows") || ua.includes("macintosh") || ua.includes("linux")) return "💻 Desktop/Laptop";
       return "نامشخص";
     }
 
@@ -138,6 +154,7 @@
             <td>${log.slug || '-'}</td>
             <td>${formatDate(log.time)}</td>
             <td>${detectBrowser(ua)}</td>
+            <td>${detectOS(ua)}</td>
             <td>${detectDevice(ua)}</td>
             <td style="text-align:left; direction:ltr">${ua}</td>
           `;
