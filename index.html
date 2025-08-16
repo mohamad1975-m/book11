@@ -87,7 +87,7 @@
       const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
-      document.getElementById('visit-count')?.textContent = `بازدید این صفحه: ${data.value}`;
+      document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
 
       // ساخت payload برای لاگ
       let uaCH = null;
@@ -119,13 +119,15 @@
       });
 
     } catch (e) {
-      document.getElementById('visit-count')?.textContent = 'خطا در دریافت شمارنده';
+      document.getElementById('visit-count').textContent = 'خطا در دریافت شمارنده';
       console.error(e);
     }
   }
   loadVisits();
 </script>
 
+
 </body>
 </html>
+
 
