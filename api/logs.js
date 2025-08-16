@@ -12,8 +12,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // گرفتن 50 لاگ آخر
-    const r = await fetch(`${url}/lrange/logs:${slug}/0/49`, {
+    // آخرین 100 لاگ رو بگیر (جدیدترین‌ها چون lpush می‌زنیم)
+    const r = await fetch(`${url}/lrange/logs:${slug}/0/99`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
