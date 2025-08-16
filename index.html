@@ -5,52 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>کتاب‌های کمک‌درسی تاریخ</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background-color:#222;
-      color:#fff;
-      text-align:center;
-      margin:0; padding:0;
+    @font-face {
+      font-family: 'iranyekan';
+      src: url('iranyekanweblight.woff') format('woff');
     }
-    header { background:#1C93E3; padding:20px; font-size:22px; font-weight:bold }
-    .book-list{max-width:500px;margin:30px auto;list-style:none;padding:0}
-    .book-item{background:#28A745;padding:15px;margin:10px 0;border-radius:8px}
-    .book-item a{color:#fff;text-decoration:none;font-weight:bold}
-    #counter{margin:30px 0;color:#ccc}
+    body{
+      font-family:'iranyekan',sans-serif;
+      background-color:#222222;
+      color:#fff;
+      margin:0;
+      padding:0;
+      text-align:center;
+    }
+    header{
+      background-color:#1C93E3;
+      color:#fff;
+      padding:20px;
+      font-size:22px;
+      font-weight:bold;
+    }
+    .book-list{max-width:500px;margin:30px auto;padding:0;list-style:none}
+    .book-item{
+      background-color:#28A745;
+      padding:15px;margin:10px 0;border-radius:8px;
+      box-shadow:0 2px 5px rgba(0,0,0,.3);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .book-item:hover{transform:translateY(-3px);box-shadow:0 4px 12px rgba(0,0,0,.5)}
+    .book-item a{text-decoration:none;color:#fff;font-weight:bold}
+    @media (max-width:500px){
+      header{font-size:18px}
+      .book-item{font-size:14px}
+    }
+    #counter{margin:30px 0;font-size:18px;color:#ccc}
   </style>
 </head>
 <body>
+
   <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
+
   <ul class="book-list">
-    <li class="book-item"><a href="#">ماجرای بیست – خیلی سبز</a></li>
-    <li class="book-item"><a href="#">ماجراهای من و درسام – خیلی سبز</a></li>
-    <li class="book-item"><a href="#">شب امتحان – خیلی سبز</a></li>
+    <li class="book-item">
+      <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">ماجرای بیست – خیلی سبز</a>
+    </li>
+    <li class="book-item">
+      <a href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">ماجراهای من و درسام – خیلی سبز</a>
+    </li>
+    <li class="book-item">
+      <a href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">شب امتحان – خیلی سبز</a>
+    </li>
   </ul>
 
-  <div id="counter">در حال بارگذاری...</div>
+  <div id="counter">
+    <span id="visit-count">در حال بارگذاری...</span>
+  </div>
 
   <script>
     async function loadVisits() {
       const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
       try {
-        const res = await fetch(`/api/visits?slug=${slug}`, { cache: 'no-store' });
+        const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
         const data = await res.json();
-
-        if (!res.ok) throw new Error(data.error || "خطا");
-
-        document.getElementById('counter').textContent =
-          `بازدید این صفحه: ${data.value}`;
-
-        // ثبت لاگ بازدید
-        await fetch(`/api/logs`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug })
-        });
-
-      } catch (err) {
-        document.getElementById('counter').textContent = "❌ خطا در بارگذاری شمارنده";
-        console.error(err);
+        if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
+        document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
+      } catch (e) {
+        document.getElementById('visit-count').textContent = 'خطا در دریافت شمارنده';
       }
     }
     loadVisits();
