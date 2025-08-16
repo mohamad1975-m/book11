@@ -2,95 +2,245 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <title>📊 لیست بازدیدها</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📑 لاگ بازدیدها</title>
   <style>
+    @font-face {
+      font-family: 'iranyekan';
+      src: url('iranyekanweblight.woff') format('woff');
+    }
     body {
-      font-family: sans-serif;
+      font-family: 'iranyekan', sans-serif;
       background: #111;
       color: #eee;
       margin: 0;
-      padding: 20px;
-      direction: rtl;
+      padding: 0;
+      text-align: center;
     }
     h1 {
-      text-align: center;
-      color: #1C93E3;
+      color: #1da1f2;
+      margin: 20px 0;
+    }
+    .stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 20px;
+    }
+    .card {
+      background: #1c1c1c;
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      min-width: 150px;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #1da1f2;
+    }
+    .card p {
+      margin: 5px 0 0;
+      font-size: 16px;
     }
     table {
-      width: 100%;
+      width: 95%;
+      margin: 20px auto;
       border-collapse: collapse;
-      margin-top: 20px;
-      background: #222;
-      border-radius: 10px;
+      background: #1c1c1c;
+      border-radius: 8px;
       overflow: hidden;
     }
     th, td {
-      padding: 10px;
+      padding: 12px;
       border-bottom: 1px solid #333;
-      text-align: center;
+      font-size: 14px;
     }
     th {
-      background: #1C93E3;
+      background: #1da1f2;
       color: #fff;
+      cursor: pointer;
     }
-    tr:nth-child(even) { background: #2a2a2a; }
-    tr:hover { background: #333; }
-    .ua {
-      font-size: 12px;
-      color: #aaa;
-      word-break: break-all;
+    tr:hover td {
+      background: #222;
+    }
+    #controls {
+      margin: 20px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #1da1f2;
+      color: white;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #0d8adb;
+    }
+    canvas {
+      max-width: 600px;
+      margin: 30px auto;
+      display: block;
     }
   </style>
 </head>
 <body>
+
   <h1>📑 لیست بازدیدها</h1>
 
-  <table id="logs-table">
+  <!-- آمار -->
+  <div class="stats">
+    <div class="card"><h2 id="total">0</h2><p>کل بازدیدها</p></div>
+    <div class="card"><h2 id="today">0</h2><p>بازدیدهای امروز</p></div>
+    <div class="card"><h2 id="chrome">0</h2><p>مرورگر Chrome</p></div>
+    <div class="card"><h2 id="mobile">0</h2><p>بازدید از موبایل</p></div>
+  </div>
+
+  <!-- کنترل‌ها -->
+  <div id="controls">
+    <button onclick="exportCSV()">📥 خروجی CSV</button>
+    <button onclick="clearLogs()">🗑 پاک کردن همه لاگ‌ها</button>
+  </div>
+
+  <!-- جدول -->
+  <table id="logsTable">
     <thead>
       <tr>
-        <th>صفحه</th>
-        <th>زمان</th>
-        <th>User-Agent</th>
+        <th onclick="sortTable(0)">صفحه</th>
+        <th onclick="sortTable(1)">زمان</th>
+        <th onclick="sortTable(2)">User-Agent</th>
+        <th>دستگاه</th>
       </tr>
     </thead>
-    <tbody>
-      <tr><td colspan="3">در حال بارگذاری...</td></tr>
-    </tbody>
+    <tbody></tbody>
   </table>
 
+  <!-- نمودار -->
+  <canvas id="chartBrowsers"></canvas>
+  <canvas id="chartPages"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    // 🔐 Password Protection
+    const pass = prompt("برای ورود رمز را وارد کنید:");
+    if (pass !== "1975") {
+      document.body.innerHTML = "<h2 style='margin-top:50px;color:red'>⛔ دسترسی غیرمجاز</h2>";
+      throw new Error("Unauthorized");
+    }
+
     async function loadLogs() {
-      try {
-        const res = await fetch('/api/logs?slug=index', { cache: 'no-store' });
-        const data = await res.json();
-        if (!res.ok || !Array.isArray(data.logs)) throw new Error('bad response');
+      const res = await fetch('/api/logs?slug=index', { cache: 'no-store' });
+      const data = await res.json();
+      const logs = data.logs || [];
+      const tbody = document.querySelector("#logsTable tbody");
+      tbody.innerHTML = "";
 
-        const tbody = document.querySelector('#logs-table tbody');
-        tbody.innerHTML = '';
+      let total = logs.length;
+      let today = 0;
+      let chrome = 0;
+      let mobile = 0;
 
-        if (data.logs.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="3">هیچ بازدیدی ثبت نشده</td></tr>';
-          return;
+      const browserCounts = {};
+      const pageCounts = {};
+
+      logs.forEach(log => {
+        const date = new Date(log.time);
+        const todayStr = new Date().toISOString().slice(0,10);
+        if (log.time.startsWith(todayStr)) today++;
+
+        const ua = log.ua || "-";
+        if (/chrome/i.test(ua)) chrome++;
+        if (/mobile/i.test(ua)) mobile++;
+
+        // دستگاه
+        let device = /mobile/i.test(ua) ? "📱 موبایل" : "💻 دسکتاپ";
+
+        // شمارش مرورگر
+        const br = /firefox/i.test(ua) ? "Firefox" :
+                   /safari/i.test(ua) && !/chrome/i.test(ua) ? "Safari" :
+                   /edg/i.test(ua) ? "Edge" : "Chrome";
+        browserCounts[br] = (browserCounts[br]||0)+1;
+
+        // شمارش صفحه
+        const pg = log.page || "نامشخص";
+        pageCounts[pg] = (pageCounts[pg]||0)+1;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${pg}</td>
+            <td>${new Date(log.time).toLocaleString("fa-IR")}</td>
+            <td>${ua}</td>
+            <td>${device}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("total").textContent = total;
+      document.getElementById("today").textContent = today;
+      document.getElementById("chrome").textContent = chrome;
+      document.getElementById("mobile").textContent = mobile;
+
+      drawChart("chartBrowsers", "مرورگرها", browserCounts);
+      drawChart("chartPages", "صفحات", pageCounts);
+    }
+
+    function drawChart(id, label, dataObj) {
+      const ctx = document.getElementById(id);
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(dataObj),
+          datasets: [{
+            label,
+            data: Object.values(dataObj)
+          }]
         }
+      });
+    }
 
-        for (const log of data.logs) {
-          const tr = document.createElement('tr');
-          const date = log.time ? new Date(log.time).toLocaleString('fa-IR') : '-';
-
-          tr.innerHTML = `
-            <td>${log.slug || '-'}</td>
-            <td>${date}</td>
-            <td class="ua">${log.ua || '-'}</td>
-          `;
-          tbody.appendChild(tr);
+    function sortTable(n) {
+      const table = document.getElementById("logsTable");
+      let switching = true, dir = "asc", switchcount = 0;
+      while (switching) {
+        switching = false;
+        const rows = table.rows;
+        for (let i = 1; i < (rows.length - 1); i++) {
+          let shouldSwitch = false;
+          const x = rows[i].getElementsByTagName("TD")[n];
+          const y = rows[i + 1].getElementsByTagName("TD")[n];
+          if (dir === "asc" && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) shouldSwitch = true;
+          if (dir === "desc" && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) shouldSwitch = true;
+          if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true; switchcount++;
+            break;
+          }
         }
-      } catch (e) {
-        console.error(e);
-        document.querySelector('#logs-table tbody').innerHTML =
-          '<tr><td colspan="3">خطا در بارگذاری لاگ‌ها</td></tr>';
+        if (!switching && dir === "asc" && switchcount === 0) { dir = "desc"; switching = true; }
       }
     }
+
+    function exportCSV() {
+      const rows = [...document.querySelectorAll("table tr")].map(tr => 
+        [...tr.children].map(td => td.innerText).join(",")
+      ).join("\n");
+      const blob = new Blob([rows], { type: 'text/csv' });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "logs.csv";
+      a.click();
+    }
+
+    async function clearLogs() {
+      if (!confirm("همه لاگ‌ها پاک شوند؟")) return;
+      await fetch("/api/clearLogs", { method: "POST" });
+      loadLogs();
+    }
+
     loadLogs();
   </script>
 </body>
