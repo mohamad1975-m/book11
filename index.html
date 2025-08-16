@@ -61,8 +61,14 @@
   </div>
 
   <script>
+    const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
+
+    // ۱) ثبت بازدید
+    fetch(`/api/visit?slug=${encodeURIComponent(slug)}`)
+      .catch(err => console.error('خطا در ثبت بازدید:', err));
+
+    // ۲) گرفتن شمارنده
     async function loadVisits() {
-      const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
       try {
         const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
         const data = await res.json();
