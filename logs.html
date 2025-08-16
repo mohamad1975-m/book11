@@ -69,30 +69,17 @@
   </table>
 
   <script>
-    async function addVisit() {
-      try {
-        await fetch('/api/visit?slug=index');
-      } catch (e) {
-        console.error("خطا در ثبت بازدید:", e);
-      }
-    }
-
     async function fetchLogs() {
       try {
-        const res = await fetch('/api/logs?slug=index');
+        const res = await fetch('/api/logs?slug=index', { cache: 'no-store' });
         const data = await res.json();
         const tbody = document.querySelector('#logsTable tbody');
         tbody.innerHTML = '';
 
-        (data.logs || []).forEach(item => {
-          let log = item;
-
+        // آخرین‌ها اول نمایش داده بشن
+        data.logs.reverse().forEach(log => {
           if (Array.isArray(log)) {
-            try {
-              log = JSON.parse(log[0]);
-            } catch {
-              log = { raw: log };
-            }
+            log = JSON.parse(log[0]);
           }
 
           const date = new Date(log.time);
@@ -120,18 +107,14 @@
               <td>${log.ua || 'undefined'}</td>
             </tr>
           `;
-          // ردیف جدید بیاد بالا
-          tbody.innerHTML = row + tbody.innerHTML;
+          tbody.innerHTML += row;
         });
       } catch (err) {
         console.error('Error fetching logs:', err);
       }
     }
 
-    (async () => {
-      await addVisit();  // اول بازدید ثبت میشه
-      await fetchLogs(); // بعد جدول آپدیت میشه
-    })();
+    fetchLogs();
   </script>
 </body>
 </html>
