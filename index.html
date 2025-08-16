@@ -64,17 +64,20 @@
     async function loadVisits() {
       const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
       try {
-        // شمارنده
+        // دریافت شمارنده
         const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
         const data = await res.json();
         if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
         document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
 
         // ثبت لاگ جدید
-        await fetch(`/api/log?slug=${encodeURIComponent(slug)}`, {
+        await fetch(`/api/log`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ua: navigator.userAgent })
+          body: JSON.stringify({
+            slug,
+            ua: navigator.userAgent
+          })
         });
 
       } catch (e) {
