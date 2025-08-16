@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // شمارنده ↑
+    // شمارنده
     const r = await fetch(`${url}/incr/pageviews:${slug}`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
@@ -30,32 +30,27 @@ export default async function handler(req, res) {
     const ua = req.headers["user-agent"] || "unknown";
     const now = new Date().toISOString();
 
-    // یک خلاصه‌ی ساده از user-agent
     const parsed =
-      (/Android|iPhone|iPad|Windows|Mac OS X|Linux/i.exec(ua)?.[0] || "Other") +
+      (/Android|iPhone|iPad|Windows|Mac OS X|Linux/i.exec(ua)?.[0] ||
+        "Other") +
       " - " +
       (/Edg|Chrome|Safari|Firefox/i.exec(ua)?.[0] || "Other");
 
-    const log = JSON.stringify({ time: now, ua, parsed });
+    const log = { time: now, ua, parsed };
 
-    // ذخیره در Redis
+    // ذخیره مستقیم (بدون آرایه اضافه!)
     await fetch(`${url}/lpush/logs:${slug}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify([log]),
+      body: JSON.stringify(log),
     });
 
     // فقط 500 رکورد آخر نگه داریم
-    await fetch(`${url}/ltrim/logs:${slug}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify([0, 499]),
+    await fetch(`${url}/ltrim/logs:${slug}/0/499`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     // -------------------------
