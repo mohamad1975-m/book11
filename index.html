@@ -105,25 +105,29 @@
             </a>
         </li>
     </ul>
+      </ul>
     <!-- 🔴 پایان لیست کتاب‌ها -->
 
- <!-- 📊 اسکریپت برای شمارش بازدید -->
-<script>
-  async function loadVisits() {
-    try {
-      const res = await fetch('/api/visits');
-      const data = await res.json();
-      document.getElementById('visit-count').textContent =
-        `بازدید این صفحه: ${data.visits}`;
-    } catch (e) {
-      document.getElementById('visit-count').textContent =
-        "خطا در دریافت آمار بازدید 😕";
-    }
-  }
-  loadVisits();
-</script>
+    <!-- 📊 نمایش شمارنده بازدید -->
+    <div id="counter">
+        <span id="visit-count">در حال بارگذاری...</span>
+    </div>
 
+    <!-- 📊 اسکریپت برای شمارش بازدید -->
+    <script>
+      async function loadVisits() {
+        try {
+          const res = await fetch('/api/visits');
+          const data = await res.json();
+          document.getElementById('visit-count').textContent =
+            `بازدید این صفحه: ${data.visits}`;
+        } catch (e) {
+          document.getElementById('visit-count').textContent =
+            "خطا در دریافت آمار بازدید 😕";
+        }
+      }
+      loadVisits();
+    </script>
 
 </body>
 </html>
-
