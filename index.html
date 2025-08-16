@@ -14,8 +14,8 @@
         /* 🎨 تنظیمات کلی صفحه */
         body {
             font-family: 'iranyekan', sans-serif;
-            background-color: #222222; /* تغییر به رنگ تیره */
-            color: #fff; /* متن سفید برای خوانایی */
+            background-color: #222222;
+            color: #fff;
             margin: 0;
             padding: 0;
             text-align: center;
@@ -23,7 +23,7 @@
 
         /* 🟢 هدر بالای صفحه */
         header {
-            background-color: #1C93E3; /* تغییر رنگ هدر */
+            background-color: #1C93E3;
             color: white;
             padding: 20px;
             font-size: 22px;
@@ -40,28 +40,35 @@
 
         /* 🔵 استایل هر گزینه (هر کتاب) */
         .book-item {
-            background-color: #28A745; /* تغییر رنگ گزینه‌ها */
+            background-color: #28A745;
             padding: 15px;
             margin: 10px 0;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* سایه کمی پررنگ‌تر چون بک‌گراند تیره شده */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        /* ✨ افکت هاور (وقتی موس روی گزینه بره) */
+        /* ✨ افکت هاور */
         .book-item:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
-        /* 🔗 استایل لینک داخل گزینه‌ها */
+        /* 🔗 استایل لینک‌ها */
         .book-item a {
             text-decoration: none;
-            color: #fff; /* لینک سفید برای خوانایی روی سبز */
+            color: #fff;
             font-weight: bold;
         }
 
-        /* 📱 ریسپانسیو (برای موبایل و صفحه کوچیک) */
+        /* 👁️ استایل شمارنده بازدید */
+        #counter {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        /* 📱 ریسپانسیو */
         @media (max-width: 500px) {
             header {
                 font-size: 18px;
@@ -74,37 +81,41 @@
 </head>
 <body>
 
-    <!-- 🟢 شروع بخش هدر -->
+    <!-- 🟢 هدر -->
     <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
-    <!-- 🔴 پایان هدر -->
 
-    <!-- 📖 شروع لیست کتاب‌ها -->
+    <!-- 📖 لیست کتاب‌ها -->
     <ul class="book-list">
-        <!-- ✅ کتاب 1 -->
         <li class="book-item">
             <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">
                 ماجرای بیست – خیلی سبز
             </a>
         </li>
 
-        <!-- ✅ کتاب 2 -->
         <li class="book-item">
             <a href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">
                 ماجراهای من و درسام – خیلی سبز
             </a>
         </li>
 
-        <!-- ✅ کتاب 3 -->
         <li class="book-item">
             <a href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">
                 شب امتحان – خیلی سبز
             </a>
         </li>
     </ul>
-    <!-- 🔴 پایان لیست کتاب‌ها -->
+
+    <!-- 👁️ شمارنده بازدید -->
+    <p id="counter">بازدید این صفحه: در حال بارگذاری...</p>
+
+    <script>
+        fetch('https://api.countapi.xyz/hit/book11-one.vercel.app/tarikh')
+            .then(res => res.json())
+            .then(res => {
+                document.getElementById('counter').innerText =
+                    "👁️ تعداد بازدید این صفحه: " + res.value;
+            });
+    </script>
 
 </body>
 </html>
-
-
-
