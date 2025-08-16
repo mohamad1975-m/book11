@@ -14,8 +14,8 @@
         /* 🎨 تنظیمات کلی صفحه */
         body {
             font-family: 'iranyekan', sans-serif;
-            background-color: #222222;
-            color: #fff;
+            background-color: #222222; /* رنگ پس‌زمینه */
+            color: #fff; /* متن سفید */
             margin: 0;
             padding: 0;
             text-align: center;
@@ -23,7 +23,7 @@
 
         /* 🟢 هدر بالای صفحه */
         header {
-            background-color: #1C93E3;
+            background-color: #1C93E3; /* رنگ هدر */
             color: white;
             padding: 20px;
             font-size: 22px;
@@ -38,9 +38,9 @@
             list-style: none;
         }
 
-        /* 🔵 استایل هر گزینه (هر کتاب) */
+        /* 🔵 استایل هر گزینه کتاب */
         .book-item {
-            background-color: #28A745;
+            background-color: #28A745; /* رنگ گزینه‌ها */
             padding: 15px;
             margin: 10px 0;
             border-radius: 8px;
@@ -54,18 +54,11 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
-        /* 🔗 استایل لینک‌ها */
+        /* 🔗 استایل لینک */
         .book-item a {
             text-decoration: none;
             color: #fff;
             font-weight: bold;
-        }
-
-        /* 👁️ استایل شمارنده بازدید */
-        #counter {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #bbb;
         }
 
         /* 📱 ریسپانسیو */
@@ -77,12 +70,20 @@
                 font-size: 14px;
             }
         }
+
+        /* 📊 استایل شمارنده */
+        #counter {
+            margin: 30px 0;
+            font-size: 16px;
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 🟢 هدر -->
+    <!-- 🟢 شروع هدر -->
     <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
+    <!-- 🔴 پایان هدر -->
 
     <!-- 📖 لیست کتاب‌ها -->
     <ul class="book-list">
@@ -104,16 +105,21 @@
             </a>
         </li>
     </ul>
+    <!-- 🔴 پایان لیست کتاب‌ها -->
 
-    <!-- 👁️ شمارنده بازدید -->
+    <!-- 📊 شمارنده بازدید -->
     <p id="counter">بازدید این صفحه: در حال بارگذاری...</p>
 
     <script>
-        fetch('https://api.countapi.xyz/hit/book11-one.vercel.app/tarikh')
+        fetch('https://api.countapi.xyz/hit/tarikh-books/visits')
             .then(res => res.json())
             .then(res => {
                 document.getElementById('counter').innerText =
                     "👁️ تعداد بازدید این صفحه: " + res.value;
+            })
+            .catch(() => {
+                document.getElementById('counter').innerText =
+                    "خطا در دریافت آمار بازدید 😕";
             });
     </script>
 
