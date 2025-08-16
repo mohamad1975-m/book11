@@ -80,13 +80,13 @@
     <span id="visit-count">در حال بارگذاری...</span>
   </div>
 
-  <!-- 📊 اسکریپت برای شمارش بازدید + ثبت لاگ -->
+  <!-- 📊 اسکریپت برای شمارش بازدید -->
   <script>
     async function loadVisits() {
       const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
 
       try {
-        // 1️⃣ شمارنده بازدید
+        // شمارنده بازدید
         const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
         const data = await res.json();
 
@@ -96,9 +96,6 @@
 
         document.getElementById('visit-count').textContent =
           `بازدید این صفحه: ${data.value}`;
-
-        // 2️⃣ ثبت لاگ بازدید
-        await fetch("/api/log", { method: "POST" });
 
       } catch (e) {
         // 👇 اگر سرور در دسترس نبود، شمارنده‌ی لوکال
