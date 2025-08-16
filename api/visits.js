@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // شمارنده
+    // شمارنده ↑
     const r = await fetch(`${url}/incr/pageviews:${slug}`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
@@ -20,14 +20,11 @@ export default async function handler(req, res) {
 
     if (!r.ok) {
       const txt = await r.text();
-      return res
-        .status(500)
-        .json({ error: "Upstash error", details: txt });
+      return res.status(500).json({ error: "Upstash error", details: txt });
     }
 
     const data = await r.json(); // { result: number }
-    const value =
-      typeof data.result === "number" ? data.result : data;
+    const value = typeof data.result === "number" ? data.result : data;
 
     // ---- بخش لاگ بازدید ----
     const ua = req.headers["user-agent"] || "unknown";
@@ -35,28 +32,31 @@ export default async function handler(req, res) {
 
     // یک خلاصه‌ی ساده از user-agent
     const parsed =
-      (/Android|iPhone|iPad|Windows|Mac OS X|Linux/i.exec(ua)?.[0] ||
-        "Other") +
+      (/Android|iPhone|iPad|Windows|Mac OS X|Linux/i.exec(ua)?.[0] || "Other") +
       " - " +
       (/Edg|Chrome|Safari|Firefox/i.exec(ua)?.[0] || "Other");
 
-    // اضافه به لیست لاگ‌ها (داده داخل URL، نه body)
     const log = JSON.stringify({ time: now, ua, parsed });
 
-await fetch(`${url}/lpush/logs:${slug}`, {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify([log]),
-});
+    // ذخیره در Redis
+    await fetch(`${url}/lpush/logs:${slug}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify([log]),
+    });
 
-// فقط 500 رکورد آخر نگه داریم
-await fetch(`${url}/ltrim/logs:${slug}/0/499`, {
-  headers: { Authorization: `Bearer ${token}` },
-});
-
+    // فقط 500 رکورد آخر نگه داریم
+    await fetch(`${url}/ltrim/logs:${slug}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify([0, 499]),
+    });
 
     // -------------------------
 
@@ -68,4 +68,3 @@ await fetch(`${url}/ltrim/logs:${slug}/0/499`, {
       .json({ error: "Server error", details: String(err) });
   }
 }
-
