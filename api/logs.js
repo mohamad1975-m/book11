@@ -12,23 +12,21 @@ export default async function handler(req, res) {
       });
     }
 
-    // آخرین 100 لاگ رو بگیر (جدیدترین‌ها چون lpush می‌زنیم)
-    const r = await fetch(`${url}/lrange/logs:${slug}/0/99`, {
+    // گرفتن 50 لاگ آخر
+    const r = await fetch(`${url}/lrange/logs:${slug}/0/49`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
 
     if (!r.ok) {
       const txt = await r.text();
-      return res
-        .status(500)
-        .json({ error: "Upstash error", details: txt });
+      return res.status(500).json({ error: "Upstash error", details: txt });
     }
 
     const data = await r.json(); // { result: [...] }
     const logs = (data.result || []).map((x) => {
       try {
-        return JSON.parse(x);
+        return typeof x === "string" ? JSON.parse(x) : x;
       } catch {
         return { raw: x };
       }
