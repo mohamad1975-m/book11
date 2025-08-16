@@ -14,7 +14,7 @@
         /* 🎨 تنظیمات کلی صفحه */
         body {
             font-family: 'iranyekan', sans-serif;
-            background-color: #222222; /* رنگ پس‌زمینه */
+            background-color: #0D1117; /* رنگ پس‌زمینه */
             color: #fff; /* متن سفید */
             margin: 0;
             padding: 0;
@@ -23,7 +23,7 @@
 
         /* 🟢 هدر بالای صفحه */
         header {
-            background-color: #1C93E3; /* رنگ هدر */
+            background-color: #008CBA; /* رنگ هدر */
             color: white;
             padding: 20px;
             font-size: 22px;
@@ -40,7 +40,7 @@
 
         /* 🔵 استایل هر گزینه کتاب */
         .book-item {
-            background-color: #28A745; /* رنگ گزینه‌ها */
+            background-color: #238636; /* رنگ گزینه‌ها */
             padding: 15px;
             margin: 10px 0;
             border-radius: 8px;
@@ -74,7 +74,7 @@
         /* 📊 استایل شمارنده */
         #counter {
             margin: 30px 0;
-            font-size: 11px;
+            font-size: 16px;
             color: #ccc;
         }
     </style>
@@ -105,10 +105,9 @@
             </a>
         </li>
     </ul>
-      </ul>
     <!-- 🔴 پایان لیست کتاب‌ها -->
 
-    <!-- 📊 نمایش شمارنده بازدید -->
+    <!-- 📊 شمارنده بازدید -->
     <div id="counter">
         <span id="visit-count">در حال بارگذاری...</span>
     </div>
@@ -117,10 +116,10 @@
     <script>
       async function loadVisits() {
         try {
-          const res = await fetch('/api/visits');
+          const res = await fetch('https://api.countapi.xyz/hit/book11-one.vercel.app/visits');
           const data = await res.json();
           document.getElementById('visit-count').textContent =
-            `بازدید این صفحه: ${data.visits}`;
+            `بازدید این صفحه: ${data.value}`;
         } catch (e) {
           document.getElementById('visit-count').textContent =
             "خطا در دریافت آمار بازدید 😕";
@@ -131,5 +130,3 @@
 
 </body>
 </html>
-
-
