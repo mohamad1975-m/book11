@@ -1,351 +1,248 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>لیست بازدیدها</title>
-
-  <!-- فونت ایران‌یکان -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📊 لیست بازدیدها</title>
   <style>
     @font-face {
-      font-family: 'IranYekan';
-      src: url('./iranyekanweblight.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
+      font-family: 'iranyekan';
+      src: url('iranyekanweblight.woff') format('woff');
     }
+    body {
+      font-family: 'iranyekan', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1C93E3;
+      padding: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,.3);
+      text-align: center;
+    }
+    .card h2 { margin: 0; font-size: 24px; color: #1C93E3; }
+    .card p { margin: 5px 0 0; font-size: 14px; color: #ccc; }
 
-    :root{
-      --bg:#111;
-      --panel:#1b1b1b;
-      --panel2:#0e0e0e;
-      --blue:#1C93E3;
-      --text:#eee;
-      --muted:#aaa;
-      --row:#171717;
-      --rowHover:#222;
-      --border:#2b2b2b;
+    .table-container { padding: 20px; overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
+    thead {
+      background-color: #1C93E3;
+    }
+    thead th {
+      padding: 10px;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+    }
+    tbody td {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+      text-align: center;
+      font-size: 14px;
+    }
+    tr:nth-child(even) { background-color: #1a1a1a; }
+    tr:hover { background-color: #2a2a2a; }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:'IranYekan',sans-serif;
-      padding:16px;
+    .actions {
+      margin: 20px;
+      text-align: center;
     }
-    .card{
-      background:var(--panel);
-      border-radius:10px;
-      overflow:hidden;
-      box-shadow:0 10px 25px rgba(0,0,0,.35);
-      border:1px solid var(--border);
+    .btn {
+      background: #1C93E3;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px;
+      font-family: 'iranyekan';
     }
-    .card .header{
-      background:var(--blue);
-      color:#fff;
-      padding:14px 16px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      justify-content:space-between;
-    }
-    .header h1{
-      margin:0; font-size:22px; display:flex; align-items:center; gap:8px;
-    }
-    .header .tools{ display:flex; gap:8px; align-items:center; }
+    .btn:hover { background: #177ac0; }
 
-    .btn{
-      background:#0d6efd; border:none; color:#fff; border-radius:8px;
-      padding:8px 10px; cursor:pointer; font-size:13px;
+    canvas {
+      background: #1e1e1e;
+      border-radius: 10px;
+      margin: 20px auto;
+      display: block;
+      max-width: 800px;
     }
-    .btn:disabled{opacity:.5; cursor:not-allowed}
-    .btn.secondary{ background:#2f2f2f; color:#fff; }
-    .input, .select{
-      background:var(--panel2);
-      color:var(--text);
-      border:1px solid var(--border);
-      border-radius:8px;
-      padding:8px 10px;
-    }
-
-    .filters{
-      display:flex; gap:8px; padding:10px; background:var(--panel2); border-top:1px solid var(--border);
-      border-bottom:1px solid var(--border);
-    }
-
-    table{ width:100%; border-collapse:collapse; }
-    th, td{
-      padding:10px; text-align:center; border-bottom:1px solid var(--border); font-size:13.5px;
-    }
-    thead th{
-      background:var(--panel2); font-weight:bold; color:#fff;
-      position:sticky; top:0; z-index:1;
-    }
-    tbody tr{ background:var(--row); }
-    tbody tr:hover{ background:var(--rowHover); }
-    .muted{ color:var(--muted); font-size:12px; }
-    .foot{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px; background:var(--panel2); border-top:1px solid var(--border);
-      color:var(--muted); font-size:12.5px;
-    }
-
-    /* دیالوگ رمز */
-    .overlay{
-      position:fixed; inset:0; background:rgba(0,0,0,.75);
-      display:flex; align-items:center; justify-content:center;
-      z-index:2000;
-    }
-    .dialog{
-      background:#1b1b1b; border:1px solid var(--border);
-      padding:20px; border-radius:12px; width:95%; max-width:380px;
-      color:var(--text); display:flex; flex-direction:column; gap:10px;
-      box-shadow:0 8px 30px rgba(0,0,0,.5)
-    }
-    .dialog h3{ margin:0 0 6px 0; font-size:17px; }
-    .dialog .row{ display:flex; gap:8px }
   </style>
 </head>
 <body>
 
-  <!-- دیالوگ رمز -->
-  <div id="lock" class="overlay" hidden>
-    <div class="dialog">
-      <h3>ورود به صفحه مدیریت</h3>
-      <div class="muted">برای مشاهده لاگ‌ها، رمز عبور را وارد کنید.</div>
-      <div class="row">
-        <input id="pwd" class="input" type="password" placeholder="رمز عبور (1975)"/>
-        <button class="btn" onclick="checkPass()">ورود</button>
-      </div>
-      <div id="msg" class="muted"></div>
-    </div>
-  </div>
+<header>📑 لیست بازدیدها</header>
 
+<!-- کارت‌های آماری -->
+<section class="stats">
   <div class="card">
-    <div class="header">
-      <h1>لیست بازدیدها <span class="muted" id="count"></span></h1>
-      <div class="tools">
-        <button id="exportCsv" class="btn">خروجی CSV</button>
-      </div>
-    </div>
-
-    <div class="filters">
-      <input id="q" class="input" style="flex:1" placeholder="جستجو در User-Agent / سیستم‌عامل / مرورگر / صفحه"/>
-      <select id="slugSel" class="select">
-        <option value="">همه صفحات</option>
-      </select>
-    </div>
-
-    <table id="tbl">
-      <thead>
-        <tr>
-          <th>صفحه</th>
-          <th>زمان</th>
-          <th>سیستم‌عامل</th>
-          <th>مرورگر</th>
-          <th>User-Agent</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <div class="foot">
-      <div>مرتب‌سازی: جدیدترین بالا</div>
-      <div id="status">در حال بارگذاری…</div>
-    </div>
+    <h2 id="total-visits">0</h2>
+    <p>کل بازدیدها</p>
   </div>
+  <div class="card">
+    <h2 id="today-visits">0</h2>
+    <p>بازدید امروز</p>
+  </div>
+  <div class="card">
+    <h2 id="top-page">-</h2>
+    <p>محبوب‌ترین صفحه</p>
+  </div>
+</section>
 
-  <script>
-    // --- قفل با رمز 1975 (یک‌بار برای هر سشن) ---
-    const PASS = "1975";
-    const lockEl = document.getElementById('lock');
-    function checkLock(){
-      if(sessionStorage.getItem('ok-logs') === '1'){ lockEl.hidden = true; return; }
-      lockEl.hidden = false;
+<!-- نمودار -->
+<canvas id="visitsChart" height="120"></canvas>
+
+<!-- دکمه‌های خروجی -->
+<div class="actions">
+  <button class="btn" onclick="exportCSV()">📂 خروجی CSV</button>
+  <button class="btn" onclick="exportJSON()">📂 خروجی JSON</button>
+</div>
+
+<!-- جدول -->
+<div class="table-container">
+  <table id="logs-table">
+    <thead>
+      <tr>
+        <th>صفحه</th>
+        <th>زمان</th>
+        <th>User-Agent</th>
+        <th>دستگاه</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let logsData = [];
+
+  async function loadLogs() {
+    try {
+      const res = await fetch('/api/logs?slug=index', { cache: 'no-store' });
+      const data = await res.json();
+      logsData = data.logs || [];
+      renderTable();
+      renderStats();
+      renderChart();
+    } catch (err) {
+      console.error('خطا در دریافت لاگ‌ها', err);
     }
-    function checkPass(){
-      const p = document.getElementById('pwd').value.trim();
-      const msg = document.getElementById('msg');
-      if(p === PASS){
-        sessionStorage.setItem('ok-logs','1');
-        lockEl.hidden = true;
-        loadAll();
-      }else{
-        msg.textContent = 'رمز اشتباه است.';
-      }
-    }
-    // با Enter هم تایید شود
-    document.getElementById('pwd').addEventListener('keydown', e=>{
-      if(e.key === 'Enter') checkPass();
+  }
+
+  function detectDevice(ua) {
+    if (!ua) return '-';
+    ua = ua.toLowerCase();
+    if (ua.includes('mobile')) return '📱 موبایل';
+    if (ua.includes('tablet')) return '� tablet';
+    return '💻 دسکتاپ';
+  }
+
+  function renderTable() {
+    const tbody = document.querySelector('#logs-table tbody');
+    tbody.innerHTML = '';
+    logsData.forEach(log => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${log.slug || '-'}</td>
+        <td>${log.time || '-'}</td>
+        <td>${log.ua || '-'}</td>
+        <td>${detectDevice(log.ua)}</td>
+      `;
+      tbody.appendChild(tr);
     });
+  }
 
-    // --- ابزارها ---
-    const $ = (s)=>document.querySelector(s);
-    const tbody = $('#tbl tbody');
-    const qInput = $('#q');
-    const slugSel = $('#slugSel');
-    const statusEl = $('#status');
-    const countEl = $('#count');
+  function renderStats() {
+    document.getElementById('total-visits').textContent = logsData.length;
 
-    let LOGS = [];          // همه‌ی لاگ‌ها (آرایه اشیا)
-    let VIEW = [];          // نمای فیلترشده و مرتب شده
+    // بازدید امروز
+    const today = new Date().toISOString().split('T')[0];
+    const todayCount = logsData.filter(l => l.time && l.time.startsWith(today)).length;
+    document.getElementById('today-visits').textContent = todayCount;
 
-    function formatTime(t){
-      if(!t) return '-';
-      let d;
-      if(!isNaN(t)) d = new Date(parseInt(t,10));
-      else d = new Date(t);
-      if(isNaN(d.getTime())) return '-';
-      // تاریخ و زمان شمسی
-      return d.toLocaleString('fa-IR');
-    }
-    function parseOS(ua){
-      if(!ua) return '-';
-      const m = /Windows|Android|iPhone|iPad|Mac OS X|Linux/i.exec(ua);
-      return m ? m[0] : 'Other';
-    }
-    function parseBrowser(ua){
-      if(!ua) return '-';
-      const m = /Edg|Chrome|Safari|Firefox/i.exec(ua);
-      return m ? (m[0]==='Edg'?'Edge':m[0]) : 'Other';
-    }
+    // محبوب‌ترین صفحه
+    const counts = {};
+    logsData.forEach(l => { counts[l.slug] = (counts[l.slug] || 0) + 1; });
+    let top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+    document.getElementById('top-page').textContent = top ? `${top[0]} (${top[1]})` : '-';
+  }
 
-    // تبدیل داده‌ی خام به شیء استاندارد
-    function normalizeLog(x){
-      let obj=x;
-      try{
-        if(Array.isArray(x)) obj = JSON.parse(x[0]);
-        else if(typeof x==='string') obj = JSON.parse(x);
-      }catch(_){ /* ignore */ }
-      // سازگاری با نسخه‌های قبلی
-      if(obj && obj.parsed){
-        const parts = String(obj.parsed).split(' - ');
-        obj.os = parts[0] || parseOS(obj.ua);
-        obj.browser = parts[1] || parseBrowser(obj.ua);
-      }else{
-        obj.os = parseOS(obj.ua);
-        obj.browser = parseBrowser(obj.ua);
-      }
-      obj.slug = obj.slug || 'index';
-      return obj;
-    }
+  function renderChart() {
+    const ctx = document.getElementById('visitsChart').getContext('2d');
+    const daily = {};
+    logsData.forEach(l => {
+      if (!l.time) return;
+      const d = l.time.split('T')[0];
+      daily[d] = (daily[d] || 0) + 1;
+    });
+    const labels = Object.keys(daily).sort();
+    const values = labels.map(k => daily[k]);
 
-    async function fetchLogs(slug=''){
-      // اگر slug خالی باشد، همان index را می‌گیریم (سمت‌سرور فعلاً همان را پوشش می‌دهد)
-      const url = slug ? `/api/logs?slug=${encodeURIComponent(slug)}` : '/api/logs?slug=index';
-      const r = await fetch(url, {cache:'no-store'});
-      if(!r.ok){
-        const t=await r.text(); throw new Error(t||r.status);
-      }
-      const data = await r.json();
-      const raw = Array.isArray(data.logs)? data.logs : [];
-      const arr = raw.map(normalizeLog);
-
-      // مرتب‌سازی: جدیدترین بالا
-      arr.sort((a,b)=>{
-        const ta = isNaN(a.time)? (new Date(a.time)).getTime() : parseInt(a.time,10);
-        const tb = isNaN(b.time)? (new Date(b.time)).getTime() : parseInt(b.time,10);
-        return (tb||0)-(ta||0);
-      });
-      return arr;
-    }
-
-    function buildSlugOptions(){
-      const set = new Set(LOGS.map(x=>x.slug||'index'));
-      const old = slugSel.value;
-      slugSel.innerHTML = `<option value="">همه صفحات</option>` +
-        [...set].map(s=>`<option ${s===old?'selected':''} value="${s}">${s}</option>`).join('');
-    }
-
-    function renderTable(){
-      const q = qInput.value.trim().toLowerCase();
-      const sel = slugSel.value.trim();
-
-      VIEW = LOGS.filter(l=>{
-        if(sel && String(l.slug) !== sel) return false;
-        if(!q) return true;
-        const hay = [
-          l.ua||'',
-          l.os||'',
-          l.browser||'',
-          l.slug||''
-        ].join(' ').toLowerCase();
-        return hay.includes(q);
-      });
-
-      tbody.innerHTML = VIEW.map(l=>`
-        <tr>
-          <td>${l.slug || '-'}</td>
-          <td>${formatTime(l.time)}</td>
-          <td>${l.os || '-'}</td>
-          <td>${l.browser || '-'}</td>
-          <td class="muted" style="text-align:right">${l.ua || '-'}</td>
-        </tr>
-      `).join('');
-
-      countEl.textContent = `(${VIEW.length.toLocaleString('fa-IR')} رکورد)`;
-      statusEl.textContent = 'آماده';
-    }
-
-    function exportCSV(){
-      if(!VIEW.length){ alert('چیزی برای خروجی نیست.'); return; }
-      const rows = [
-        ['slug','time','os','browser','userAgent'],
-        ...VIEW.map(l=>[
-          l.slug || '',
-          formatTime(l.time),
-          l.os || '',
-          l.browser || '',
-          l.ua || ''
-        ])
-      ];
-      const csv = rows.map(r=>r.map(x=>{
-        const s = String(x).replace(/"/g,'""');
-        return `"${s}"`;
-      }).join(',')).join('\n');
-
-      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `logs_${Date.now()}.csv`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    async function loadAll(){
-      try{
-        statusEl.textContent='در حال دریافت...';
-        LOGS = await fetchLogs('index');   // فعلاً از index می‌خوانیم
-        buildSlugOptions();
-        renderTable();
-      }catch(e){
-        statusEl.textContent='خطا در دریافت';
-        console.error(e);
-      }
-    }
-
-    // رویدادها
-    qInput.addEventListener('input', renderTable);
-    slugSel.addEventListener('change', async ()=>{
-      // وقتی slug عوض شد، از سرور همان را بگیریم
-      try{
-        statusEl.textContent='در حال دریافت...';
-        LOGS = await fetchLogs(slugSel.value);
-        renderTable();
-      }catch(e){
-        statusEl.textContent='خطا در دریافت';
-        console.error(e);
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'بازدیدها در روز',
+          data: values,
+          borderColor: '#1C93E3',
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: "#fff" } }
+        },
+        scales: {
+          x: { ticks: { color: "#ccc" } },
+          y: { ticks: { color: "#ccc" } }
+        }
       }
     });
-    document.getElementById('exportCsv').addEventListener('click', exportCSV);
+  }
 
-    // شروع
-    checkLock();
-    if(sessionStorage.getItem('ok-logs')==='1'){
-      loadAll();
-    }
-  </script>
+  function exportCSV() {
+    let csv = "صفحه,زمان,User-Agent,دستگاه\n";
+    logsData.forEach(l => {
+      csv += `"${l.slug||''}","${l.time||''}","${l.ua||''}","${detectDevice(l.ua)}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "logs.csv";
+    link.click();
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(logsData,null,2)], { type: 'application/json' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "logs.json";
+    link.click();
+  }
+
+  loadLogs();
+</script>
 </body>
 </html>
