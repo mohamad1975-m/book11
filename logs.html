@@ -82,6 +82,8 @@
         <th>صفحه</th>
         <th>زمان</th>
         <th>مرورگر</th>
+        <th>دستگاه</th>
+        <th>User-Agent کامل</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -91,6 +93,30 @@
     function formatDate(isoString) {
       const d = new Date(isoString);
       return d.toLocaleString("fa-IR", { hour12: false });
+    }
+
+    // 📌 شناسایی مرورگر از UA
+    function detectBrowser(ua) {
+      if (!ua) return "-";
+      ua = ua.toLowerCase();
+      if (ua.includes("edg")) return "Microsoft Edge";
+      if (ua.includes("chrome")) return "Google Chrome";
+      if (ua.includes("firefox")) return "Mozilla Firefox";
+      if (ua.includes("safari")) return "Safari";
+      if (ua.includes("opera") || ua.includes("opr")) return "Opera";
+      return "ناشناخته";
+    }
+
+    // 📌 شناسایی دستگاه از UA
+    function detectDevice(ua) {
+      if (!ua) return "-";
+      ua = ua.toLowerCase();
+      if (ua.includes("android")) return "📱 Android";
+      if (ua.includes("iphone") || ua.includes("ipad")) return "📱 iOS";
+      if (ua.includes("windows")) return "💻 Windows Desktop";
+      if (ua.includes("macintosh")) return "💻 macOS";
+      if (ua.includes("linux")) return "💻 Linux";
+      return "نامشخص";
     }
 
     async function loadLogs() {
@@ -105,12 +131,15 @@
         tbody.innerHTML = "";
 
         logs.forEach((log, i) => {
+          const ua = log.ua || "";
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${i + 1}</td>
             <td>${log.slug || '-'}</td>
             <td>${formatDate(log.time)}</td>
-            <td>${log.ua ? log.ua.slice(0, 40) : '-'}</td>
+            <td>${detectBrowser(ua)}</td>
+            <td>${detectDevice(ua)}</td>
+            <td style="text-align:left; direction:ltr">${ua}</td>
           `;
           tbody.appendChild(tr);
         });
@@ -132,7 +161,7 @@
 
       } catch (e) {
         console.error(e);
-        document.getElementById("stats").textContent = "خطا در بارگذاری لاگ‌ها";
+        document.getElementById("stats").textContent = "❌ خطا در بارگذاری لاگ‌ها";
       }
     }
 
