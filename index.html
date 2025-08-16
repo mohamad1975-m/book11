@@ -11,17 +11,17 @@
       src: url('iranyekanweblight.woff') format('woff');
     }
 
-    /* 🎨 تنظیمات کلی صفحه (فقط بک‌گراند به #222222 برگشت) */
+    /* 🎨 تنظیمات کلی صفحه */
     body{
       font-family:'iranyekan',sans-serif;
-      background-color:#222222;   /* ← طبق درخواست شما */
+      background-color:#222222;
       color:#fff;
       margin:0;
       padding:0;
       text-align:center;
     }
 
-    /* 🟢 هدر (دست‌نخورده) */
+    /* 🟢 هدر */
     header{
       background-color:#1C93E3;
       color:#fff;
@@ -33,7 +33,7 @@
     /* 📚 لیست کتاب‌ها */
     .book-list{max-width:500px;margin:30px auto;padding:0;list-style:none}
 
-    /* 🔵 آیتم‌ها (دست‌نخورده) */
+    /* 🔵 آیتم‌ها */
     .book-item{
       background-color:#28A745;
       padding:15px;margin:10px 0;border-radius:8px;
@@ -75,41 +75,42 @@
     </li>
   </ul>
 
-<!-- 📊 نمایش شمارنده بازدید -->
-<div id="counter">
-  <span id="visit-count">در حال بارگذاری...</span>
-</div>
+  <!-- 📊 نمایش شمارنده بازدید -->
+  <div id="counter">
+    <span id="visit-count">در حال بارگذاری...</span>
+  </div>
 
-<!-- 📊 اسکریپت برای شمارش بازدید (با Backend خودت + fallback لوکال) -->
-<script>
-  async function loadVisits() {
-    const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
+  <!-- 📊 اسکریپت برای شمارش بازدید + ثبت لاگ -->
+  <script>
+    async function loadVisits() {
+      const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
 
-    try {
-      const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
-      const data = await res.json();
+      try {
+        // 1️⃣ شمارنده بازدید
+        const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
+        const data = await res.json();
 
-      if (!res.ok || typeof data.value !== 'number') {
-        throw new Error('bad response');
+        if (!res.ok || typeof data.value !== 'number') {
+          throw new Error('bad response');
+        }
+
+        document.getElementById('visit-count').textContent =
+          `بازدید این صفحه: ${data.value}`;
+
+        // 2️⃣ ثبت لاگ بازدید
+        await fetch("/api/log", { method: "POST" });
+
+      } catch (e) {
+        // 👇 اگر سرور در دسترس نبود، شمارنده‌ی لوکال
+        const k = `local_visits_${slug}`;
+        const n = (parseInt(localStorage.getItem(k) || '0', 10) + 1);
+        localStorage.setItem(k, n);
+        document.getElementById('visit-count').textContent =
+          `بازدید این صفحه (لوکال): ${n}`;
       }
-
-      document.getElementById('visit-count').textContent =
-        `بازدید این صفحه: ${data.value}`;
-    } catch (e) {
-      // 👇 اگر سرور در دسترس نبود، یه شمارنده‌ی تقریبی لوکال برای کاربر فعلی
-      const k = `local_visits_${slug}`;
-      const n = (parseInt(localStorage.getItem(k) || '0', 10) + 1);
-      localStorage.setItem(k, n);
-      document.getElementById('visit-count').textContent =
-        `بازدید این صفحه (لوکال): ${n}`;
     }
-  }
-  loadVisits();
-</script>
-
+    loadVisits();
+  </script>
 
 </body>
 </html>
-
-
-
