@@ -26,7 +26,9 @@ export default async function handler(req, res) {
     const incrData = await incr.json();
     const value = typeof incrData.result === "number" ? incrData.result : 0;
 
-    // 2) ثبت لاگ بازدید (اینجا انجام می شود، نه در فرانت)
+    // 2) ثبت لاگ بازدید
+    let logged = false;
+    let logError = null;
     try {
       const ua = req.headers["user-agent"] || "unknown";
       const now = new Date().toISOString();
@@ -45,7 +47,7 @@ export default async function handler(req, res) {
       });
 
       // Upstash LPUSH expects array of values => ["value"]
-      await fetch(`${url}/lpush/logs:${slug}`, {
+      const pushRes = await fetch(`${url}/lpush/logs:${slug}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -54,17 +56,23 @@ export default async function handler(req, res) {
         body: JSON.stringify([logString]),
       });
 
-      // فقط 500 رکورد آخر
+      if (!pushRes.ok) {
+        logError = await pushRes.text();
+      } else {
+        const pushed = await pushRes.json(); // {"result": new_length}
+        logged = Number.isFinite(pushed?.result);
+      }
+
+      // نگه داشتن 500 مورد آخر
       await fetch(`${url}/ltrim/logs:${slug}/0/499`, {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (e) {
-      // اگر لاگ ثبت نشد، عمداً ارور نمی‌دهیم تا شمارنده قطع نشود
-      console.error("log push failed:", e);
+      logError = String(e);
     }
 
     res.setHeader("Cache-Control", "no-store");
-    return res.status(200).json({ value });
+    return res.status(200).json({ value, logged, logError });
   } catch (err) {
     return res
       .status(500)
