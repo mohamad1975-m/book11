@@ -43,19 +43,19 @@ export default async function handler(req, res) {
     // اضافه به لیست لاگ‌ها
     const log = JSON.stringify({ time: now, ua, parsed });
 
-    await fetch(`${url}/lpush/logs:${slug}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify([log]),
-    });
+    await fetch(`${url}/lpush/logs`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify([log]),
+});
 
-    // فقط 500 رکورد آخر نگه داریم
-    await fetch(`${url}/ltrim/logs:${slug}/0/499`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+// فقط 500 رکورد آخر نگه داریم
+await fetch(`${url}/ltrim/logs/0/499`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
 
     // -------------------------
 
@@ -67,3 +67,4 @@ export default async function handler(req, res) {
       .json({ error: "Server error", details: String(err) });
   }
 }
+
