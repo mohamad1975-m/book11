@@ -4,7 +4,7 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { slug } = req.query || {};
+    const { slug = "index" } = req.query || {};
     const { ua } = req.body || {};
 
     const url = process.env.UPSTASH_REDIS_REST_URL;
@@ -12,19 +12,20 @@ export default async function handler(req, res) {
 
     if (!url || !token) {
       return res.status(500).json({
-        error: "Missing Upstash config (set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in Vercel).",
+        error:
+          "Missing Upstash config (set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in Vercel).",
       });
     }
 
-    // شیء لاگ جدید
+    // شیء لاگ جدید با مقادیر پیش‌فرض
     const logEntry = {
       slug: slug || "index",
       ua: ua || "-",
-      time: Date.now(),
+      time: Date.now(), // زمان درست به میلی‌ثانیه
     };
 
-    // ذخیره در یک کلید ثابت
-    const r = await fetch(`${url}/lpush/logs`, {
+    // ذخیره در لیست Redis (برای هر slug جداگانه)
+    const r = await fetch(`${url}/lpush/logs:${slug}`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(logEntry),
@@ -36,12 +37,14 @@ export default async function handler(req, res) {
     }
 
     // نگه داشتن فقط 200 تا آخرین بازدید
-    await fetch(`${url}/ltrim/logs/0/199`, {
+    await fetch(`${url}/ltrim/logs:${slug}/0/199`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     return res.status(200).json({ logged: true });
   } catch (err) {
-    return res.status(500).json({ error: "Server error", details: String(err) });
+    return res
+      .status(500)
+      .json({ error: "Server error", details: String(err) });
   }
 }
