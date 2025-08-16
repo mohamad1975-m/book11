@@ -1,132 +1,116 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>کتاب‌های کمک‌درسی تاریخ</title>
-    <style>
-        /* 🎨 تعریف فونت سفارشی ایران‌یکان */
-        @font-face {
-            font-family: 'iranyekan';
-            src: url('iranyekanweblight.woff') format('woff');
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کتاب‌های کمک‌درسی تاریخ</title>
+  <style>
+    /* 🎨 فونت ایران‌یکان */
+    @font-face {
+      font-family: 'iranyekan';
+      src: url('iranyekanweblight.woff') format('woff');
+    }
 
-        /* 🎨 تنظیمات کلی صفحه */
-        body {
-            font-family: 'iranyekan', sans-serif;
-            background-color: #0D1117; /* رنگ پس‌زمینه */
-            color: #fff; /* متن سفید */
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
+    /* 🎨 تنظیمات کلی صفحه (فقط بک‌گراند به #222222 برگشت) */
+    body{
+      font-family:'iranyekan',sans-serif;
+      background-color:#222222;   /* ← طبق درخواست شما */
+      color:#fff;
+      margin:0;
+      padding:0;
+      text-align:center;
+    }
 
-        /* 🟢 هدر بالای صفحه */
-        header {
-            background-color: #008CBA; /* رنگ هدر */
-            color: white;
-            padding: 20px;
-            font-size: 22px;
-            font-weight: bold;
-        }
+    /* 🟢 هدر (دست‌نخورده) */
+    header{
+      background-color:#1C93E3;
+      color:#fff;
+      padding:20px;
+      font-size:22px;
+      font-weight:bold;
+    }
 
-        /* 📚 تنظیمات لیست کتاب‌ها */
-        .book-list {
-            max-width: 500px;
-            margin: 30px auto;
-            padding: 0;
-            list-style: none;
-        }
+    /* 📚 لیست کتاب‌ها */
+    .book-list{max-width:500px;margin:30px auto;padding:0;list-style:none}
 
-        /* 🔵 استایل هر گزینه کتاب */
-        .book-item {
-            background-color: #238636; /* رنگ گزینه‌ها */
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    /* 🔵 آیتم‌ها (دست‌نخورده) */
+    .book-item{
+      background-color:#28A745;
+      padding:15px;margin:10px 0;border-radius:8px;
+      box-shadow:0 2px 5px rgba(0,0,0,.3);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .book-item:hover{transform:translateY(-3px);box-shadow:0 4px 12px rgba(0,0,0,.5)}
+    .book-item a{text-decoration:none;color:#fff;font-weight:bold}
 
-        /* ✨ افکت هاور */
-        .book-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
+    /* 📱 ریسپانسیو */
+    @media (max-width:500px){
+      header{font-size:18px}
+      .book-item{font-size:14px}
+    }
 
-        /* 🔗 استایل لینک */
-        .book-item a {
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        /* 📱 ریسپانسیو */
-        @media (max-width: 500px) {
-            header {
-                font-size: 18px;
-            }
-            .book-item {
-                font-size: 14px;
-            }
-        }
-
-        /* 📊 استایل شمارنده */
-        #counter {
-            margin: 30px 0;
-            font-size: 16px;
-            color: #ccc;
-        }
-    </style>
+    /* 📊 شمارنده */
+    #counter{margin:30px 0;font-size:16px;color:#ccc}
+  </style>
 </head>
 <body>
 
-    <!-- 🟢 شروع هدر -->
-    <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
-    <!-- 🔴 پایان هدر -->
+  <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
 
-    <!-- 📖 لیست کتاب‌ها -->
-    <ul class="book-list">
-        <li class="book-item">
-            <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">
-                ماجرای بیست – خیلی سبز
-            </a>
-        </li>
+  <ul class="book-list">
+    <li class="book-item">
+      <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">
+        ماجرای بیست – خیلی سبز
+      </a>
+    </li>
+    <li class="book-item">
+      <a href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">
+        ماجراهای من و درسام – خیلی سبز
+      </a>
+    </li>
+    <li class="book-item">
+      <a href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">
+        شب امتحان – خیلی سبز
+      </a>
+    </li>
+  </ul>
 
-        <li class="book-item">
-            <a href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">
-                ماجراهای من و درسام – خیلی سبز
-            </a>
-        </li>
+  <!-- 📊 شمارنده بازدید -->
+  <div id="counter">
+    <span id="visit-count">در حال بارگذاری...</span>
+  </div>
 
-        <li class="book-item">
-            <a href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">
-                شب امتحان – خیلی سبز
-            </a>
-        </li>
-    </ul>
-    <!-- 🔴 پایان لیست کتاب‌ها -->
+  <script>
+    // نام‌فضا ثابت؛ کلید از مسیر صفحه ساخته می‌شود (برای صفحات بعدی، مستقل می‌شود)
+    const NAMESPACE = 'book11-one';
+    const KEY = (location.pathname.replace(/[^\w]+/g,'_') || 'index');
 
-    <!-- 📊 شمارنده بازدید -->
-    <div id="counter">
-        <span id="visit-count">در حال بارگذاری...</span>
-    </div>
-
-    <!-- 📊 اسکریپت برای شمارش بازدید -->
-    <script>
-      async function loadVisits() {
-        try {
-          const res = await fetch('https://api.countapi.xyz/hit/book11-one.vercel.app/visits');
+    async function hitCount(){
+      const urls = [
+        `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`,
+        `https://countapi.xyz/hit/${NAMESPACE}/${KEY}`
+      ];
+      for (const url of urls){
+        try{
+          const res = await fetch(url, {cache:'no-store'});
+          if(!res.ok) continue;
           const data = await res.json();
-          document.getElementById('visit-count').textContent =
-            `بازدید این صفحه: ${data.value}`;
-        } catch (e) {
-          document.getElementById('visit-count').textContent =
-            "خطا در دریافت آمار بازدید 😕";
-        }
+          if (typeof data.value === 'number') return data.value;
+        }catch(e){ /* امتحان بعدی */ }
       }
-      loadVisits();
-    </script>
+      throw new Error('all endpoints failed');
+    }
+
+    (async ()=>{
+      const el = document.getElementById('visit-count');
+      try{
+        const value = await hitCount();
+        el.textContent = `بازدید این صفحه: ${value}`;
+      }catch(e){
+        el.textContent = 'خطا در دریافت آمار بازدید 😕';
+      }
+    })();
+  </script>
 
 </body>
 </html>
