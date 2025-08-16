@@ -26,31 +26,38 @@
     <tbody id="logs-body"></tbody>
   </table>
 
-  <script>
-    async function loadLogs() {
-      try {
-        const res = await fetch("/api/logs"); // همون API که ساختیم
-        const data = await res.json();
+<script>
+  async function loadLogs() {
+    try {
+      const res = await fetch("/api/logs"); 
+      const data = await res.json();
 
-        const tbody = document.getElementById("logs-body");
-        tbody.innerHTML = "";
+      const tbody = document.getElementById("logs-body");
+      tbody.innerHTML = "";
 
-        data.logs.forEach(log => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${new Date(log.time).toLocaleString()}</td>
-            <td>${log.parsed.split(" - ")[0]}</td>
-            <td>${log.parsed.split(" - ")[1]}</td>
-            <td>${log.ua}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } catch (e) {
-        console.error("خطا در دریافت لاگ:", e);
+      if (!data.logs || data.logs.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='4'>هیچ لاگی پیدا نشد</td></tr>";
+        return;
       }
-    }
 
-    loadLogs();
-  </script>
-</body>
+      data.logs.forEach(log => {
+        const [os, browser] = log.parsed ? log.parsed.split(" - ") : ["نامشخص", "نامشخص"];
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${new Date(log.time).toLocaleString("fa-IR")}</td>
+          <td>${os}</td>
+          <td>${browser}</td>
+          <td>${log.ua}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (e) {
+      console.error("خطا در دریافت لاگ:", e);
+    }
+  }
+
+  loadLogs();
+</script>
+
 </html>
+
