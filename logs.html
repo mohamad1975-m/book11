@@ -76,9 +76,16 @@
         const tbody = document.querySelector('#logsTable tbody');
         tbody.innerHTML = '';
 
-        data.logs.forEach(log => {
+        (data.logs || []).forEach(item => {
+          let log = item;
+
+          // 🔹 لاگ ممکنه به صورت استرینگ داخل آرایه باشه یا آبجکت
           if (Array.isArray(log)) {
-            log = JSON.parse(log[0]);
+            try {
+              log = JSON.parse(log[0]);
+            } catch {
+              log = { raw: log };
+            }
           }
 
           const date = new Date(log.time);
