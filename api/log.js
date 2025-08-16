@@ -4,7 +4,8 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { slug = "index", ua } = JSON.parse(req.body || "{}");
+    const { slug = "index" } = req.query || {};
+    const { ua } = req.body || {};
 
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -16,20 +17,18 @@ export default async function handler(req, res) {
       });
     }
 
-    const log = {
-      time: new Date().toISOString(),
-      ua,
-      parsed: parseUA(ua),
+    // شیء لاگ جدید
+    const logEntry = {
+      slug,
+      ua: ua || null,
+      time: Date.now(),
     };
 
-    // push log into redis
+    // ذخیره در لیست Redis
     const r = await fetch(`${url}/lpush/logs:${slug}`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify([JSON.stringify(log)]),
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(logEntry),
     });
 
     if (!r.ok) {
@@ -37,18 +36,15 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Upstash error", details: txt });
     }
 
-    return res.status(200).json({ success: true, log });
+    // نگه داشتن فقط 50 تا
+    await fetch(`${url}/ltrim/logs:${slug}/0/49`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return res.status(200).json({ logged: true });
   } catch (err) {
     return res
       .status(500)
       .json({ error: "Server error", details: String(err) });
   }
-}
-
-function parseUA(ua) {
-  if (!ua) return "نامشخص - نامشخص";
-  if (ua.includes("Windows")) return "Windows - " + (ua.includes("Chrome") ? "Chrome" : "Other");
-  if (ua.includes("Android")) return "Android - " + (ua.includes("Chrome") ? "Chrome" : "Other");
-  if (ua.includes("iPhone")) return "iOS - " + (ua.includes("Safari") ? "Safari" : "Other");
-  return "نامشخص - نامشخص";
 }
