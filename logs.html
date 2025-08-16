@@ -1,123 +1,119 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>لیست بازدیدها</title>
-  <style>
-@font-face {
-  font-family: 'IranYekan';
-  src: url('./iranyekanweblight.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
 
-body {
-  font-family: 'IranYekan', sans-serif;
-}
+  <style>
+    @font-face {
+      font-family: 'IranYekan';
+      src: url('./iranyekanweblight.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
 
     body {
-      font-family: Tahoma, sans-serif;
-      background: #f7f7f7;
+      font-family: 'IranYekan', sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
       direction: rtl;
-      text-align: center;
     }
-    h2 {
-      margin: 20px 0;
-      color: #333;
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+
     table {
+      width: 100%;
       border-collapse: collapse;
-      margin: 20px auto;
-      width: 95%;
       background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
+
     th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
+      border-bottom: 1px solid #eee;
     }
+
     th {
-      background: #f1f1f1;
+      background: #f0f0f0;
       font-weight: bold;
     }
-    tr:nth-child(even) {
+
+    tr:hover {
       background: #fafafa;
     }
   </style>
 </head>
 <body>
-  <h2>📋 لیست بازدیدها</h2>
-  <table>
+  <h1>📋 لیست بازدیدها</h1>
+  <table id="logsTable">
     <thead>
       <tr>
         <th>⏰ زمان</th>
         <th>📱 دستگاه / سیستم عامل</th>
         <th>🌐 مرورگر</th>
-        <th>🔎 User-Agent کامل</th>
+        <th>🔍 User-Agent کامل</th>
       </tr>
     </thead>
-    <tbody id="logs-body">
-      <tr><td colspan="4">در حال بارگذاری...</td></tr>
-    </tbody>
+    <tbody></tbody>
   </table>
 
   <script>
-    async function loadLogs() {
-      const tbody = document.getElementById("logs-body");
-      tbody.innerHTML = "<tr><td colspan='4'>در حال بارگذاری...</td></tr>";
-
+    async function fetchLogs() {
       try {
-        const res = await fetch("https://book11-one.vercel.app/api/logs?slug=index");
+        const res = await fetch('/api/logs?slug=index');
         const data = await res.json();
+        const tbody = document.querySelector('#logsTable tbody');
+        tbody.innerHTML = '';
 
-        tbody.innerHTML = "";
-
-        data.logs.forEach(item => {
-          let log = item;
-
-          // اگر به صورت آرایه و استرینگ ذخیره شده باشه
+        data.logs.forEach(log => {
           if (Array.isArray(log)) {
-            try {
-              log = JSON.parse(log[0]);
-            } catch (e) {
-              console.error("خطا در parse لاگ:", e);
-              return;
-            }
+            log = JSON.parse(log[0]);
           }
 
-          const time = log.time ? new Date(log.time).toLocaleString("fa-IR") : "نامشخص";
-          let os = "نامشخص", browser = "نامشخص";
+          const date = new Date(log.time);
+          const formattedDate = isNaN(date.getTime())
+            ? 'Invalid Date'
+            : new Intl.DateTimeFormat('fa-IR', {
+                dateStyle: 'full',
+                timeStyle: 'medium'
+              }).format(date);
+
+          let os = 'نامشخص';
+          let browser = 'نامشخص';
 
           if (log.parsed) {
-            const parts = log.parsed.split(" - ");
-            os = parts[0] || "نامشخص";
-            browser = parts[1] || "نامشخص";
+            const parts = log.parsed.split(' - ');
+            os = parts[0] || 'نامشخص';
+            browser = parts[1] || 'نامشخص';
           }
 
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${time}</td>
-            <td>${os}</td>
-            <td>${browser}</td>
-            <td>${log.ua || "نامشخص"}</td>
+          const row = `
+            <tr>
+              <td>${formattedDate}</td>
+              <td>${os}</td>
+              <td>${browser}</td>
+              <td>${log.ua || 'undefined'}</td>
+            </tr>
           `;
-          tbody.appendChild(tr);
+          tbody.innerHTML += row;
         });
-
-        if (!tbody.innerHTML.trim()) {
-          tbody.innerHTML = "<tr><td colspan='4'>هیچ لاگی پیدا نشد</td></tr>";
-        }
-
       } catch (err) {
-        console.error("خطا در دریافت لاگ‌ها:", err);
-        tbody.innerHTML = "<tr><td colspan='4'>خطا در بارگذاری لاگ‌ها</td></tr>";
+        console.error('Error fetching logs:', err);
       }
     }
 
-    loadLogs();
+    fetchLogs();
   </script>
 </body>
 </html>
-
