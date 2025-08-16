@@ -1,6 +1,33 @@
-let count = 0;
+export default async function handler(req, res) {
+  try {
+    const { slug = 'index' } = req.query || {};
 
-export default function handler(req, res) {
-  count++;
-  res.status(200).json({ visits: count });
+    const url = process.env.UPSTASH_REDIS_REST_URL;
+    const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+    if (!url || !token) {
+      return res.status(500).json({
+        error: 'Missing Upstash config (set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in Vercel).'
+      });
+    }
+
+    // INCR visits:<slug>
+    const r = await fetch(`${url}/incr/visits:${slug}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+
+    if (!r.ok) {
+      const txt = await r.text();
+      return res.status(500).json({ error: 'Upstash error', details: txt });
+    }
+
+    const data = await r.json(); // { result: number }
+    const value = typeof data.result === 'number' ? data.result : data;
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ value });
+  } catch (err) {
+    return res.status(500).json({ error: 'Server error', details: String(err) });
+  }
 }
