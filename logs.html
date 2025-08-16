@@ -1,19 +1,42 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <title>لاگ بازدیدها</title>
+  <meta charset="UTF-8">
+  <title>لیست بازدیدها</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f7f7f7; padding:20px; }
-    h1 { color:#333; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; background:white; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background:#eee; }
-    tr:nth-child(even){ background:#f9f9f9; }
+    body {
+      font-family: Tahoma, sans-serif;
+      background: #f7f7f7;
+      direction: rtl;
+      text-align: center;
+    }
+    h2 {
+      margin: 20px 0;
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
+      width: 95%;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #f1f1f1;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background: #fafafa;
+    }
   </style>
 </head>
 <body>
-  <h1>📋 لیست بازدیدها</h1>
+  <h2>📋 لیست بازدیدها</h2>
   <table>
     <thead>
       <tr>
@@ -23,41 +46,65 @@
         <th>🔎 User-Agent کامل</th>
       </tr>
     </thead>
-    <tbody id="logs-body"></tbody>
+    <tbody id="logs-body">
+      <tr><td colspan="4">در حال بارگذاری...</td></tr>
+    </tbody>
   </table>
 
-<script>
-  async function loadLogs() {
-    try {
-      const res = await fetch("/api/logs"); 
-      const data = await res.json();
-
+  <script>
+    async function loadLogs() {
       const tbody = document.getElementById("logs-body");
-      tbody.innerHTML = "";
+      tbody.innerHTML = "<tr><td colspan='4'>در حال بارگذاری...</td></tr>";
 
-      if (!data.logs || data.logs.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='4'>هیچ لاگی پیدا نشد</td></tr>";
-        return;
+      try {
+        const res = await fetch("https://book11-one.vercel.app/api/logs?slug=index");
+        const data = await res.json();
+
+        tbody.innerHTML = "";
+
+        data.logs.forEach(item => {
+          let log = item;
+
+          // اگر به صورت آرایه و استرینگ ذخیره شده باشه
+          if (Array.isArray(log)) {
+            try {
+              log = JSON.parse(log[0]);
+            } catch (e) {
+              console.error("خطا در parse لاگ:", e);
+              return;
+            }
+          }
+
+          const time = log.time ? new Date(log.time).toLocaleString("fa-IR") : "نامشخص";
+          let os = "نامشخص", browser = "نامشخص";
+
+          if (log.parsed) {
+            const parts = log.parsed.split(" - ");
+            os = parts[0] || "نامشخص";
+            browser = parts[1] || "نامشخص";
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${time}</td>
+            <td>${os}</td>
+            <td>${browser}</td>
+            <td>${log.ua || "نامشخص"}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        if (!tbody.innerHTML.trim()) {
+          tbody.innerHTML = "<tr><td colspan='4'>هیچ لاگی پیدا نشد</td></tr>";
+        }
+
+      } catch (err) {
+        console.error("خطا در دریافت لاگ‌ها:", err);
+        tbody.innerHTML = "<tr><td colspan='4'>خطا در بارگذاری لاگ‌ها</td></tr>";
       }
-
-      data.logs.forEach(log => {
-        const [os, browser] = log.parsed ? log.parsed.split(" - ") : ["نامشخص", "نامشخص"];
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${new Date(log.time).toLocaleString("fa-IR")}</td>
-          <td>${os}</td>
-          <td>${browser}</td>
-          <td>${log.ua}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    } catch (e) {
-      console.error("خطا در دریافت لاگ:", e);
     }
-  }
 
-  loadLogs();
-</script>
-
+    loadLogs();
+  </script>
+</body>
 </html>
-
