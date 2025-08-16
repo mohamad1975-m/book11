@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>کتاب‌های کمک‌درسی تاریخ</title>
+  <title>کتاب‌های کمک‌درسی</title>
   <style>
     @font-face {
       font-family: 'iranyekan';
@@ -24,54 +24,36 @@
       font-size: 22px;
       font-weight: bold;
     }
-    .book-list {
-      max-width: 500px;
-      margin: 30px auto;
-      padding: 0;
-      list-style: none;
-    }
-    .book-item {
-      background-color: #28A745;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 8px;
+    .lesson-list {max-width: 500px; margin: 30px auto; padding: 0; list-style: none}
+    .lesson-item {
+      background-color: #17A2B8;
+      padding: 15px; margin: 10px 0; border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,.3);
       transition: transform .2s ease, box-shadow .2s ease;
     }
-    .book-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,.5);
-    }
-    .book-item a {
-      text-decoration: none;
-      color: #fff;
-      font-weight: bold;
-    }
+    .lesson-item:hover {transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,.5)}
+    .lesson-item a {text-decoration: none; color: #fff; font-weight: bold}
     @media (max-width:500px) {
       header {font-size: 18px}
-      .book-item {font-size: 14px}
+      .lesson-item {font-size: 14px}
     }
-    #counter {
-      margin: 30px 0;
-      font-size: 18px;
-      color: #ccc;
-    }
+    #counter {margin: 30px 0; font-size: 18px; color: #ccc}
   </style>
 </head>
 <body>
 
-  <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
+  <header>📚 لیست درس‌ها</header>
 
-  <ul class="book-list">
-    <li class="book-item">
-      <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">ماجرای بیست – خیلی سبز</a>
-    </li>
-    <li class="book-item">
-      <a href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">ماجراهای من و درسام – خیلی سبز</a>
-    </li>
-    <li class="book-item">
-      <a href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">شب امتحان – خیلی سبز</a>
-    </li>
+  <ul class="lesson-list">
+    <li class="lesson-item"><a href="tarikh.html">تاریخ</a></li>
+    <li class="lesson-item"><a href="geography.html">جغرافیا</a></li>
+    <li class="lesson-item"><a href="fonoon.html">فنون ادبی</a></li>
+    <li class="lesson-item"><a href="arabi.html">عربی</a></li>
+    <li class="lesson-item"><a href="ravanshenasi.html">روان‌شناسی</a></li>
+    <li class="lesson-item"><a href="riyazi.html">ریاضی</a></li>
+    <li class="lesson-item"><a href="falsafe.html">فلسفه</a></li>
+    <li class="lesson-item"><a href="farsi.html">فارسی</a></li>
+    <li class="lesson-item"><a href="jame.html">جامعه‌شناسی</a></li>
   </ul>
 
   <div id="counter">
@@ -81,24 +63,19 @@
   <script>
     async function loadVisits() {
       const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
-
       try {
-        // ثبت بازدید جدید
-        await fetch('/api/logs', {
+        // دریافت شمارنده
+        const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
+        const data = await res.json();
+        if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
+        document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
+
+        // ثبت لاگ جدید
+        await fetch(`/api/log?slug=${encodeURIComponent(slug)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slug })
+          body: JSON.stringify({ ua: navigator.userAgent })
         });
-
-        // دریافت همه لاگ‌ها
-        const res = await fetch('/api/logs', { cache: 'no-store' });
-        const data = await res.json();
-
-        if (!res.ok || !data.logs) throw new Error('bad response');
-
-        // شمارش تعداد بازدیدهای این صفحه
-        const count = data.logs.filter(l => l.slug === slug).length;
-        document.getElementById('visit-count').textContent = `بازدید این صفحه: ${count}`;
 
       } catch (e) {
         document.getElementById('visit-count').textContent = 'خطا در دریافت شمارنده';
