@@ -107,21 +107,23 @@
     </ul>
     <!-- 🔴 پایان لیست کتاب‌ها -->
 
-    <!-- 📊 شمارنده بازدید -->
-    <p id="counter">بازدید این صفحه: در حال بارگذاری...</p>
+ <!-- 📊 اسکریپت برای شمارش بازدید -->
+<script>
+  async function loadVisits() {
+    try {
+      const res = await fetch('/api/visits');
+      const data = await res.json();
+      document.getElementById('visit-count').textContent =
+        `بازدید این صفحه: ${data.visits}`;
+    } catch (e) {
+      document.getElementById('visit-count').textContent =
+        "خطا در دریافت آمار بازدید 😕";
+    }
+  }
+  loadVisits();
+</script>
 
-    <script>
-        fetch('https://api.countapi.xyz/hit/tarikh-books/visits')
-            .then(res => res.json())
-            .then(res => {
-                document.getElementById('counter').innerText =
-                    "👁️ تعداد بازدید این صفحه: " + res.value;
-            })
-            .catch(() => {
-                document.getElementById('counter').innerText =
-                    "خطا در دریافت آمار بازدید 😕";
-            });
-    </script>
 
 </body>
 </html>
+
