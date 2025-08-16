@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <title>لاگ بازدیدها</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f7f7f7; padding:20px; }
+    h1 { color:#333; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; background:white; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background:#eee; }
+    tr:nth-child(even){ background:#f9f9f9; }
+  </style>
+</head>
+<body>
+  <h1>📋 لیست بازدیدها</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>⏰ زمان</th>
+        <th>📱 دستگاه / سیستم عامل</th>
+        <th>🌐 مرورگر</th>
+        <th>🔎 User-Agent کامل</th>
+      </tr>
+    </thead>
+    <tbody id="logs-body"></tbody>
+  </table>
+
+  <script>
+    async function loadLogs() {
+      try {
+        const res = await fetch("/api/logs"); // همون API که ساختیم
+        const data = await res.json();
+
+        const tbody = document.getElementById("logs-body");
+        tbody.innerHTML = "";
+
+        data.logs.forEach(log => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${new Date(log.time).toLocaleString()}</td>
+            <td>${log.parsed.split(" - ")[0]}</td>
+            <td>${log.parsed.split(" - ")[1]}</td>
+            <td>${log.ua}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("خطا در دریافت لاگ:", e);
+      }
+    }
+
+    loadLogs();
+  </script>
+</body>
+</html>
