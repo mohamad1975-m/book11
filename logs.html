@@ -11,8 +11,8 @@
     }
     body {
       font-family: 'iranyekan', sans-serif;
-      background-color: #111;
-      color: #eee;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #f1f1f1;
       margin: 0;
       padding: 20px;
     }
@@ -20,42 +20,60 @@
       background: #1C93E3;
       color: white;
       padding: 15px;
-      border-radius: 8px;
-      font-size: 20px;
+      border-radius: 12px;
+      font-size: 22px;
       font-weight: bold;
       text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    }
+    .card {
+      background: #1e1e2f;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    }
+    .card h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: #1C93E3;
+    }
+    .card p {
+      margin: 6px 0;
+      font-size: 15px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background: #222;
-      border-radius: 8px;
+      background: #252540;
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.4);
     }
     th, td {
-      padding: 10px;
-      border: 1px solid #444;
+      padding: 12px;
+      border: 1px solid #333;
       text-align: center;
+      font-size: 14px;
     }
     th {
-      background: #333;
+      background: #303060;
+      color: #1C93E3;
+      font-weight: bold;
     }
     tr:nth-child(even) {
-      background: #2a2a2a;
+      background: #2e2e4d;
     }
-    #stats {
-      margin-top: 20px;
-      padding: 15px;
-      background: #1e1e1e;
-      border-radius: 8px;
+    tr:hover {
+      background: #3c3c5c;
     }
   </style>
 </head>
 <body>
   <header>📊 مدیریت بازدیدها</header>
 
-  <div id="stats">در حال بارگذاری آمار...</div>
+  <div id="stats" class="card">در حال بارگذاری آمار...</div>
 
   <table id="logs-table">
     <thead>
@@ -90,9 +108,9 @@
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${i + 1}</td>
-            <td>${log.slug}</td>
+            <td>${log.slug || '-'}</td>
             <td>${formatDate(log.time)}</td>
-            <td>${log.ua ? log.ua.slice(0, 30) : '-'}</td>
+            <td>${log.ua ? log.ua.slice(0, 40) : '-'}</td>
           `;
           tbody.appendChild(tr);
         });
@@ -101,12 +119,13 @@
         const total = logs.length;
         const byPage = {};
         logs.forEach(l => {
-          byPage[l.slug] = (byPage[l.slug] || 0) + 1;
+          byPage[l.slug || '-'] = (byPage[l.slug || '-'] || 0) + 1;
         });
 
-        let statsHtml = `<b>تعداد کل بازدیدها:</b> ${total}<br>`;
+        let statsHtml = `<h3>آمار کلی</h3>`;
+        statsHtml += `<p><b>🔹 تعداد کل بازدیدها:</b> ${total}</p>`;
         for (const slug in byPage) {
-          statsHtml += `صفحه <b>${slug}</b>: ${byPage[slug]} بازدید<br>`;
+          statsHtml += `<p>📄 صفحه <b>${slug}</b>: ${byPage[slug]} بازدید</p>`;
         }
 
         document.getElementById("stats").innerHTML = statsHtml;
