@@ -1,15 +1,73 @@
-import Redis from "ioredis";
-
-const redis = new Redis(process.env.REDIS_URL);
-
 export default async function handler(req, res) {
-  const { slug } = req.query;
-  if (!slug) return res.status(400).json({ error: "slug required" });
+  try {
+    const { slug = "index" } = req.query || {};
 
-  const key = `visits:${slug}`;
+    const url = process.env.UPSTASH_REDIS_REST_URL;
+    const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-  // افزایش شمارنده
-  const count = await redis.incr(key);
+    if (!url || !token) {
+      return res.status(500).json({
+        error:
+          "Missing Upstash config (set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in Vercel).",
+      });
+    }
 
-  res.status(200).json({ value: count });
+    // 1) افزایش شمارنده بازدید
+    const incr = await fetch(`${url}/incr/pageviews:${slug}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+
+    if (!incr.ok) {
+      const t = await incr.text();
+      return res.status(500).json({ error: "Upstash incr error", details: t });
+    }
+
+    const incrData = await incr.json();
+    const value = typeof incrData.result === "number" ? incrData.result : 0;
+
+    // 2) ثبت لاگ بازدید (اینجا انجام می شود، نه در فرانت)
+    try {
+      const ua = req.headers["user-agent"] || "unknown";
+      const now = new Date().toISOString();
+
+      const os =
+        (/Android|iPhone|iPad|Windows|Mac OS X|Linux/i.exec(ua)?.[0] ||
+          "Other");
+      const br =
+        (/Edg|Chrome|Safari|Firefox/i.exec(ua)?.[0] || "Other");
+
+      // رشته JSON به عنوان مقدار در لیست
+      const logString = JSON.stringify({
+        time: now,
+        ua,
+        parsed: `${os} - ${br}`,
+      });
+
+      // Upstash LPUSH expects array of values => ["value"]
+      await fetch(`${url}/lpush/logs:${slug}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([logString]),
+      });
+
+      // فقط 500 رکورد آخر
+      await fetch(`${url}/ltrim/logs:${slug}/0/499`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (e) {
+      // اگر لاگ ثبت نشد، عمداً ارور نمی‌دهیم تا شمارنده قطع نشود
+      console.error("log push failed:", e);
+    }
+
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({ value });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Server error", details: String(err) });
+  }
 }
