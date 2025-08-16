@@ -69,6 +69,14 @@
   </table>
 
   <script>
+    async function addVisit() {
+      try {
+        await fetch('/api/visit?slug=index');
+      } catch (e) {
+        console.error("خطا در ثبت بازدید:", e);
+      }
+    }
+
     async function fetchLogs() {
       try {
         const res = await fetch('/api/logs?slug=index');
@@ -79,7 +87,6 @@
         (data.logs || []).forEach(item => {
           let log = item;
 
-          // 🔹 لاگ ممکنه به صورت استرینگ داخل آرایه باشه یا آبجکت
           if (Array.isArray(log)) {
             try {
               log = JSON.parse(log[0]);
@@ -113,14 +120,18 @@
               <td>${log.ua || 'undefined'}</td>
             </tr>
           `;
-          tbody.innerHTML += row;
+          // ردیف جدید بیاد بالا
+          tbody.innerHTML = row + tbody.innerHTML;
         });
       } catch (err) {
         console.error('Error fetching logs:', err);
       }
     }
 
-    fetchLogs();
+    (async () => {
+      await addVisit();  // اول بازدید ثبت میشه
+      await fetchLogs(); // بعد جدول آپدیت میشه
+    })();
   </script>
 </body>
 </html>
