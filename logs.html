@@ -76,11 +76,8 @@
         const tbody = document.querySelector('#logsTable tbody');
         tbody.innerHTML = '';
 
-        // آخرین‌ها اول نمایش داده بشن
-        data.logs.reverse().forEach(log => {
-          if (Array.isArray(log)) {
-            log = JSON.parse(log[0]);
-          }
+        data.logs.forEach(log => {
+          if (Array.isArray(log)) log = JSON.parse(log[0]);
 
           const date = new Date(log.time);
           const formattedDate = isNaN(date.getTime())
