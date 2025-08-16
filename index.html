@@ -78,34 +78,54 @@
     <span id="visit-count">در حال بارگذاری...</span>
   </div>
 
-  <script>
-    async function loadVisits() {
-      const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
+<script>
+  async function loadVisits() {
+    const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
 
-      try {
-        // ثبت بازدید جدید
-        await fetch('/api/logs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slug })
-        });
+    try {
+      // شمارنده
+      const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
+      const data = await res.json();
+      if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
+      document.getElementById('visit-count')?.textContent = `بازدید این صفحه: ${data.value}`;
 
-        // دریافت همه لاگ‌ها
-        const res = await fetch('/api/logs', { cache: 'no-store' });
-        const data = await res.json();
-
-        if (!res.ok || !data.logs) throw new Error('bad response');
-
-        // شمارش تعداد بازدیدهای این صفحه
-        const count = data.logs.filter(l => l.slug === slug).length;
-        document.getElementById('visit-count').textContent = `بازدید این صفحه: ${count}`;
-
-      } catch (e) {
-        document.getElementById('visit-count').textContent = 'خطا در دریافت شمارنده';
-        console.error(e);
+      // ساخت payload برای لاگ
+      let uaCH = null;
+      if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+        try {
+          const high = await navigator.userAgentData.getHighEntropyValues([
+            "platform", "platformVersion", "model", "uaFullVersion", "bitness", "architecture", "fullVersionList", "mobile"
+          ]);
+          uaCH = {
+            platform: high.platform,
+            platformVersion: high.platformVersion,
+            model: high.model || null,
+            mobile: !!high.mobile,
+            arch: high.architecture || null,
+            bitness: high.bitness || null,
+            brands: (high.fullVersionList || []).map(b => `${b.brand} ${b.version}`).join(", ")
+          };
+        } catch (e) {}
       }
+
+      // ثبت لاگ
+      await fetch(`/api/log?slug=${encodeURIComponent(slug)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ua: navigator.userAgent,
+          uaCH
+        })
+      });
+
+    } catch (e) {
+      document.getElementById('visit-count')?.textContent = 'خطا در دریافت شمارنده';
+      console.error(e);
     }
-    loadVisits();
-  </script>
+  }
+  loadVisits();
+</script>
+
 </body>
 </html>
+
