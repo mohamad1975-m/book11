@@ -5,95 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>کتاب‌های کمک‌درسی تاریخ</title>
     <style>
-        /* 🎨 تنظیمات کلی صفحه */
+        /* 🎨 تعریف فونت سفارشی ایران‌یکان */
         @font-face {
-    font-family: 'iranyekan';
-    src: url('iranyekanweblight.woff') format('woff');
+            font-family: 'iranyekan'; /* اسم فونت */
+            src: url('iranyekanweblight.woff') format('woff'); /* فایل فونت */
         }
+
+        /* 🎨 تنظیمات کلی صفحه */
         body {
-            font-family: 'Vazir', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            margin: 0;
+            font-family: 'iranyekan', sans-serif; /* فونت اصلی همه نوشته‌ها */
+            background-color: #f5f5f5; /* رنگ پس‌زمینه خاکستری روشن */
+            color: #333; /* رنگ نوشته‌ها تیره */
+            margin: 0; /* حذف فاصله دور صفحه */
             padding: 0;
-            text-align: center;
+            text-align: center; /* وسط‌چین کردن متن‌ها */
         }
 
-        /* 🟢 هدر صفحه */
+        /* 🟢 هدر بالای صفحه */
         header {
-            background-color: #4a90e2;
-            color: white;
-            padding: 20px;
-            font-size: 22px;
-            font-weight: bold;
+            background-color: #4a90e2; /* پس‌زمینه آبی */
+            color: white; /* رنگ نوشته سفید */
+            padding: 20px; /* فاصله داخلی */
+            font-size: 22px; /* اندازه متن */
+            font-weight: bold; /* بولد شدن نوشته */
         }
 
-        /* 📚 لیست کتاب‌ها */
+        /* 📚 تنظیمات لیست کتاب‌ها */
         .book-list {
-            max-width: 500px;
-            margin: 30px auto;
+            max-width: 500px; /* بیشترین عرض لیست */
+            margin: 30px auto; /* فاصله بالا-پایین ۳۰px و وسط‌چین افقی */
             padding: 0;
-            list-style: none;
+            list-style: none; /* حذف علامت پیش‌فرض لیست */
         }
 
-        /* 🔵 استایل هر گزینه کتاب */
+        /* 🔵 استایل هر گزینه (هر کتاب) */
         .book-item {
-          
-            background-color: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background-color: white; /* پس‌زمینه سفید */
+            padding: 15px; /* فاصله داخلی */
+            margin: 10px 0; /* فاصله بین گزینه‌ها */
+            border-radius: 8px; /* گوشه‌های گرد */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* سایه دور کادر */
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* انیمیشن هنگام هاور */
         }
 
-        /* افکت هاور برای گزینه‌ها */
+        /* ✨ افکت هاور (وقتی موس روی گزینه بره) */
         .book-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-3px); /* کمی به بالا بیاد */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* سایه پررنگ‌تر بشه */
         }
 
-        /* 🔗 لینک کتاب‌ها */
+        /* 🔗 استایل لینک داخل گزینه‌ها */
         .book-item a {
-            text-decoration: none;
-            color: #4a90e2;
-            font-weight: bold;
+            text-decoration: none; /* حذف خط زیر متن */
+            color: #4a90e2; /* رنگ آبی لینک */
+            font-weight: bold; /* متن پررنگ */
         }
 
-        /* 📱 ریسپانسیو برای موبایل */
+        /* 📱 ریسپانسیو (برای موبایل و صفحه کوچیک) */
         @media (max-width: 500px) {
             header {
-                font-size: 18px; /* کوچیک شدن فونت هدر در موبایل */
+                font-size: 18px; /* کوچیک‌تر شدن فونت هدر */
             }
             .book-item {
-                font-size: 14px; /* کوچیک شدن فونت گزینه‌ها در موبایل */
+                font-size: 14px; /* کوچیک‌تر شدن فونت گزینه‌ها */
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🟢 شروع هدر -->
+    <!-- 🟢 شروع بخش هدر (عنوان اصلی) -->
     <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
     <!-- 🔴 پایان هدر -->
 
     <!-- 📖 شروع لیست کتاب‌ها -->
     <ul class="book-list">
-        <!-- کتاب 1 -->
+
+        <!-- ✅ کتاب 1 -->
         <li class="book-item">
             <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">
                 ماجرای بیست – خیلی سبز
             </a>
         </li>
 
-        <!-- کتاب 2 -->
+        <!-- ✅ کتاب 2 -->
         <li class="book-item">
             <a href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ" target="_blank">
                 ماجراهای من و درسام – خیلی سبز
             </a>
         </li>
 
-        <!-- کتاب 3 -->
+        <!-- ✅ کتاب 3 -->
         <li class="book-item">
             <a href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html" target="_blank">
                 شب امتحان – خیلی سبز
@@ -104,6 +106,3 @@
 
 </body>
 </html>
-
-
-
