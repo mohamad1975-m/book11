@@ -7,80 +7,79 @@
     <style>
         /* 🎨 تعریف فونت سفارشی ایران‌یکان */
         @font-face {
-            font-family: 'iranyekan'; /* اسم فونت */
-            src: url('iranyekanweblight.woff') format('woff'); /* فایل فونت */
+            font-family: 'iranyekan';
+            src: url('iranyekanweblight.woff') format('woff');
         }
 
         /* 🎨 تنظیمات کلی صفحه */
         body {
-            font-family: 'iranyekan', sans-serif; /* فونت اصلی همه نوشته‌ها */
-            background-color: #f5f5f5; /* رنگ پس‌زمینه خاکستری روشن */
-            color: #333; /* رنگ نوشته‌ها تیره */
-            margin: 0; /* حذف فاصله دور صفحه */
+            font-family: 'iranyekan', sans-serif;
+            background-color: #0D1117; /* تغییر به رنگ تیره */
+            color: #fff; /* متن سفید برای خوانایی */
+            margin: 0;
             padding: 0;
-            text-align: center; /* وسط‌چین کردن متن‌ها */
+            text-align: center;
         }
 
         /* 🟢 هدر بالای صفحه */
         header {
-            background-color: #4a90e2; /* پس‌زمینه آبی */
-            color: white; /* رنگ نوشته سفید */
-            padding: 20px; /* فاصله داخلی */
-            font-size: 22px; /* اندازه متن */
-            font-weight: bold; /* بولد شدن نوشته */
+            background-color: #008CBA; /* تغییر رنگ هدر */
+            color: white;
+            padding: 20px;
+            font-size: 22px;
+            font-weight: bold;
         }
 
         /* 📚 تنظیمات لیست کتاب‌ها */
         .book-list {
-            max-width: 500px; /* بیشترین عرض لیست */
-            margin: 30px auto; /* فاصله بالا-پایین ۳۰px و وسط‌چین افقی */
+            max-width: 500px;
+            margin: 30px auto;
             padding: 0;
-            list-style: none; /* حذف علامت پیش‌فرض لیست */
+            list-style: none;
         }
 
         /* 🔵 استایل هر گزینه (هر کتاب) */
         .book-item {
-            background-color: white; /* پس‌زمینه سفید */
-            padding: 15px; /* فاصله داخلی */
-            margin: 10px 0; /* فاصله بین گزینه‌ها */
-            border-radius: 8px; /* گوشه‌های گرد */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* سایه دور کادر */
-            transition: transform 0.2s ease, box-shadow 0.2s ease; /* انیمیشن هنگام هاور */
+            background-color: #238636; /* تغییر رنگ گزینه‌ها */
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* سایه کمی پررنگ‌تر چون بک‌گراند تیره شده */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         /* ✨ افکت هاور (وقتی موس روی گزینه بره) */
         .book-item:hover {
-            transform: translateY(-3px); /* کمی به بالا بیاد */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* سایه پررنگ‌تر بشه */
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         /* 🔗 استایل لینک داخل گزینه‌ها */
         .book-item a {
-            text-decoration: none; /* حذف خط زیر متن */
-            color: #4a90e2; /* رنگ آبی لینک */
-            font-weight: bold; /* متن پررنگ */
+            text-decoration: none;
+            color: #fff; /* لینک سفید برای خوانایی روی سبز */
+            font-weight: bold;
         }
 
         /* 📱 ریسپانسیو (برای موبایل و صفحه کوچیک) */
         @media (max-width: 500px) {
             header {
-                font-size: 18px; /* کوچیک‌تر شدن فونت هدر */
+                font-size: 18px;
             }
             .book-item {
-                font-size: 14px; /* کوچیک‌تر شدن فونت گزینه‌ها */
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🟢 شروع بخش هدر (عنوان اصلی) -->
+    <!-- 🟢 شروع بخش هدر -->
     <header>📚 کتاب‌های کمک‌درسی تاریخ</header>
     <!-- 🔴 پایان هدر -->
 
     <!-- 📖 شروع لیست کتاب‌ها -->
     <ul class="book-list">
-
         <!-- ✅ کتاب 1 -->
         <li class="book-item">
             <a href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k" target="_blank">
