@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📑 لیست بازدیدها</title>
+  <title>مدیریت بازدیدها</title>
   <style>
     @font-face {
       font-family: 'iranyekan';
@@ -11,151 +11,114 @@
     }
     body {
       font-family: 'iranyekan', sans-serif;
-      background: #111;
-      color: #fff;
+      background-color: #111;
+      color: #eee;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      padding: 20px;
     }
     header {
       background: #1C93E3;
+      color: white;
       padding: 15px;
-      font-size: 22px;
+      border-radius: 8px;
+      font-size: 20px;
       font-weight: bold;
+      text-align: center;
     }
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 20px;
-    }
-    .card {
-      flex: 1;
-      max-width: 250px;
-      background: #222;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 6px rgba(0,0,0,.5);
-    }
-    .card h2 {margin: 0; font-size: 28px; color: #1C93E3;}
-    .card p {margin: 5px 0 0; font-size: 14px; color: #aaa;}
-
     table {
-      width: 95%;
-      margin: 20px auto;
+      width: 100%;
       border-collapse: collapse;
-      background: #1a1a1a;
-      border-radius: 10px;
+      margin-top: 20px;
+      background: #222;
+      border-radius: 8px;
       overflow: hidden;
-    }
-    thead {
-      background: #1C93E3;
-      color: #fff;
     }
     th, td {
       padding: 10px;
+      border: 1px solid #444;
       text-align: center;
-      border-bottom: 1px solid #333;
     }
-    tr:nth-child(even) {background: #222;}
-    tr:hover {background: #333;}
+    th {
+      background: #333;
+    }
+    tr:nth-child(even) {
+      background: #2a2a2a;
+    }
+    #stats {
+      margin-top: 20px;
+      padding: 15px;
+      background: #1e1e1e;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
-  <header>📑 لیست بازدیدها</header>
+  <header>📊 مدیریت بازدیدها</header>
 
-  <div class="stats">
-    <div class="card">
-      <h2 id="today-count">۰</h2>
-      <p>بازدید امروز</p>
-    </div>
-    <div class="card">
-      <h2 id="total-count">۰</h2>
-      <p>کل بازدیدها</p>
-    </div>
-    <div class="card">
-      <h2 id="top-page">-</h2>
-      <p>محبوب‌ترین صفحه</p>
-    </div>
-  </div>
+  <div id="stats">در حال بارگذاری آمار...</div>
 
   <table id="logs-table">
     <thead>
       <tr>
+        <th>#</th>
         <th>صفحه</th>
         <th>زمان</th>
-        <th>User-Agent</th>
-        <th>دستگاه</th>
+        <th>مرورگر</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
   <script>
-    let logsData = [];
-
-    function detectDevice(ua) {
-      if (!ua) return '-';
-      ua = ua.toLowerCase();
-      if (ua.includes('mobile')) return '📱 موبایل';
-      if (ua.includes('tablet')) return '📲 تبلت';
-      return '💻 دسکتاپ';
-    }
-
-    function formatDate(ts) {
-      if (!ts) return '-';
-      // اگر timestamp خام بود
-      if (!isNaN(ts)) {
-        const d = new Date(parseInt(ts));
-        return d.toLocaleString('fa-IR');
-      }
-      // اگر ISO بود
-      const d = new Date(ts);
-      return d.toLocaleString('fa-IR');
-    }
-
-    function renderTable() {
-      const tbody = document.querySelector('#logs-table tbody');
-      tbody.innerHTML = '';
-      logsData.forEach(log => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${log.slug || '-'}</td>
-          <td>${formatDate(log.time)}</td>
-          <td>${log.ua || '-'}</td>
-          <td>${detectDevice(log.ua)}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderStats() {
-      document.getElementById('total-count').textContent = logsData.length;
-
-      const today = new Date().toLocaleDateString('fa-IR');
-      const todayCount = logsData.filter(log =>
-        formatDate(log.time).startsWith(today)
-      ).length;
-      document.getElementById('today-count').textContent = todayCount;
-
-      const counts = {};
-      logsData.forEach(l => { if(l.slug) counts[l.slug] = (counts[l.slug]||0)+1; });
-      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
-      document.getElementById('top-page').textContent = top ? top[0] : '-';
+    function formatDate(isoString) {
+      const d = new Date(isoString);
+      return d.toLocaleString("fa-IR", { hour12: false });
     }
 
     async function loadLogs() {
       try {
         const res = await fetch('/api/logs', { cache: 'no-store' });
-        logsData = await res.json();
-        renderTable();
-        renderStats();
+        const data = await res.json();
+
+        if (!res.ok || !data.logs) throw new Error("bad response");
+
+        const logs = data.logs;
+        const tbody = document.querySelector("#logs-table tbody");
+        tbody.innerHTML = "";
+
+        logs.forEach((log, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${i + 1}</td>
+            <td>${log.slug}</td>
+            <td>${formatDate(log.time)}</td>
+            <td>${log.ua ? log.ua.slice(0, 30) : '-'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // 📊 نمایش آمار کلی
+        const total = logs.length;
+        const byPage = {};
+        logs.forEach(l => {
+          byPage[l.slug] = (byPage[l.slug] || 0) + 1;
+        });
+
+        let statsHtml = `<b>تعداد کل بازدیدها:</b> ${total}<br>`;
+        for (const slug in byPage) {
+          statsHtml += `صفحه <b>${slug}</b>: ${byPage[slug]} بازدید<br>`;
+        }
+
+        document.getElementById("stats").innerHTML = statsHtml;
+
       } catch (e) {
-        console.error('خطا در بارگذاری لاگ‌ها:', e);
+        console.error(e);
+        document.getElementById("stats").textContent = "خطا در بارگذاری لاگ‌ها";
       }
     }
 
     loadLogs();
+    setInterval(loadLogs, 5000); // هر ۵ ثانیه یکبار رفرش
   </script>
 </body>
 </html>
