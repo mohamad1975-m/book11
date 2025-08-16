@@ -12,8 +12,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // فقط خواندن 50 مورد آخر
     const r = await fetch(`${url}/lrange/logs:${slug}/0/49`, {
+      method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
