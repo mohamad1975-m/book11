@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>پنل مدیریت</title>
+  <style>
+    @font-face {
+      font-family: 'IranYekan';
+      src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.woff2') format('woff2');
+    }
+
+      body {
+       font-family: 'IranYekan', sans-serif;
+       background: linear-gradient(to bottom, #f0f9ff, #cbebff);
+         display: flex;
+      justify-content: center;
+      align-items: center;
+     height: 100vh;   /* ✅ اضافه شد */
+        margin: 0;       /* ✅ اضافه شد */
+      direction: rtl;
+        }
+        
+
+    .login-box, .panel {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      width: 400px;
+      text-align: center;
+    }
+
+    .login-box h2 {
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-family: inherit;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #0077ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-family: inherit;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #005ecc;
+    }
+
+    .comment {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      text-align: right;
+    }
+
+    .comment button {
+      background: red;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- فرم لاگین -->
+  <div class="login-box" id="loginBox">
+    <h2>ورود به پنل مدیریت</h2>
+    <input type="password" id="adminPass" placeholder="رمز عبور را وارد کنید">
+    <button onclick="login()">ورود</button>
+  </div>
+
+  <!-- پنل مدیریت -->
+  <div class="panel hidden" id="panel">
+    <h2>مدیریت نظرات کاربران</h2>
+    <div id="commentsList">در حال بارگذاری...</div>
+  </div>
+
+ <script>
+  async function login() {
+    const password = document.getElementById("password").value;
+
+    const res = await fetch(`/api/comments?admin=true&password=${password}`);
+    if (res.ok) {
+      const comments = await res.json();
+
+      // نمایش پنل مدیریت
+      document.body.innerHTML = `
+        <div style="font-family: IranYekan; padding: 20px; direction: rtl;">
+          <h2>پنل مدیریت</h2>
+          <ul id="comments-list">
+            ${comments.map(c => `
+              <li style="margin: 8px 0; padding: 6px; border: 1px solid #ccc; border-radius: 6px;">
+                <b>کتاب:</b> ${c.book}<br/>
+                <b>نظر:</b> ${c.text}
+                <button onclick="deleteComment('${c.id}')" style="margin-right: 10px; color: red;">حذف</button>
+              </li>
+            `).join("")}
+          </ul>
+        </div>
+      `;
+    } else {
+      alert("رمز اشتباه است!");
+    }
+  }
+
+  async function deleteComment(id) {
+    const res = await fetch(`/api/comments?id=${id}&password=${document.getElementById("password")?.value || prompt("رمز ادمین را وارد کنید:")}`, {
+      method: "DELETE"
+    });
+
+    if (res.ok) {
+      location.reload();
+    } else {
+      alert("خطا در حذف نظر");
+    }
+  }
+</script>
+</body>
+</html>
