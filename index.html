@@ -15,9 +15,13 @@
       padding: 0;
       color: #fff;
       height: 100vh;
-      background: linear-gradient(-45deg, #ff9a9e, #a1c4fd, #fbc2eb, #96e6a1, #f6d365, #fda085);
-      background-size: 600% 600%;
-      animation: bgMove 18s ease infinite;
+      background: radial-gradient(circle at top left, #ff9a9e, transparent 60%),
+                  radial-gradient(circle at top right, #a1c4fd, transparent 60%),
+                  radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
+                  radial-gradient(circle at bottom right, #96e6a1, transparent 60%),
+                  #111;
+      background-blend-mode: screen;
+      animation: bgShift 20s ease-in-out infinite alternate;
       position: relative;
     }
     body::before {
@@ -29,37 +33,50 @@
       pointer-events: none;
       z-index: 0;
     }
-    @keyframes bgMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes bgShift {
+      0% {
+        background: radial-gradient(circle at top left, #ff9a9e, transparent 60%),
+                    radial-gradient(circle at top right, #a1c4fd, transparent 60%),
+                    radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
+                    radial-gradient(circle at bottom right, #96e6a1, transparent 60%),
+                    #111;
+      }
+      50% {
+        background: radial-gradient(circle at top left, #f6d365, transparent 60%),
+                    radial-gradient(circle at top right, #84fab0, transparent 60%),
+                    radial-gradient(circle at bottom left, #f093fb, transparent 60%),
+                    radial-gradient(circle at bottom right, #8fd3f4, transparent 60%),
+                    #111;
+      }
+      100% {
+        background: radial-gradient(circle at top left, #ff6ec4, transparent 60%),
+                    radial-gradient(circle at top right, #7873f5, transparent 60%),
+                    radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
+                    radial-gradient(circle at bottom right, #4ade80, transparent 60%),
+                    #111;
+      }
     }
 
     /* متن هدر نئونی */
     header {
       text-align: center;
-      font-size: 44px;
+      font-size: 36px;
       font-weight: bold;
       margin-top: 25px;
-      margin-bottom: 20px;
-      background: linear-gradient(270deg, #ff6ec4, #7873f5, #4ade80, #facc15, #f87171, #06b6d4);
-      background-size: 1000% 1000%;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ff6ec4, #7873f5, #4ade80, #facc15, #f87171);
+      background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: textFlow 10s linear infinite, glowPulse 2.5s ease-in-out infinite;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3),
-                   0 0 20px rgba(255,255,255,0.3),
-                   0 0 40px rgba(255,255,255,0.25);
+      animation: gradientText 8s ease infinite;
+      text-shadow: 0 0 15px rgba(255,255,255,0.3);
       position: relative;
       z-index: 2;
     }
-    @keyframes textFlow {
+    @keyframes gradientText {
       0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-    @keyframes glowPulse {
-      0%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #ff6ec4, 0 0 30px #7873f5; }
-      50% { text-shadow: 0 0 20px #fff, 0 0 40px #4ade80, 0 0 60px #facc15; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .grid {
