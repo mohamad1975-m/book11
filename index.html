@@ -9,113 +9,57 @@
       font-family: 'iranyekan';
       src: url('iranyekanweblight.woff') format('woff');
     }
-    :root{
-      /* پالت شاد و شیک */
-      --c-blue1: #60a5fa;  /* آبی آسمانی */
-      --c-blue2: #3b82f6;  /* آبی */
-      --c-green1:#34d399;  /* سبز روشن */
-      --c-green2:#10b981;  /* سبز یشمی */
-      --c-pink1: #f472b6;  /* صورتی */
-      --c-pink2: #ec4899;  /* صورتی تند */
-      --c-amber1:#fbbf24;  /* کهربایی */
-      --c-amber2:#f59e0b;  /* نارنجی */
-
-      --bg-deep1:#0b132b;  /* آبی خیلی تیره */
-      --bg-deep2:#111827;  /* خاکستری خیلی تیره */
-
-      --text-color:#fff;
-    }
-
     body {
       font-family: 'iranyekan', sans-serif;
       margin: 0;
       padding: 0;
-      color: var(--text-color);
-      min-height: 100vh;
-
-      /* چهار گرادیان رادیال برای چهار گوشه، بدون مرز و ملایم */
-      background:
-        radial-gradient(65% 85% at 0% 0%,      var(--c-blue1) 0%, var(--c-blue2) 40%, transparent 70%),
-        radial-gradient(65% 85% at 100% 0%,    var(--c-green1) 0%, var(--c-green2) 40%, transparent 70%),
-        radial-gradient(65% 85% at 0% 100%,    var(--c-pink1) 0%, var(--c-pink2) 40%, transparent 70%),
-        radial-gradient(65% 85% at 100% 100%,  var(--c-amber1) 0%, var(--c-amber2) 40%, transparent 70%),
-        linear-gradient(180deg, var(--bg-deep1) 0%, var(--bg-deep2) 100%);
-      background-repeat: no-repeat;
-      background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, cover;
-      background-position: left top, right top, left bottom, right bottom, center;
-      animation: gentleFloat 24s ease-in-out infinite;
+      color: #fff;
+      background: linear-gradient(120deg,
+        #ff9a9e, #fad0c4, #a1c4fd,
+        #c2e9fb, #d4fc79, #96e6a1,
+        #84fab0, #8fd3f4, #a18cd1, #fbc2eb
+      );
+      background-size: 400% 400%;
+      animation: gradientBG 20s ease infinite;
       position: relative;
     }
-
-    /* لایه‌ی تیره‌ی لطیف برای خوانایی بهتر متن‌ها */
     body::before {
       content: "";
       position: fixed;
-      inset: 0;
-      background: radial-gradient(90% 90% at 50% 50%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 100%);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.25);
       pointer-events: none;
       z-index: 0;
     }
-
-    /* حرکت آهسته و نامحسوس پس‌زمینه */
-    @keyframes gentleFloat {
-      0%,100% {
-        background-position:
-          left -4% top -4%,
-          right -4% top -4%,
-          left -4% bottom -4%,
-          right -4% bottom -4%,
-          center;
-      }
-      50% {
-        background-position:
-          left 4% top 4%,
-          right 4% top 4%,
-          left 4% bottom 4%,
-          right 4% bottom 4%,
-          center;
-      }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    /* تیتر رنگی و شیک */
+    /* هدر نئونی با طیف رنگ‌های متنوع */
     header {
       text-align: center;
-      font-size: 46px;
+      font-size: 38px;
       font-weight: bold;
       margin-top: 25px;
-      margin-bottom: 35px;
-      letter-spacing: 1px;
-      position: relative;
-      z-index: 2;
-      background: linear-gradient(90deg, #60a5fa, #34d399, #fbbf24, #ec4899, #3b82f6, #10b981);
-      background-size: 400% 400%;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ff6ec4, #7873f5, #4ade80, #facc15, #00c6ff, #f87171);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientText 10s ease infinite;
-      text-shadow: 0 0 10px rgba(255,255,255,0.08);
+      animation: gradientText 6s ease infinite;
+      text-shadow: 0 0 15px rgba(255,255,255,0.3);
+      position: relative;
+      z-index: 2;
     }
     @keyframes gradientText {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    header::after {
-      content: "";
-      display: block;
-      margin: 12px auto 0 auto;
-      width: 160px;
-      height: 4px;
-      border-radius: 2px;
-      background: linear-gradient(90deg, #60a5fa, #34d399, #fbbf24, #ec4899, #3b82f6, #10b981);
-      background-size: 300% 300%;
-      animation: underlineFlow 6s linear infinite;
-    }
-    @keyframes underlineFlow {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
 
-    /* گرید کارت‌ها */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -127,19 +71,18 @@
       z-index: 1;
     }
     .card {
-      background: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.15);
       border-radius: 18px;
       padding: 25px 15px;
       text-align: center;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       box-shadow: 0 5px 15px rgba(0,0,0,0.35);
       backdrop-filter: blur(6px);
     }
     .card:hover {
-      transform: translateY(-2px) scale(1.03);
+      transform: translateY(-8px) scale(1.05);
       box-shadow: 0 12px 28px rgba(0,0,0,0.6);
-      background: rgba(255,255,255,0.18);
     }
     .card a {
       text-decoration: none;
@@ -152,8 +95,6 @@
       font-size: 42px;
       margin-bottom: 15px;
     }
-
-    /* شمارنده */
     #counter {
       text-align: center;
       margin: 40px 0 20px 0;
