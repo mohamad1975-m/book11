@@ -15,9 +15,13 @@
       padding: 0;
       color: #fff;
       height: 100vh;
-      background: linear-gradient(-45deg, #ff9a9e, #a1c4fd, #fbc2eb, #96e6a1, #f6d365, #fda085);
-      background-size: 600% 600%;
-      animation: bgMove 18s ease infinite;
+      background: linear-gradient(-45deg,
+        #232526, #414345, #2c3e50,
+        #434343, #0f2027, #203a43, #2c5364,
+        #3a1c71, #5a2a2a, #16222A, #1F1C2C
+      );
+      background-size: 800% 800%;
+      animation: bgMove 30s ease infinite;
       position: relative;
     }
     body::before {
@@ -35,31 +39,32 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* متن هدر نئونی */
+    /* هدر شیک */
     header {
       text-align: center;
-      font-size: 44px;
+      font-size: 46px;
       font-weight: bold;
       margin-top: 25px;
-      margin-bottom: 20px;
-      background: linear-gradient(270deg, #ff6ec4, #7873f5, #4ade80, #facc15, #f87171, #06b6d4);
-      background-size: 1000% 1000%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: textFlow 10s linear infinite, glowPulse 2.5s ease-in-out infinite;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3),
-                   0 0 20px rgba(255,255,255,0.3),
-                   0 0 40px rgba(255,255,255,0.25);
+      margin-bottom: 35px;
+      color: #f1f1f1;
+      letter-spacing: 1px;
       position: relative;
       z-index: 2;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.15);
     }
-    @keyframes textFlow {
+    header::after {
+      content: "";
+      display: block;
+      margin: 12px auto 0 auto;
+      width: 140px;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #06b6d4, #7873f5, #ff6ec4);
+      animation: underlineFlow 6s linear infinite;
+    }
+    @keyframes underlineFlow {
       0% { background-position: 0% 50%; }
       100% { background-position: 100% 50%; }
-    }
-    @keyframes glowPulse {
-      0%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #ff6ec4, 0 0 30px #7873f5; }
-      50% { text-shadow: 0 0 20px #fff, 0 0 40px #4ade80, 0 0 60px #facc15; }
     }
 
     .grid {
