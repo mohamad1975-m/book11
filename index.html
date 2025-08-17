@@ -14,13 +14,14 @@
       margin: 0;
       padding: 0;
       color: #fff;
-      background: linear-gradient(180deg,
-        #ff9a9e, #fad0c4, #a1c4fd,
-        #c2e9fb, #d4fc79, #96e6a1,
-        #84fab0, #8fd3f4, #a18cd1, #fbc2eb
-      );
-      background-size: 400% 400%;
-      animation: gradientBG 25s ease infinite;
+      height: 100vh;
+      background: radial-gradient(circle at top left, #ff9a9e, transparent 60%),
+                  radial-gradient(circle at top right, #a1c4fd, transparent 60%),
+                  radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
+                  radial-gradient(circle at bottom right, #96e6a1, transparent 60%),
+                  #111;
+      background-blend-mode: screen;
+      animation: bgShift 20s ease-in-out infinite alternate;
       position: relative;
     }
     body::before {
@@ -32,10 +33,28 @@
       pointer-events: none;
       z-index: 0;
     }
-    @keyframes gradientBG {
-      0% { background-position: 50% 0%; }
-      50% { background-position: 50% 100%; }
-      100% { background-position: 50% 0%; }
+    @keyframes bgShift {
+      0% {
+        background: radial-gradient(circle at top left, #ff9a9e, transparent 60%),
+                    radial-gradient(circle at top right, #a1c4fd, transparent 60%),
+                    radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
+                    radial-gradient(circle at bottom right, #96e6a1, transparent 60%),
+                    #111;
+      }
+      50% {
+        background: radial-gradient(circle at top left, #f6d365, transparent 60%),
+                    radial-gradient(circle at top right, #84fab0, transparent 60%),
+                    radial-gradient(circle at bottom left, #f093fb, transparent 60%),
+                    radial-gradient(circle at bottom right, #8fd3f4, transparent 60%),
+                    #111;
+      }
+      100% {
+        background: radial-gradient(circle at top left, #ff6ec4, transparent 60%),
+                    radial-gradient(circle at top right, #7873f5, transparent 60%),
+                    radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
+                    radial-gradient(circle at bottom right, #4ade80, transparent 60%),
+                    #111;
+      }
     }
 
     /* متن هدر نئونی */
