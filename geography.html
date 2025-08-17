@@ -2,118 +2,181 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>کتاب‌های جغرافیا</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جغرافیا</title>
   <style>
+    @font-face {
+      font-family: 'iranyekan';
+      src: url('iranyekanweblight.woff') format('woff');
+    }
+    * { box-sizing: border-box; }
     body {
       font-family: 'iranyekan', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(120deg,
-        #a1c4fd, #c2e9fb, #d4fc79,
-        #96e6a1, #84fab0, #8fd3f4,
-        #a18cd1, #fbc2eb
-      );
+      margin: 0; padding: 0; color: #fff;
+      background: radial-gradient(circle at 20% 20%, #e3f2fd, transparent 40%),
+                  radial-gradient(circle at 80% 25%, #d4fc79, transparent 42%),
+                  radial-gradient(circle at 20% 80%, #96e6a1, transparent 45%),
+                  radial-gradient(circle at 80% 75%, #8fd3f4, transparent 40%),
+                  linear-gradient(180deg, #58a 0%, #2c3e50 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      position: relative;
+    }
+    /* لایه‌ی ملایم جهت خوانایی متن */
+    body::before {
+      content:""; position:fixed; inset:0;
+      background: linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.25));
+      pointer-events: none; z-index:0;
+    }
+
+    header {
+      text-align: center;
+      font-weight: 800;
+      margin: 26px 0 10px;
+      letter-spacing: .5px;
+      position: relative; z-index: 1;
+      font-size: 38px;
+      /* متن گرادیانی برای هدر */
+      background: linear-gradient(90deg,#60a5fa,#a78bfa,#34d399,#fbbf24,#f87171);
       background-size: 400% 400%;
-      animation: gradientBG 25s ease infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: headGrad 18s ease infinite;
+      text-shadow: 0 0 10px rgba(255,255,255,.25);
+    }
+    @keyframes headGrad { 
+      0%{background-position:0% 50%} 
+      50%{background-position:100% 50%} 
+      100%{background-position:0% 50%}
     }
 
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 2rem;
-      color: #4a148c;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      background: rgba(255,255,255,0.65);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    .panel {
+      width: min(920px, 95%);
+      margin: 20px auto;
+      padding: 22px 20px 26px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
       backdrop-filter: blur(6px);
+      position: relative;
+      z-index: 1;
+    }
+    .panel h2 {
+      margin: 0 0 18px 0;
+      font-size: 22px;
+      color: #f1f5f9;
+      text-shadow: 0 2px 8px rgba(0,0,0,.4);
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #222;
+    /* لیست کتاب‌ها */
+    ul.books { list-style: none; margin: 0; padding: 0; }
+    li {
+      margin: 10px 0;
     }
-
-    ul.books {
-      list-style: none;
-      padding: 0;
-    }
-
-    ul.books li {
-      background: rgba(255,255,255,0.8);
-      margin: 12px 0;
-      padding: 14px 18px;
-      border-radius: 12px;
-      transition: transform 0.2s ease, background 0.3s ease;
-      color: #111;
-      font-size: 1.1rem;
+    /* هر کارت عملاً لینک است */
+    .book-card {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-    }
+      justify-content: space-between;
+      gap: 10px;
 
-    ul.books li:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,0.95);
-    }
-
-    ul.books a {
-      color: #111;
       text-decoration: none;
-      font-weight: bold;
+      color: #fff;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.15);
+      padding: 16px 18px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.28);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .book-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,.16);
+      box-shadow: 0 12px 28px rgba(0,0,0,.45);
+    }
+    .book-card .title {
+      font-size: 16.5px;
+      white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .book-card .badge {
+      font-size: 13px; opacity: .9;
+      margin-right: 8px; 
     }
 
-    .back-button {
-      display: block;
-      width: fit-content;
-      margin: 30px auto 0;
+    .btn-back {
+      display: inline-block;
+      margin: 24px auto 10px;
+      background: linear-gradient(135deg,#1C93E3,#2ea3f2);
       padding: 12px 26px;
-      background: linear-gradient(45deg, #00c6ff, #0072ff);
-      color: white;
-      font-size: 1rem;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-      text-decoration: none;
+      color: #fff; text-decoration: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 18px rgba(28,147,227,.4);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn-back:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(28,147,227,.6);
     }
 
-    .back-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    /* شمارنده */
+    #counter {
+      text-align: center; margin: 14px 0 26px 0;
+      font-size: 15px; color: #eaeaea;
+      text-shadow: 0 2px 6px rgba(0,0,0,.45);
     }
   </style>
 </head>
 <body>
-  <h1>📘 جغرافیا</h1>
-  <div class="container">
+  <header>جغرافیا 📘</header>
+
+  <section class="panel">
     <h2>کتاب‌های جغرافیا</h2>
+
     <ul class="books">
       <li>
-        <a href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs" target="_blank">
-          پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز
+        <a class="book-card" href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs" target="_blank" rel="noopener">
+          <span class="title">پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز</span>
+          <span class="badge">📘</span>
         </a>
       </li>
       <li>
-        <a href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw" target="_blank">
-          شب امتحان – خیلی سبز
+        <a class="book-card" href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw" target="_blank" rel="noopener">
+          <span class="title">شب امتحان – خیلی سبز</span>
+          <span class="badge">📕</span>
         </a>
       </li>
     </ul>
-    <a href="index.html" class="back-button">بازگشت به منوی اصلی</a>
-  </div>
+
+    <div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
+
+    <div style="text-align:center">
+      <a class="btn-back" href="index.html">بازگشت به منوی اصلی</a>
+    </div>
+  </section>
+
+  <script>
+    // شمارنده بازدید و ثبت در لاگ (مثل صفحات دیگر)
+    async function loadVisits() {
+      const slug = 'geography';
+      try {
+        const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
+        const data = await res.json();
+        if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
+        document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
+
+        await fetch(`/api/log?slug=${encodeURIComponent(slug)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ua: navigator.userAgent })
+        });
+      } catch (e) {
+        document.getElementById('visit-count').textContent = 'خطا در دریافت شمارنده';
+        console.error(e);
+      }
+    }
+    loadVisits();
+  </script>
 </body>
 </html>
