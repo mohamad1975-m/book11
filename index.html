@@ -13,28 +13,25 @@
       font-family: 'iranyekan', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg,#1e3c72,#2a5298,#6dd5ed,#2193b0);
-      background-size: 400% 400%;
-      animation: gradientBG 18s ease infinite;
+      background: linear-gradient(135deg, #1f1c2c, #928DAB);
+      background-size: cover;
       color: #fff;
       overflow-x: hidden;
-    }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
       text-align: center;
-      font-size: 36px;
+      font-size: 32px;
       font-weight: bold;
-      margin: 25px 0;
-      background: linear-gradient(90deg,#fbc2eb,#a6c1ee,#84fab0,#8fd3f4);
+      margin: 30px 0;
+      background: linear-gradient(90deg,#00c6ff,#0072ff,#ff758c,#ff7eb3);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientText 8s ease infinite;
+      animation: gradientText 6s ease infinite;
     }
     @keyframes gradientText {
       0% { background-position: 0% 50%; }
@@ -43,80 +40,61 @@
     }
 
     .menu {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 25px;
+      padding: 30px 60px;
+      flex-grow: 1;
     }
 
     .item {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 25px 15px;
       text-align: center;
-      cursor: pointer;
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      backdrop-filter: blur(14px);
+      box-shadow: 6px 6px 15px rgba(0,0,0,0.5),
+                  -6px -6px 15px rgba(255,255,255,0.05);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
       position: relative;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
       overflow: hidden;
     }
 
     .item::before {
       content: "";
       position: absolute;
-      width: 200%;
-      height: 200%;
-      background: conic-gradient(from 0deg,#ff6ec4,#7873f5,#4ade80,#facc15,#00c6ff,#f87171,#ff6ec4);
-      animation: spin 6s linear infinite;
-      z-index: 0;
-      opacity: 0.3;
-    }
-    .item::after {
-      content: "";
-      position: absolute;
-      inset: 5px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 50%;
-      z-index: 1;
-    }
-
-    .item span {
-      position: relative;
-      z-index: 2;
-      font-size: 20px;
-      font-weight: bold;
-      color: #fff;
-      margin-top: 10px;
+      inset: 0;
+      background: linear-gradient(135deg,rgba(255,255,255,0.12),transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
     }
 
     .icon {
-      position: relative;
-      z-index: 2;
-      font-size: 40px;
+      font-size: 42px;
+      margin-bottom: 12px;
+      display: block;
     }
 
     .item:hover {
-      transform: scale(1.2) rotate(8deg);
-      box-shadow: 0 0 35px rgba(255,255,255,0.8);
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 12px 12px 25px rgba(0,0,0,0.65),
+                  -8px -8px 20px rgba(255,255,255,0.07);
     }
 
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
+    .item:hover::before {
+      opacity: 1;
     }
 
     #counter {
       text-align: center;
       margin: 25px 0;
-      font-size: 16px;
+      font-size: 15px;
       color: #eee;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      text-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
   </style>
 </head>
@@ -124,15 +102,15 @@
   <header>📚 انتخاب درس</header>
 
   <div class="menu">
-    <a href="tarikh.html" class="item"><div class="icon">📜</div><span>تاریخ</span></a>
-    <a href="geography.html" class="item"><div class="icon">🗺️</div><span>جغرافیا</span></a>
-    <a href="fonoon.html" class="item"><div class="icon">✍️</div><span>فنون ادبی</span></a>
-    <a href="arabi.html" class="item"><div class="icon">🕌</div><span>عربی</span></a>
-    <a href="ravanshenasi.html" class="item"><div class="icon">🧠</div><span>روان‌شناسی</span></a>
-    <a href="riyazi.html" class="item"><div class="icon">📐</div><span>ریاضی</span></a>
-    <a href="falsafe.html" class="item"><div class="icon">🤔</div><span>فلسفه</span></a>
-    <a href="farsi.html" class="item"><div class="icon">📖</div><span>فارسی</span></a>
-    <a href="jameeh.html" class="item"><div class="icon">👥</div><span>جامعه‌شناسی</span></a>
+    <a href="tarikh.html" class="item"><div class="icon">📜</div>تاریخ</a>
+    <a href="geography.html" class="item"><div class="icon">🗺️</div>جغرافیا</a>
+    <a href="fonoon.html" class="item"><div class="icon">✍️</div>فنون ادبی</a>
+    <a href="arabi.html" class="item"><div class="icon">🕌</div>عربی</a>
+    <a href="ravanshenasi.html" class="item"><div class="icon">🧠</div>روان‌شناسی</a>
+    <a href="riyazi.html" class="item"><div class="icon">📐</div>ریاضی</a>
+    <a href="falsafe.html" class="item"><div class="icon">🤔</div>فلسفه</a>
+    <a href="farsi.html" class="item"><div class="icon">📖</div>فارسی</a>
+    <a href="jameeh.html" class="item"><div class="icon">👥</div>جامعه‌شناسی</a>
   </div>
 
   <div id="counter">
