@@ -13,21 +13,21 @@
       font-family: 'iranyekan', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #1f1c2c, #928DAB);
-      background-size: cover;
-      color: #fff;
-      overflow-x: hidden;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
     }
 
     header {
       text-align: center;
       font-size: 32px;
       font-weight: bold;
-      margin: 30px 0;
-      background: linear-gradient(90deg,#00c6ff,#0072ff,#ff758c,#ff7eb3);
+      margin: 40px 0;
+      background: linear-gradient(90deg,#ff758c,#ff7eb3,#6a11cb,#2575fc);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -40,61 +40,60 @@
     }
 
     .menu {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 25px;
-      padding: 30px 60px;
-      flex-grow: 1;
+      max-width: 1100px;
     }
 
-    .item {
-      background: rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 25px 15px;
-      text-align: center;
-      color: #fff;
-      text-decoration: none;
+    .hex {
+      width: 160px;
+      aspect-ratio: 1/1;
+      background: linear-gradient(135deg, #ff758c, #6a11cb);
+      clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
       font-size: 18px;
       font-weight: bold;
-      backdrop-filter: blur(14px);
-      box-shadow: 6px 6px 15px rgba(0,0,0,0.5),
-                  -6px -6px 15px rgba(255,255,255,0.05);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      text-decoration: none;
       position: relative;
       overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
     }
 
-    .item::before {
+    .hex .icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .hex::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg,rgba(255,255,255,0.12),transparent);
-      opacity: 0;
-      transition: opacity 0.4s;
+      background: rgba(255,255,255,0.15);
+      clip-path: inherit;
+      transform: scale(0);
+      transition: transform 0.4s ease;
     }
 
-    .icon {
-      font-size: 42px;
-      margin-bottom: 12px;
-      display: block;
+    .hex:hover {
+      transform: translateY(-10px) rotate(2deg) scale(1.05);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.7);
     }
 
-    .item:hover {
-      transform: translateY(-10px) scale(1.05);
-      box-shadow: 12px 12px 25px rgba(0,0,0,0.65),
-                  -8px -8px 20px rgba(255,255,255,0.07);
-    }
-
-    .item:hover::before {
-      opacity: 1;
+    .hex:hover::before {
+      transform: scale(1);
     }
 
     #counter {
-      text-align: center;
       margin: 25px 0;
       font-size: 15px;
       color: #eee;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
   </style>
 </head>
@@ -102,15 +101,15 @@
   <header>📚 انتخاب درس</header>
 
   <div class="menu">
-    <a href="tarikh.html" class="item"><div class="icon">📜</div>تاریخ</a>
-    <a href="geography.html" class="item"><div class="icon">🗺️</div>جغرافیا</a>
-    <a href="fonoon.html" class="item"><div class="icon">✍️</div>فنون ادبی</a>
-    <a href="arabi.html" class="item"><div class="icon">🕌</div>عربی</a>
-    <a href="ravanshenasi.html" class="item"><div class="icon">🧠</div>روان‌شناسی</a>
-    <a href="riyazi.html" class="item"><div class="icon">📐</div>ریاضی</a>
-    <a href="falsafe.html" class="item"><div class="icon">🤔</div>فلسفه</a>
-    <a href="farsi.html" class="item"><div class="icon">📖</div>فارسی</a>
-    <a href="jameeh.html" class="item"><div class="icon">👥</div>جامعه‌شناسی</a>
+    <a href="tarikh.html" class="hex"><div class="icon">📜</div>تاریخ</a>
+    <a href="geography.html" class="hex"><div class="icon">🗺️</div>جغرافیا</a>
+    <a href="fonoon.html" class="hex"><div class="icon">✍️</div>فنون ادبی</a>
+    <a href="arabi.html" class="hex"><div class="icon">🕌</div>عربی</a>
+    <a href="ravanshenasi.html" class="hex"><div class="icon">🧠</div>روان‌شناسی</a>
+    <a href="riyazi.html" class="hex"><div class="icon">📐</div>ریاضی</a>
+    <a href="falsafe.html" class="hex"><div class="icon">🤔</div>فلسفه</a>
+    <a href="farsi.html" class="hex"><div class="icon">📖</div>فارسی</a>
+    <a href="jameeh.html" class="hex"><div class="icon">👥</div>جامعه‌شناسی</a>
   </div>
 
   <div id="counter">
