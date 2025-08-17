@@ -11,54 +11,85 @@
     }
     body {
       font-family: 'iranyekan', sans-serif;
-      background-color: #222;
-      color: #fff;
       margin: 0;
       padding: 0;
-      text-align: center;
+      color: #fff;
+      background: linear-gradient(270deg, #1c92d2, #f2fcfe, #1c92d2);
+      background-size: 600% 600%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     header {
-      background-color: #1C93E3;
-      padding: 20px;
-      font-size: 22px;
+      text-align: center;
+      padding: 25px;
+      font-size: 28px;
       font-weight: bold;
+      background-color: rgba(0,0,0,0.5);
+      border-bottom: 2px solid #fff;
     }
-    .subject-list {max-width: 500px; margin: 30px auto; padding: 0; list-style: none}
-    .subject-item {
-      background-color: #28A745;
-      margin: 10px 0;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,.3);
-      transition: transform .2s ease, box-shadow .2s ease;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
     }
-    .subject-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,.5);
+    .card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 25px 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
-    .subject-item a {
-      display: block;
-      padding: 15px;
+    .card:hover {
+      transform: rotateY(8deg) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    }
+    .card a {
       text-decoration: none;
       color: #fff;
+      font-size: 20px;
       font-weight: bold;
+      display: block;
     }
-    #counter {margin: 30px 0; font-size: 18px; color: #ccc}
+    .icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+    #counter {
+      text-align: center;
+      margin: 40px 0;
+      font-size: 18px;
+      color: #fff;
+      background: rgba(0,0,0,0.4);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
   </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <header>📚 لیست درس‌ها</header>
+  <header>📚 انتخاب درس</header>
 
-  <ul class="subject-list">
-    <li class="subject-item"><a href="tarikh.html">تاریخ</a></li>
-    <li class="subject-item"><a href="geography.html">جغرافیا</a></li>
-    <li class="subject-item"><a href="fonoon.html">فنون ادبی</a></li>
-    <li class="subject-item"><a href="arabi.html">عربی</a></li>
-    <li class="subject-item"><a href="ravanshenasi.html">روان‌شناسی</a></li>
-    <li class="subject-item"><a href="riyazi.html">ریاضی</a></li>
-    <li class="subject-item"><a href="falsafe.html">فلسفه</a></li>
-    <li class="subject-item"><a href="farsi.html">فارسی</a></li>
-    <li class="subject-item"><a href="jameeh.html">جامعه‌شناسی</a></li>
-  </ul>
+  <div class="grid">
+    <div class="card"><a href="tarikh.html"><div class="icon">📜</div>تاریخ</a></div>
+    <div class="card"><a href="geography.html"><div class="icon">🗺️</div>جغرافیا</a></div>
+    <div class="card"><a href="fonoon.html"><div class="icon">✍️</div>فنون ادبی</a></div>
+    <div class="card"><a href="arabi.html"><div class="icon">🕌</div>عربی</a></div>
+    <div class="card"><a href="ravanshenasi.html"><div class="icon">🧠</div>روان‌شناسی</a></div>
+    <div class="card"><a href="riyazi.html"><div class="icon">📐</div>ریاضی</a></div>
+    <div class="card"><a href="falsafe.html"><div class="icon">🤔</div>فلسفه</a></div>
+    <div class="card"><a href="farsi.html"><div class="icon">📖</div>فارسی</a></div>
+    <div class="card"><a href="jameeh.html"><div class="icon">👥</div>جامعه‌شناسی</a></div>
+  </div>
 
   <div id="counter">
     <span id="visit-count">در حال بارگذاری...</span>
