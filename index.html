@@ -13,10 +13,11 @@
       font-family: 'iranyekan', sans-serif;
       margin: 0;
       padding: 0;
-      color: #fff;
-      background: linear-gradient(120deg,#ff9a9e,#fad0c4,#a1c4fd,#c2e9fb,#d4fc79,#96e6a1,#fbc2eb);
+      background: linear-gradient(135deg,#1e3c72,#2a5298,#6dd5ed,#2193b0);
       background-size: 400% 400%;
-      animation: gradientBG 20s ease infinite;
+      animation: gradientBG 18s ease infinite;
+      color: #fff;
+      overflow-x: hidden;
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
@@ -26,16 +27,14 @@
 
     header {
       text-align: center;
-      font-size: 40px;
+      font-size: 36px;
       font-weight: bold;
-      margin-top: 25px;
-      margin-bottom: 30px;
-      background: linear-gradient(90deg, #ff6ec4, #7873f5, #4ade80, #facc15, #00c6ff, #f87171);
+      margin: 25px 0;
+      background: linear-gradient(90deg,#fbc2eb,#a6c1ee,#84fab0,#8fd3f4);
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientText 6s ease infinite;
-      text-shadow: 0 0 15px rgba(255,255,255,0.4);
+      animation: gradientText 8s ease infinite;
     }
     @keyframes gradientText {
       0% { background-position: 0% 50%; }
@@ -43,81 +42,80 @@
       100% { background-position: 0% 50%; }
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 25px;
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
       padding: 40px;
-      max-width: 1100px;
-      margin: auto;
     }
 
-    .card {
-      position: relative;
-      background: rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 40px 20px;
+    .item {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       cursor: pointer;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      position: relative;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
       overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .card::before {
+
+    .item::before {
       content: "";
       position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: conic-gradient(#ff6ec4,#7873f5,#4ade80,#facc15,#00c6ff,#f87171,#ff6ec4);
-      animation: spin 8s linear infinite;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg,#ff6ec4,#7873f5,#4ade80,#facc15,#00c6ff,#f87171,#ff6ec4);
+      animation: spin 6s linear infinite;
       z-index: 0;
-      opacity: 0.5;
+      opacity: 0.3;
     }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-    .card::after {
+    .item::after {
       content: "";
       position: absolute;
-      inset: 2px;
+      inset: 5px;
       background: rgba(0,0,0,0.6);
-      border-radius: 18px;
+      border-radius: 50%;
       z-index: 1;
     }
-    .card a {
+
+    .item span {
       position: relative;
       z-index: 2;
-      text-decoration: none;
-      color: #fff;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: bold;
-      display: block;
+      color: #fff;
+      margin-top: 10px;
     }
+
     .icon {
-      font-size: 50px;
-      margin-bottom: 15px;
-      display: inline-block;
-      background: rgba(255,255,255,0.15);
-      padding: 15px;
-      border-radius: 50%;
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      z-index: 2;
+      font-size: 40px;
     }
-    .card:hover {
-      transform: translateY(-10px) scale(1.07);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+
+    .item:hover {
+      transform: scale(1.2) rotate(8deg);
+      box-shadow: 0 0 35px rgba(255,255,255,0.8);
     }
-    .card:hover .icon {
-      transform: rotate(10deg) scale(1.2);
-      box-shadow: 0 0 25px rgba(255,255,255,0.6);
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
     }
 
     #counter {
       text-align: center;
-      margin: 40px 0 20px 0;
-      font-size: 18px;
-      color: #fff;
+      margin: 25px 0;
+      font-size: 16px;
+      color: #eee;
       text-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
   </style>
@@ -125,16 +123,16 @@
 <body>
   <header>📚 انتخاب درس</header>
 
-  <div class="grid">
-    <div class="card"><a href="tarikh.html"><div class="icon">📜</div>تاریخ</a></div>
-    <div class="card"><a href="geography.html"><div class="icon">🗺️</div>جغرافیا</a></div>
-    <div class="card"><a href="fonoon.html"><div class="icon">✍️</div>فنون ادبی</a></div>
-    <div class="card"><a href="arabi.html"><div class="icon">🕌</div>عربی</a></div>
-    <div class="card"><a href="ravanshenasi.html"><div class="icon">🧠</div>روان‌شناسی</a></div>
-    <div class="card"><a href="riyazi.html"><div class="icon">📐</div>ریاضی</a></div>
-    <div class="card"><a href="falsafe.html"><div class="icon">🤔</div>فلسفه</a></div>
-    <div class="card"><a href="farsi.html"><div class="icon">📖</div>فارسی</a></div>
-    <div class="card"><a href="jameeh.html"><div class="icon">👥</div>جامعه‌شناسی</a></div>
+  <div class="menu">
+    <a href="tarikh.html" class="item"><div class="icon">📜</div><span>تاریخ</span></a>
+    <a href="geography.html" class="item"><div class="icon">🗺️</div><span>جغرافیا</span></a>
+    <a href="fonoon.html" class="item"><div class="icon">✍️</div><span>فنون ادبی</span></a>
+    <a href="arabi.html" class="item"><div class="icon">🕌</div><span>عربی</span></a>
+    <a href="ravanshenasi.html" class="item"><div class="icon">🧠</div><span>روان‌شناسی</span></a>
+    <a href="riyazi.html" class="item"><div class="icon">📐</div><span>ریاضی</span></a>
+    <a href="falsafe.html" class="item"><div class="icon">🤔</div><span>فلسفه</span></a>
+    <a href="farsi.html" class="item"><div class="icon">📖</div><span>فارسی</span></a>
+    <a href="jameeh.html" class="item"><div class="icon">👥</div><span>جامعه‌شناسی</span></a>
   </div>
 
   <div id="counter">
