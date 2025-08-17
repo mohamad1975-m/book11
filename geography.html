@@ -22,7 +22,6 @@
       min-height: 100vh;
       position: relative;
     }
-    /* لایه‌ی ملایم جهت خوانایی متن */
     body::before {
       content:""; position:fixed; inset:0;
       background: linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.25));
@@ -33,16 +32,14 @@
       text-align: center;
       font-weight: 800;
       margin: 26px 0 10px;
-      letter-spacing: .5px;
-      position: relative; z-index: 1;
       font-size: 38px;
-      /* متن گرادیانی برای هدر */
       background: linear-gradient(90deg,#60a5fa,#a78bfa,#34d399,#fbbf24,#f87171);
       background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: headGrad 18s ease infinite;
       text-shadow: 0 0 10px rgba(255,255,255,.25);
+      position: relative; z-index: 1;
     }
     @keyframes headGrad { 
       0%{background-position:0% 50%} 
@@ -69,18 +66,13 @@
       text-shadow: 0 2px 8px rgba(0,0,0,.4);
     }
 
-    /* لیست کتاب‌ها */
     ul.books { list-style: none; margin: 0; padding: 0; }
-    li {
-      margin: 10px 0;
-    }
-    /* هر کارت عملاً لینک است */
+    li { margin: 10px 0; }
     .book-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-
       text-decoration: none;
       color: #fff;
       background: rgba(255,255,255,.10);
@@ -97,12 +89,14 @@
     }
     .book-card .title {
       font-size: 16.5px;
-      white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.6;
+      white-space: normal;   /* اجازه بده متن بشکنه */
+      word-wrap: break-word; /* شکستن متن‌های طولانی */
+      flex: 1;
     }
     .book-card .badge {
-      font-size: 13px; opacity: .9;
-      margin-right: 8px; 
+      font-size: 18px;
+      margin-right: 12px; 
     }
 
     .btn-back {
@@ -120,9 +114,8 @@
       box-shadow: 0 12px 26px rgba(28,147,227,.6);
     }
 
-    /* شمارنده */
     #counter {
-      text-align: center; margin: 14px 0 26px 0;
+      text-align: center; margin: 20px 0 30px;
       font-size: 15px; color: #eaeaea;
       text-shadow: 0 2px 6px rgba(0,0,0,.45);
     }
@@ -138,26 +131,25 @@
       <li>
         <a class="book-card" href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs" target="_blank" rel="noopener">
           <span class="title">پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز</span>
-          <span class="badge">📘</span>
+          <span class="badge">⬇️</span>
         </a>
       </li>
       <li>
         <a class="book-card" href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw" target="_blank" rel="noopener">
           <span class="title">شب امتحان – خیلی سبز</span>
-          <span class="badge">📕</span>
+          <span class="badge">⬇️</span>
         </a>
       </li>
     </ul>
-
-    <div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
 
     <div style="text-align:center">
       <a class="btn-back" href="index.html">بازگشت به منوی اصلی</a>
     </div>
   </section>
 
+  <div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
+
   <script>
-    // شمارنده بازدید و ثبت در لاگ (مثل صفحات دیگر)
     async function loadVisits() {
       const slug = 'geography';
       try {
@@ -165,7 +157,6 @@
         const data = await res.json();
         if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
         document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
-
         await fetch(`/api/log?slug=${encodeURIComponent(slug)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
