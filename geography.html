@@ -2,87 +2,118 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>کتاب‌های جغرافیا</title>
   <style>
-    @font-face {
-      font-family: 'iranyekan';
-      src: url('iranyekanweblight.woff') format('woff');
-    }
     body {
       font-family: 'iranyekan', sans-serif;
-      background-color: #222222;
-      color: #fff;
       margin: 0;
       padding: 0;
+      background: linear-gradient(120deg,
+        #a1c4fd, #c2e9fb, #d4fc79,
+        #96e6a1, #84fab0, #8fd3f4,
+        #a18cd1, #fbc2eb
+      );
+      background-size: 400% 400%;
+      animation: gradientBG 25s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    h1 {
       text-align: center;
+      margin-top: 30px;
+      font-size: 2rem;
+      color: #4a148c;
     }
-    header {
-      background-color: #1C93E3;
-      padding: 20px;
-      font-size: 22px;
-      font-weight: bold;
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: rgba(255,255,255,0.65);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(6px);
     }
-    .book-list {max-width: 500px; margin: 30px auto; padding: 0; list-style: none}
-    .book-item {
-      background-color: #28A745;
-      margin: 10px 0;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,.3);
-      transition: transform .2s ease, box-shadow .2s ease;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
     }
-    .book-item:hover {transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,.5)}
-    .book-item a {
-      display: block;
-      padding: 15px;
+
+    ul.books {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul.books li {
+      background: rgba(255,255,255,0.8);
+      margin: 12px 0;
+      padding: 14px 18px;
+      border-radius: 12px;
+      transition: transform 0.2s ease, background 0.3s ease;
+      color: #111;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    ul.books li:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.95);
+    }
+
+    ul.books a {
+      color: #111;
       text-decoration: none;
-      color: #fff;
       font-weight: bold;
     }
-    #counter {margin: 30px 0; font-size: 18px; color: #ccc}
+
+    .back-button {
+      display: block;
+      width: fit-content;
+      margin: 30px auto 0;
+      padding: 12px 26px;
+      background: linear-gradient(45deg, #00c6ff, #0072ff);
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
   </style>
 </head>
 <body>
-
-  <header>📖 کتاب‌های جغرافیا</header>
-
-  <ul class="book-list">
-    <li class="book-item">
-      <a href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs" target="_blank">
-        پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز
-      </a>
-    </li>
-    <li class="book-item">
-      <a href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw" target="_blank">
-        شب امتحان – خیلی سبز
-      </a>
-    </li>
-  </ul>
-
-  <div id="counter">
-    <span id="visit-count">در حال بارگذاری...</span>
+  <h1>📘 جغرافیا</h1>
+  <div class="container">
+    <h2>کتاب‌های جغرافیا</h2>
+    <ul class="books">
+      <li>
+        <a href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs" target="_blank">
+          پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز
+        </a>
+      </li>
+      <li>
+        <a href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw" target="_blank">
+          شب امتحان – خیلی سبز
+        </a>
+      </li>
+    </ul>
+    <a href="index.html" class="back-button">بازگشت به منوی اصلی</a>
   </div>
-
-  <script>
-    async function loadVisits() {
-      const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'geography');
-      try {
-        const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
-        const data = await res.json();
-        if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
-        document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
-
-        await fetch(`/api/log?slug=${encodeURIComponent(slug)}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ua: navigator.userAgent })
-        });
-      } catch (e) {
-        document.getElementById('visit-count').textContent = 'خطا در دریافت شمارنده';
-        console.error(e);
-      }
-    }
-    loadVisits();
-  </script>
 </body>
 </html>
