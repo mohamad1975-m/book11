@@ -15,13 +15,13 @@
       padding: 0;
       color: #fff;
       height: 100vh;
-      background: radial-gradient(circle at top left, #ff9a9e, transparent 60%),
-                  radial-gradient(circle at top right, #a1c4fd, transparent 60%),
-                  radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
-                  radial-gradient(circle at bottom right, #96e6a1, transparent 60%),
+      background: radial-gradient(circle at 20% 30%, #ff9a9e, transparent 60%),
+                  radial-gradient(circle at 80% 20%, #a1c4fd, transparent 60%),
+                  radial-gradient(circle at 25% 80%, #fbc2eb, transparent 60%),
+                  radial-gradient(circle at 80% 80%, #96e6a1, transparent 60%),
                   #111;
       background-blend-mode: screen;
-      animation: bgShift 20s ease-in-out infinite alternate;
+      animation: bgShift 30s ease-in-out infinite alternate;
       position: relative;
     }
     body::before {
@@ -35,25 +35,13 @@
     }
     @keyframes bgShift {
       0% {
-        background: radial-gradient(circle at top left, #ff9a9e, transparent 60%),
-                    radial-gradient(circle at top right, #a1c4fd, transparent 60%),
-                    radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
-                    radial-gradient(circle at bottom right, #96e6a1, transparent 60%),
-                    #111;
+        background-position: 20% 30%, 80% 20%, 25% 80%, 80% 80%;
       }
       50% {
-        background: radial-gradient(circle at top left, #f6d365, transparent 60%),
-                    radial-gradient(circle at top right, #84fab0, transparent 60%),
-                    radial-gradient(circle at bottom left, #f093fb, transparent 60%),
-                    radial-gradient(circle at bottom right, #8fd3f4, transparent 60%),
-                    #111;
+        background-position: 30% 40%, 70% 30%, 35% 70%, 70% 70%;
       }
       100% {
-        background: radial-gradient(circle at top left, #ff6ec4, transparent 60%),
-                    radial-gradient(circle at top right, #7873f5, transparent 60%),
-                    radial-gradient(circle at bottom left, #fbc2eb, transparent 60%),
-                    radial-gradient(circle at bottom right, #4ade80, transparent 60%),
-                    #111;
+        background-position: 20% 30%, 80% 20%, 25% 80%, 80% 80%;
       }
     }
 
