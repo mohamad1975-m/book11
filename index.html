@@ -14,9 +14,15 @@
       margin: 0;
       padding: 0;
       color: #fff;
-      background: linear-gradient(270deg, #1c92d2, #f2fcfe, #1c92d2);
-      background-size: 600% 600%;
-      animation: gradientBG 15s ease infinite;
+      background: linear-gradient(270deg,
+        #ff9a9e, #fad0c4, #fad0c4,
+        #a1c4fd, #c2e9fb,
+        #d4fc79, #96e6a1,
+        #84fab0, #8fd3f4,
+        #a18cd1, #fbc2eb
+      );
+      background-size: 400% 400%;
+      animation: gradientBG 20s ease infinite;
       position: relative;
     }
     /* لایه تیره برای خوانایی متن */
@@ -36,15 +42,14 @@
     }
     header {
       text-align: center;
-      padding: 15px;
-      font-size: 26px;
+      font-size: 28px;
       font-weight: bold;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(5px);
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #fff;
+      text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+      position: relative;
+      z-index: 2;
     }
     .grid {
       display: grid;
@@ -57,17 +62,18 @@
       z-index: 1;
     }
     .card {
-      background: rgba(255,255,255,0.1);
-      border-radius: 15px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 18px;
       padding: 25px 15px;
       text-align: center;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
     }
     .card:hover {
       transform: rotateY(8deg) scale(1.05);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.6);
     }
     .card a {
       text-decoration: none;
@@ -77,7 +83,7 @@
       display: block;
     }
     .icon {
-      font-size: 40px;
+      font-size: 42px;
       margin-bottom: 15px;
     }
     #counter {
@@ -85,8 +91,9 @@
       margin: 40px 0 20px 0;
       font-size: 18px;
       color: #fff;
-      z-index: 2;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
       position: relative;
+      z-index: 2;
     }
   </style>
 </head>
