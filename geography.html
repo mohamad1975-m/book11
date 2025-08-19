@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>جغرافیا</title>
   <style>
     @font-face {
@@ -13,10 +13,10 @@
     body{
       font-family:'iranyekan',sans-serif;margin:0;padding:0;color:#fff;
       background:radial-gradient(circle at 20% 20%,#e3f2fd,transparent 40%),
-                radial-gradient(circle at 80% 25%,#d4fc79,transparent 42%),
-                radial-gradient(circle at 20% 80%,#96e6a1,transparent 45%),
-                radial-gradient(circle at 80% 75%,#8fd3f4,transparent 40%),
-                linear-gradient(180deg,#58a 0%,#2c3e50 100%);
+                 radial-gradient(circle at 80% 25%,#d4fc79,transparent 42%),
+                 radial-gradient(circle at 20% 80%,#96e6a1,transparent 45%),
+                 radial-gradient(circle at 80% 75%,#8fd3f4,transparent 40%),
+                 linear-gradient(180deg,#58a 0%,#2c3e50 100%);
       background-attachment:fixed;min-height:100vh;position:relative;
     }
     body::before{content:"";position:fixed;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.25));pointer-events:none;z-index:0}
@@ -45,7 +45,7 @@
     .book-card:hover{transform:translateY(-3px);background:rgba(255,255,255,.16);box-shadow:0 12px 28px rgba(0,0,0,.45)}
     .book-card .title{font-size:16.5px;line-height:1.6;white-space:normal;word-wrap:break-word;flex:1;text-shadow:0 2px 6px rgba(0,0,0,.45)}
 
-    /* دانلود سمت چپ کارت */
+    /* دانلود (چپ کارت) */
     .book-card .badge{
       width:26px;height:26px;margin-left:12px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;order:-1
     }
@@ -80,14 +80,61 @@
 <body>
   <header>جغرافیا 📘</header>
 
-  <!-- پایه یازدهم -->
+  <!-- یازدهم -->
   <section class="panel">
     <h2>کتاب‌های جغرافیا، پایه یازدهم</h2>
     <ul class="books">
       <li>
-        <a class="book-card" href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs" target="_blank" rel="noopener" data-id="geo11-test" data-title="پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز">
-          <span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></span>
+        <a class="book-card" href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs"
+           target="_blank" rel="noopener"
+           data-id="geo11-test" data-title="پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز">
+          <!-- دانلود (چپ) -->
+          <span class="badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
+          </span>
+          <!-- عنوان -->
           <span class="title">پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز</span>
+          <!-- اکشن‌های راست -->
+          <div class="actions">
+            <div class="action-btn rate-btn" title="امتیاز و نظرات">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
+            </div>
+            <div class="meta rate-avg"></div>
+            <div class="action-btn cmt-btn" title="امتیاز و نظرات">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+            </div>
+            <div class="meta cmt-count"></div>
+          </div>
+        </a>
+      </li>
+
+      <li>
+        <a class="book-card" href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw"
+           target="_blank" rel="noopener"
+           data-id="geo11-shab" data-title="شب امتحان – خیلی سبز">
+          <span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></span>
+          <span class="title">شب امتحان – خیلی سبز</span>
+          <div class="actions">
+            <div class="action-btn rate-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
+            <div class="meta rate-avg"></div>
+            <div class="action-btn cmt-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
+            <div class="meta cmt-count"></div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- دهم -->
+  <section class="panel">
+    <h2>کتاب‌های جغرافیا، پایه دهم</h2>
+    <ul class="books">
+      <li>
+        <a class="book-card" href="https://s32.picofile.com/file/8481978634/%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85%D8%8C_%D8%B4%D8%A8_%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86_B_U_L.pdf.html"
+           target="_blank" rel="noopener"
+           data-id="geo10-shab" data-title="شب امتحان – خیلی سبز">
+          <span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></span>
+          <span class="title">شب امتحان – خیلی سبز</span>
           <div class="actions">
             <div class="action-btn rate-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
             <div class="meta rate-avg"></div>
@@ -98,45 +145,15 @@
       </li>
 
       <li>
-        <a class="book-card" href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw" target="_blank" rel="noopener" data-id="geo11-shab" data-title="شب امتحان – خیلی سبز">
+        <a class="book-card" href="https://s32.picofile.com/file/8481961634/%D8%AF%D8%B1%D8%B3%D9%86%D8%A7%D9%85%D9%87_%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85_%D8%A8%D8%B1_%D8%B9%D9%85%D8%B1_%D9%84%D8%B9%D9%86%D8%AA.pdf.html"
+           target="_blank" rel="noopener"
+           data-id="geo10-dars" data-title="درسنامه جغرافیا – خیلی سبز">
           <span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></span>
-          <span class="title">شب امتحان – خیلی سبز</span>
-          <div class="actions">
-            <div class="action-btn rate-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
-            <div class="meta rate-avg"></div>
-            <div class="action-btn cmt-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18ل4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
-            <div class="meta cmt-count"></div>
-          </div>
-        </a>
-      </li>
-    </ul>
-  </section>
-
-  <!-- پایه دهم -->
-  <section class="panel">
-    <h2>کتاب‌های جغرافیا، پایه دهم</h2>
-    <ul class="books">
-      <li>
-        <a class="book-card" href="https://s32.picofile.com/file/8481978634/%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85%D8%8C_%D8%B4%D8%A8_%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86_B_U_L.pdf.html" target="_blank" rel="noopener" data-id="geo10-shab" data-title="شب امتحان – خیلی سبز">
-          <span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></span>
-          <span class="title">شب امتحان – خیلی سبز</span>
-          <div class="actions">
-            <div class="action-btn rate-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
-            <div class="meta rate-avg"></div>
-            <div class="action-btn cmt-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18ل4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
-            <div class="meta cmt-count"></div>
-          </div>
-        </a>
-      </li>
-
-      <li>
-        <a class="book-card" href="https://s32.picofile.com/file/8481961634/%D8%AF%D8%B1%D8%B3%D9%86%D8%A7%D9%85%D9%87_%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85_%D8%A8%D8%B1_%D8%B9%D9%85%D8%B1_%D9%84%D8%B9%D9%86%D8%AA.pdf.html" target="_blank" rel="noopener" data-id="geo10-dars" data-title="درسنامه جغرافیا – خیلی سبز">
-          <span class="badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8ل4 5zm8 2H4v2h16v-2z"/></svg></span>
           <span class="title">درسنامه جغرافیا – خیلی سبز</span>
           <div class="actions">
             <div class="action-btn rate-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
             <div class="meta rate-avg"></div>
-            <div class="action-btn cmt-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18ل4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
+            <div class="action-btn cmt-btn" title="امتیاز و نظرات"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
             <div class="meta cmt-count"></div>
           </div>
         </a>
@@ -144,13 +161,18 @@
     </ul>
   </section>
 
-  <div style="text-align:center"><a class="btn-back" href="index.html">بازگشت به منوی اصلی</a></div>
+  <div style="text-align:center">
+    <a class="btn-back" href="index.html">بازگشت به منوی اصلی</a>
+  </div>
+
   <div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
 
   <!-- مودال -->
   <div class="modal" id="cmtModal">
     <div class="box">
       <h3 id="cmtTitle">نظرات</h3>
+
+      <!-- ستاره‌های امتیاز -->
       <div class="rate-row">
         <div class="rate-stars" id="rateStars">
           <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span>
@@ -159,8 +181,10 @@
         <div id="rateLabel" class="meta"></div>
         <button class="btn" id="btnRate">ثبت امتیاز</button>
       </div>
+
       <ul class="cmt-list" id="cmtList"></ul>
       <textarea id="cmtInput" placeholder="نظر خود را بنویسید..."></textarea>
+
       <div class="row">
         <button class="btn" id="sendCmt">ارسال نظر</button>
         <button class="btn gray" id="closeCmt">بستن</button>
@@ -168,16 +192,16 @@
     </div>
   </div>
 
-  <!-- ---------------------- Script ---------------------- -->
+  <!-- Firebase + Firestore (ماژولار) -->
   <script type="module">
-    // -------- Firebase imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, runTransaction,
-             collection, addDoc, query, where, getDocs, orderBy, onSnapshot,
-             serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, doc, collection, query, where, orderBy,
+      onSnapshot, getDoc, getDocs, addDoc, setDoc,
+      serverTimestamp, runTransaction
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // -------- Firebase config (همان که دادی)
+    // ===== Firebase Config (از پروژه‌ی خودت)
     const firebaseConfig = {
       apiKey: "AIzaSyB6fWSRyXuMnJyCZz29hakPw2kkOD3JwqI",
       authDomain: "ketabha-58a96.firebaseapp.com",
@@ -188,14 +212,17 @@
       measurementId: "G-SDF15BH8Z7"
     };
 
-    const app  = initializeApp(firebaseConfig);
-    const db   = getFirestore(app);
-    const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
 
-    // ---- ورود ناشناس برای داشتن uid یکتا روی همه مرورگرها/دستگاه‌ها
-    await signInAnonymously(auth).catch(console.error);
+    // یک شناسه‌ی یکتا برای کاربر (برای محدودیت امتیاز/نظر – الزاما هویت واقعی نیست)
+    const uid = (localStorage.getItem('uid') || (() => {
+      const v = 'u_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('uid', v);
+      return v;
+    })());
 
-    // ---------------- شمارنده بازدید (بدون تغییر)
+    // ---- شمارنده بازدید (مثل قبل – سمت سرور خودت)
     async function loadVisits(){
       const slug='geography';
       try{
@@ -203,138 +230,148 @@
         const d=await r.json();
         if(!r.ok||typeof d.value!=='number')throw 0;
         document.getElementById('visit-count').textContent=`بازدید این صفحه: ${d.value}`;
-        await fetch(`/api/log?slug=${encodeURIComponent(slug)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ua:navigator.userAgent})});
+        await fetch(`/api/log?slug=${encodeURIComponent(slug)}`,{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ua:navigator.userAgent})
+        });
       }catch{
         document.getElementById('visit-count').textContent='خطا در دریافت شمارنده';
       }
     }
     loadVisits();
 
-    // ------------ UI: کارت‌ها
+    // ---- ابزارهای کمکی ستاره
+    const rateStars = document.getElementById('rateStars');
+    const rateLabel = document.getElementById('rateLabel');
+    let   selectedRate = null;
+    function setStars(n){
+      [...rateStars.children].forEach((el,i)=> el.style.color=(i<n)?'#ffd04d':'#fff');
+      rateLabel.textContent = n?`امتیاز ${n} از 5`:''; selectedRate=n||null;
+    }
+    rateStars.querySelectorAll('span').forEach(sp=> sp.addEventListener('click',()=> setStars(+sp.dataset.v)));
+
+    // ---- مودال
+    const modal       = document.getElementById('cmtModal');
+    const cmtTitle    = document.getElementById('cmtTitle');
+    const cmtList     = document.getElementById('cmtList');
+    const cmtInput    = document.getElementById('cmtInput');
+    const btnRate     = document.getElementById('btnRate');
+    const btnSend     = document.getElementById('sendCmt');
+    const btnClose    = document.getElementById('closeCmt');
+
+    let currentBook   = null;
+    let currentAvgEl  = null;
+    let unSubComments = null;
+
+    // ---- اتصال کارت‌ها به Firestore (Realtime)
     const cards = document.querySelectorAll('.book-card');
-
     cards.forEach(card=>{
-      const id=card.dataset.id, title=card.dataset.title;
-      const rateBtn = card.querySelector('.rate-btn');
-      const cmtBtn  = card.querySelector('.cmt-btn');
-      const avgEl   = card.querySelector('.rate-avg');
-      const cmtEl   = card.querySelector('.cmt-count');
+      const id          = card.dataset.id;
+      const rateAvgEl   = card.querySelector('.rate-avg');
+      const cmtCountEl  = card.querySelector('.cmt-count');
+      const rateBtn     = card.querySelector('.rate-btn');
+      const cmtBtn      = card.querySelector('.cmt-btn');
 
-      const bookRef = doc(db,'books',id);
-
-      // شنونده‌ی realtime برای میانگین امتیاز و تعداد نظرات
-      onSnapshot(bookRef,(snap)=>{
-        const d = snap.data() || {};
-        const avg = (d.ratingCount>0) ? (d.ratingSum/d.ratingCount) : 0;
-        avgEl.textContent = d.ratingCount?avg.toFixed(1):'';
+      // میانگین امتیاز realtime از خود داکیومنت book
+      onSnapshot(doc(db,'books',id),(snap)=>{
+        const d = snap.data();
+        const avg = (d && d.ratingCount>0) ? (d.ratingSum/d.ratingCount).toFixed(1) : '';
+        rateAvgEl.textContent = avg;
       });
 
       // تعداد نظرات realtime
-      const qComments = query(collection(bookRef,'comments'));
-      onSnapshot(qComments,(s)=>{ cmtEl.textContent = s.size? s.size : ''; });
+      const q = query(collection(db,'books',id,'comments'), orderBy('createdAt','desc'));
+      onSnapshot(q, (ss) => {
+        cmtCountEl.textContent = ss.size? ss.size : '';
+        // اگر مودال برای همین کتاب باز باشد، لیست را همزمان آپدیت کن
+        if (currentBook===id) renderComments(ss);
+      });
 
-      function open(){ openModal(id,title,avgEl,cmtEl); }
-      rateBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();open()});
-      cmtBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();open()});
+      function open(){ openModal(id, card.dataset.title, rateAvgEl); }
+      rateBtn.addEventListener('click', (e)=>{e.preventDefault();e.stopPropagation();open()});
+      cmtBtn.addEventListener('click', (e)=>{e.preventDefault();e.stopPropagation();open()});
     });
 
-    // ------------------- مودال
-    const modal      = document.getElementById('cmtModal');
-    const cmtList    = document.getElementById('cmtList');
-    const cmtTitle   = document.getElementById('cmtTitle');
-    const cmtInput   = document.getElementById('cmtInput');
-    const btnClose   = document.getElementById('closeCmt');
-    const btnSend    = document.getElementById('sendCmt');
-    const btnRate    = document.getElementById('btnRate');
-    const rateStars  = document.getElementById('rateStars');
-    const rateLabel  = document.getElementById('rateLabel');
-
-    let currentBook=null, unsubscribeComments=null, selectedRate=null;
-
-    function setStars(n){
-      [...rateStars.children].forEach((el,i)=>el.style.color = (i<n)?'#ffd04d':'#fff');
-      rateLabel.textContent = n ? `امتیاز ${n} از 5` : '';
-      selectedRate = n||null;
-    }
-
-    async function openModal(bookId,title,avgEl, cmtEl){
-      currentBook = bookId;
-      cmtTitle.textContent = 'نظرات «'+title+'»';
-      cmtInput.value='';
+    // باز کردن مودال + بارگذاری امتیاز/نظرات کتاب جاری
+    async function openModal(bookId, title, avgEl){
+      currentBook  = bookId;
+      currentAvgEl = avgEl;
+      cmtTitle.textContent = 'نظرات «' + title + '»';
+      cmtInput.value = '';
       modal.style.display='flex';
 
       // مقدار امتیاز کاربر
-      const uid = auth.currentUser?.uid;
-      const userRateDoc = await getDoc(doc(db,'books',bookId,'ratings',uid));
-      setStars(userRateDoc.exists()? (userRateDoc.data().value||0) : 0);
+      const rDoc = await getDoc(doc(db,'books',bookId,'ratings',uid));
+      setStars(rDoc.exists()? (rDoc.data().value||0) : 0);
 
-      // نظرات realtime
-      if(unsubscribeComments) unsubscribeComments();
-      const q = query(collection(db,'books',bookId,'comments'), orderBy('ts','desc'));
-      unsubscribeComments = onSnapshot(q,(snap)=>{
-        cmtList.innerHTML='';
-        snap.forEach(docu=>{
-          const d=docu.data();
-          const li=document.createElement('li');
-          li.textContent=d.text;
-          cmtList.appendChild(li);
-        });
+      // لیست نظرات بصورت realtime
+      if (unSubComments) unSubComments();
+      const q = query(collection(db,'books',bookId,'comments'), orderBy('createdAt','desc'));
+      unSubComments = onSnapshot(q, (ss)=> renderComments(ss));
+    }
+
+    function renderComments(snapshot){
+      cmtList.innerHTML='';
+      snapshot.forEach(docSnap=>{
+        const li=document.createElement('li');
+        li.textContent = docSnap.data().text || '';
+        cmtList.appendChild(li);
       });
     }
 
-    btnClose.addEventListener('click',()=>{ modal.style.display='none'; if(unsubscribeComments) unsubscribeComments(); });
-
-    rateStars.querySelectorAll('span').forEach(sp=>{
-      sp.addEventListener('click',()=> setStars(+sp.dataset.v));
-    });
-
-    // ثبت امتیاز (با تراکنش)
+    // ثبت امتیاز (با transaction – تغییر هم پشتیبانی می‌شود)
     btnRate.addEventListener('click', async ()=>{
-      if(!currentBook || !selectedRate) return;
-      const uid = auth.currentUser?.uid;
-      const bookRef = doc(db,'books',currentBook);
-      const userRef = doc(db,'books',currentBook,'ratings',uid);
+      if (!currentBook || !selectedRate) return;
+      const bookRef   = doc(db,'books',currentBook);
+      const userRef   = doc(bookRef,'ratings',uid);
 
-      await runTransaction(db, async (transaction)=>{
-        const bookSnap = await transaction.get(bookRef);
-        const userSnap = await transaction.get(userRef);
+      await runTransaction(db, async (t) => {
+        const bookSnap = await t.get(bookRef);
+        const userSnap = await t.get(userRef);
 
-        let ratingSum   = bookSnap.exists()? (bookSnap.data().ratingSum||0) : 0;
-        let ratingCount = bookSnap.exists()? (bookSnap.data().ratingCount||0) : 0;
+        let sum   = (bookSnap.exists() ? (bookSnap.data().ratingSum||0)   : 0);
+        let count = (bookSnap.exists() ? (bookSnap.data().ratingCount||0) : 0);
 
-        if(userSnap.exists()){
-          const prev = userSnap.data().value||0;
-          ratingSum += (selectedRate - prev);
-          transaction.update(userRef,{value:selectedRate,ts:serverTimestamp()});
-        }else{
-          ratingSum += selectedRate;
-          ratingCount += 1;
-          transaction.set(userRef,{value:selectedRate,ts:serverTimestamp()});
+        if (userSnap.exists()){
+          const prev = userSnap.data().value || 0;
+          sum += (selectedRate - prev);
+          t.update(userRef, { value: selectedRate, updatedAt: serverTimestamp() });
+        } else {
+          count += 1;
+          sum   += selectedRate;
+          t.set(userRef,  { value: selectedRate, createdAt: serverTimestamp() });
         }
-        if(bookSnap.exists()){
-          transaction.update(bookRef,{ratingSum,ratingCount});
-        }else{
-          transaction.set(bookRef,{ratingSum,ratingCount});
-        }
+        t.set(bookRef, { ratingSum: sum, ratingCount: count }, { merge:true });
       });
-      alert('امتیاز ثبت شد');
+
+      alert('امتیاز شما ثبت شد');
+      // میانگین به صورت realtime برای کارت آپدیت می‌شود
     });
 
-    // ثبت نظر (حداکثر ۲ نظر برای هر کاربر در هر کتاب)
+    // ثبت نظر (با محدودیت حداکثر ۲ نظر برای هر کاربر/کتاب – روی Firestore چک می‌شود)
     btnSend.addEventListener('click', async ()=>{
-      const text = cmtInput.value.trim(); if(!text || !currentBook) return;
-      const uid  = auth.currentUser?.uid;
-      const listRef = collection(db,'books',currentBook,'comments');
-      const qMine = query(listRef, where('uid','==',uid));
-      const mine  = await getDocs(qMine);
-      if(mine.size >= 2){ alert('برای هر کتاب حداکثر 2 نظر مجاز است'); return; }
+      const txt = (cmtInput.value || '').trim();
+      if(!txt || !currentBook) return;
 
-      await addDoc(listRef, { text, uid, ts: serverTimestamp() });
+      const cRef = collection(db,'books',currentBook,'comments');
+      const q    = query(cRef, where('uid','==',uid));
+      const res  = await getDocs(q);
+      if (res.size >= 2){
+        alert('برای هر کتاب حداکثر 2 نظر مجاز است.');
+        return;
+      }
+
+      await addDoc(cRef, {
+        text: txt,
+        uid,
+        createdAt: serverTimestamp()
+      });
       cmtInput.value='';
+      // onSnapshot خودش بلافاصله لیست را آپدیت می‌کند
     });
 
-    // کلیک بیرون مودال -> بسته شود
-    modal.addEventListener('click', (e)=>{ if(e.target===modal){ modal.style.display='none'; if(unsubscribeComments) unsubscribeComments(); }});
+    btnClose.addEventListener('click',()=> modal.style.display='none');
+    modal.addEventListener('click',e=>{ if(e.target===modal) modal.style.display='none' });
   </script>
 </body>
 </html>
