@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>جغرافیا</title>
   <style>
     @font-face {
@@ -45,7 +45,7 @@
     .book-card:hover{transform:translateY(-3px);background:rgba(255,255,255,.16);box-shadow:0 12px 28px rgba(0,0,0,.45)}
     .book-card .title{font-size:16.5px;line-height:1.6;white-space:normal;word-wrap:break-word;flex:1;text-shadow:0 2px 6px rgba(0,0,0,.45)}
 
-    /* دانلود (چپ کارت) */
+    /* دانلود میره سمت چپ کارت */
     .book-card .badge{
       width:26px;height:26px;margin-left:12px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;order:-1
     }
@@ -88,19 +88,19 @@
         <a class="book-card" href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs"
            target="_blank" rel="noopener"
            data-id="geo11-test" data-title="پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز">
-          <!-- دانلود (چپ) -->
           <span class="badge">
+            <!-- دانلود -->
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
           </span>
-          <!-- عنوان -->
           <span class="title">پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز</span>
-          <!-- اکشن‌های راست -->
           <div class="actions">
             <div class="action-btn rate-btn" title="امتیاز و نظرات">
+              <!-- ستاره -->
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
             </div>
             <div class="meta rate-avg"></div>
             <div class="action-btn cmt-btn" title="امتیاز و نظرات">
+              <!-- پیام -->
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
             </div>
             <div class="meta cmt-count"></div>
@@ -192,37 +192,8 @@
     </div>
   </div>
 
-  <!-- Firebase + Firestore (ماژولار) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore, doc, collection, query, where, orderBy,
-      onSnapshot, getDoc, getDocs, addDoc, setDoc,
-      serverTimestamp, runTransaction
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    // ===== Firebase Config (از پروژه‌ی خودت)
-    const firebaseConfig = {
-      apiKey: "AIzaSyB6fWSRyXuMnJyCZz29hakPw2kkOD3JwqI",
-      authDomain: "ketabha-58a96.firebaseapp.com",
-      projectId: "ketabha-58a96",
-      storageBucket: "ketabha-58a96.firebasestorage.app",
-      messagingSenderId: "117717169254",
-      appId: "1:117717169254:web:3c59186fa13432ba7529a7",
-      measurementId: "G-SDF15BH8Z7"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-
-    // یک شناسه‌ی یکتا برای کاربر (برای محدودیت امتیاز/نظر – الزاما هویت واقعی نیست)
-    const uid = (localStorage.getItem('uid') || (() => {
-      const v = 'u_' + Math.random().toString(36).slice(2);
-      localStorage.setItem('uid', v);
-      return v;
-    })());
-
-    // ---- شمارنده بازدید (مثل قبل – سمت سرور خودت)
+  <!-- شمارنده بازدید (بدون تغییر) -->
+  <script>
     async function loadVisits(){
       const slug='geography';
       try{
@@ -239,139 +210,189 @@
       }
     }
     loadVisits();
+  </script>
 
-    // ---- ابزارهای کمکی ستاره
-    const rateStars = document.getElementById('rateStars');
-    const rateLabel = document.getElementById('rateLabel');
-    let   selectedRate = null;
+  <!-- Firebase + Firestore Realtime -->
+  <script type="module">
+    // --- Firebase SDK Imports ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+      getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, 
+      query, where, onSnapshot, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // --- Your Firebase Config (از همون پنل شما) ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6fWSRyXuMnJyCZz29hakPw2kkOD3JwqI",
+      authDomain: "ketabha-58a96.firebaseapp.com",
+      projectId: "ketabha-58a96",
+      storageBucket: "ketabha-58a96.firebasestorage.app",
+      messagingSenderId: "117717169254",
+      appId: "1:117717169254:web:3c59186fa13432ba7529a7",
+      measurementId: "G-SDF15BH8Z7"
+    };
+
+    // --- Init Firebase ---
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // --- Device ID ثابت بین مرورگرهای یک دستگاه ---
+    const devId = (localStorage.getItem('device_id') || (() => {
+      const v = 'dvc_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('device_id', v);
+      return v;
+    })());
+
+    // --- عناصر مودال و متغیرها ---
+    const modal        = document.getElementById('cmtModal');
+    const cmtList      = document.getElementById('cmtList');
+    const cmtTitle     = document.getElementById('cmtTitle');
+    const cmtInput     = document.getElementById('cmtInput');
+    const btnClose     = document.getElementById('closeCmt');
+    const btnSend      = document.getElementById('sendCmt');
+    const btnRate      = document.getElementById('btnRate');
+    const rateStarsBox = document.getElementById('rateStars');
+    const rateLabel    = document.getElementById('rateLabel');
+
+    let currentBook    = null;
+    let currentCounterEl = null;
+    let currentAvgEl     = null;
+    let selectedRate     = null;
+
+    // --- کمک‌کارها برای ستاره ---
     function setStars(n){
-      [...rateStars.children].forEach((el,i)=> el.style.color=(i<n)?'#ffd04d':'#fff');
-      rateLabel.textContent = n?`امتیاز ${n} از 5`:''; selectedRate=n||null;
+      [...rateStarsBox.children].forEach((el,i)=>{
+        el.style.color = (i < n)?'#ffd04d':'#fff';
+      });
+      rateLabel.textContent = n?`امتیاز ${n} از 5`:'';
+      selectedRate = n || null;
     }
-    rateStars.querySelectorAll('span').forEach(sp=> sp.addEventListener('click',()=> setStars(+sp.dataset.v)));
 
-    // ---- مودال
-    const modal       = document.getElementById('cmtModal');
-    const cmtTitle    = document.getElementById('cmtTitle');
-    const cmtList     = document.getElementById('cmtList');
-    const cmtInput    = document.getElementById('cmtInput');
-    const btnRate     = document.getElementById('btnRate');
-    const btnSend     = document.getElementById('sendCmt');
-    const btnClose    = document.getElementById('closeCmt');
-
-    let currentBook   = null;
-    let currentAvgEl  = null;
-    let unSubComments = null;
-
-    // ---- اتصال کارت‌ها به Firestore (Realtime)
-    const cards = document.querySelectorAll('.book-card');
-    cards.forEach(card=>{
-      const id          = card.dataset.id;
-      const rateAvgEl   = card.querySelector('.rate-avg');
-      const cmtCountEl  = card.querySelector('.cmt-count');
-      const rateBtn     = card.querySelector('.rate-btn');
-      const cmtBtn      = card.querySelector('.cmt-btn');
-
-      // میانگین امتیاز realtime از خود داکیومنت book
-      onSnapshot(doc(db,'books',id),(snap)=>{
-        const d = snap.data();
-        const avg = (d && d.ratingCount>0) ? (d.ratingSum/d.ratingCount).toFixed(1) : '';
-        rateAvgEl.textContent = avg;
-      });
-
-      // تعداد نظرات realtime
-      const q = query(collection(db,'books',id,'comments'), orderBy('createdAt','desc'));
-      onSnapshot(q, (ss) => {
-        cmtCountEl.textContent = ss.size? ss.size : '';
-        // اگر مودال برای همین کتاب باز باشد، لیست را همزمان آپدیت کن
-        if (currentBook===id) renderComments(ss);
-      });
-
-      function open(){ openModal(id, card.dataset.title, rateAvgEl); }
-      rateBtn.addEventListener('click', (e)=>{e.preventDefault();e.stopPropagation();open()});
-      cmtBtn.addEventListener('click', (e)=>{e.preventDefault();e.stopPropagation();open()});
-    });
-
-    // باز کردن مودال + بارگذاری امتیاز/نظرات کتاب جاری
-    async function openModal(bookId, title, avgEl){
-      currentBook  = bookId;
-      currentAvgEl = avgEl;
+    // --- باز کردن مودال (برای ستاره یا پیام) ---
+    async function openModal(bookId, title, counterEl, avgEl){
+      currentBook = bookId; currentCounterEl = counterEl; currentAvgEl = avgEl;
       cmtTitle.textContent = 'نظرات «' + title + '»';
       cmtInput.value = '';
-      modal.style.display='flex';
+      modal.style.display = 'flex';
 
-      // مقدار امتیاز کاربر
-      const rDoc = await getDoc(doc(db,'books',bookId,'ratings',uid));
-      setStars(rDoc.exists()? (rDoc.data().value||0) : 0);
+      // مقدار امتیاز کاربر را از Firestore بخوانیم
+      const myRateDocId = `${bookId}_${devId}`;
+      const myRateDoc   = await getDoc(doc(db,'ratings', myRateDocId));
+      const myVal = myRateDoc.exists() ? (myRateDoc.data().value || 0) : 0;
+      setStars(myVal);
 
-      // لیست نظرات بصورت realtime
-      if (unSubComments) unSubComments();
-      const q = query(collection(db,'books',bookId,'comments'), orderBy('createdAt','desc'));
-      unSubComments = onSnapshot(q, (ss)=> renderComments(ss));
+      // نظرات: realtime در هنگام باز بودن مودال
+      attachCommentsRealtime(bookId);
     }
 
-    function renderComments(snapshot){
-      cmtList.innerHTML='';
-      snapshot.forEach(docSnap=>{
-        const li=document.createElement('li');
-        li.textContent = docSnap.data().text || '';
+    // --- رندر لیست نظرات ---
+    function renderComments(list){
+      cmtList.innerHTML = '';
+      list.sort((a,b)=> (a.ts?.seconds||0) - (b.ts?.seconds||0)); // مرتب‌سازی بر اساس زمان
+      list.forEach(it=>{
+        const li = document.createElement('li');
+        li.textContent = it.text;
         cmtList.appendChild(li);
       });
+      if(currentCounterEl) currentCounterEl.textContent = (list.length ? list.length : '');
     }
 
-    // ثبت امتیاز (با transaction – تغییر هم پشتیبانی می‌شود)
-    btnRate.addEventListener('click', async ()=>{
-      if (!currentBook || !selectedRate) return;
-      const bookRef   = doc(db,'books',currentBook);
-      const userRef   = doc(bookRef,'ratings',uid);
-
-      await runTransaction(db, async (t) => {
-        const bookSnap = await t.get(bookRef);
-        const userSnap = await t.get(userRef);
-
-        let sum   = (bookSnap.exists() ? (bookSnap.data().ratingSum||0)   : 0);
-        let count = (bookSnap.exists() ? (bookSnap.data().ratingCount||0) : 0);
-
-        if (userSnap.exists()){
-          const prev = userSnap.data().value || 0;
-          sum += (selectedRate - prev);
-          t.update(userRef, { value: selectedRate, updatedAt: serverTimestamp() });
-        } else {
-          count += 1;
-          sum   += selectedRate;
-          t.set(userRef,  { value: selectedRate, createdAt: serverTimestamp() });
-        }
-        t.set(bookRef, { ratingSum: sum, ratingCount: count }, { merge:true });
+    // --- لیسنر realtime برای نظرات (فقط وقتی مودال باز است) ---
+    let commentsUnsub = null;
+    function attachCommentsRealtime(bookId){
+      if(commentsUnsub) { commentsUnsub(); commentsUnsub = null; }
+      const qC = query(collection(db,'comments'), where('bookId','==',bookId));
+      commentsUnsub = onSnapshot(qC, snap=>{
+        const arr = snap.docs.map(d=>({id:d.id, ...d.data()}));
+        renderComments(arr);
       });
+    }
 
-      alert('امتیاز شما ثبت شد');
-      // میانگین به صورت realtime برای کارت آپدیت می‌شود
-    });
-
-    // ثبت نظر (با محدودیت حداکثر ۲ نظر برای هر کاربر/کتاب – روی Firestore چک می‌شود)
+    // --- ارسال نظر: با محدودیت <= 2 به ازای هر دستگاه و هر کتاب ---
     btnSend.addEventListener('click', async ()=>{
-      const txt = (cmtInput.value || '').trim();
+      const txt = (cmtInput.value||'').trim();
       if(!txt || !currentBook) return;
 
-      const cRef = collection(db,'books',currentBook,'comments');
-      const q    = query(cRef, where('uid','==',uid));
-      const res  = await getDocs(q);
-      if (res.size >= 2){
-        alert('برای هر کتاب حداکثر 2 نظر مجاز است.');
+      // شمارش نظرات موجود همین دستگاه
+      const qMy = query(collection(db,'comments'),
+                        where('bookId','==', currentBook),
+                        where('deviceId','==', devId));
+      const mySnap = await getDocs(qMy);
+      if(mySnap.size >= 2){
+        alert('برای هر کتاب حداکثر 2 نظر مجاز است');
         return;
       }
 
-      await addDoc(cRef, {
+      await addDoc(collection(db,'comments'), {
+        bookId: currentBook,
+        deviceId: devId,
         text: txt,
-        uid,
-        createdAt: serverTimestamp()
+        ts: serverTimestamp()
       });
-      cmtInput.value='';
-      // onSnapshot خودش بلافاصله لیست را آپدیت می‌کند
+
+      cmtInput.value = '';
+      // لیسنر onSnapshot خودش لیست را به‌روز می‌کند
     });
 
-    btnClose.addEventListener('click',()=> modal.style.display='none');
-    modal.addEventListener('click',e=>{ if(e.target===modal) modal.style.display='none' });
+    // --- ثبت امتیاز (بازنویسی با setDoc و docId یکتا) ---
+    btnRate.addEventListener('click', async ()=>{
+      if(!currentBook || !selectedRate) return;
+      const docId = `${currentBook}_${devId}`;
+      await setDoc(doc(db,'ratings', docId), {
+        bookId: currentBook,
+        deviceId: devId,
+        value: selectedRate,
+        ts: serverTimestamp()
+      }, {merge:true});
+      alert('امتیاز شما ثبت شد');
+      // avg کتاب با onSnapshot مربوط به همان کارت به‌روز می‌شود
+    });
+
+    // --- بستن مودال ---
+    btnClose.addEventListener('click', ()=>{
+      modal.style.display='none';
+      if(commentsUnsub){ commentsUnsub(); commentsUnsub=null; }
+    });
+    modal.addEventListener('click', e=>{ if(e.target===modal){ modal.style.display='none'; if(commentsUnsub){ commentsUnsub(); commentsUnsub=null; } } });
+
+    // --- کلیک روی ستاره‌های مودال ---
+    rateStarsBox.querySelectorAll('span').forEach(sp=>{
+      sp.addEventListener('click', ()=> setStars(+sp.dataset.v));
+    });
+
+    // --- کارت‌ها ---
+    const cards = document.querySelectorAll('.book-card');
+    cards.forEach(card=>{
+      const id  = card.dataset.id;
+      const ttl = card.dataset.title;
+
+      const rateBtn    = card.querySelector('.rate-btn');
+      const cmtBtn     = card.querySelector('.cmt-btn');
+      const rateAvgEl  = card.querySelector('.rate-avg');
+      const cmtCountEl = card.querySelector('.cmt-count');
+
+      function open(){ openModal(id,ttl,cmtCountEl,rateAvgEl); }
+      rateBtn.addEventListener('click', e=>{ e.preventDefault(); e.stopPropagation(); open(); });
+      cmtBtn.addEventListener('click',  e=>{ e.preventDefault(); e.stopPropagation(); open(); });
+
+      // --- لیسنر realtime تعداد نظرات برای هر کتاب (برای نمایش عدد زیر آیکن پیام) ---
+      const qC = query(collection(db,'comments'), where('bookId','==',id));
+      onSnapshot(qC, snap=>{
+        const count = snap.size;
+        cmtCountEl.textContent = (count>0 ? count : '');
+      });
+
+      // --- لیسنر realtime برای میانگین امتیاز هر کتاب ---
+      const qR = query(collection(db,'ratings'), where('bookId','==',id));
+      onSnapshot(qR, snap=>{
+        const docs = snap.docs.map(d=>d.data());
+        const n    = docs.length;
+        if(n===0){ rateAvgEl.textContent=''; return; }
+        const sum  = docs.reduce((a,c)=> a + (Number(c.value)||0), 0);
+        const avg  = sum / n;
+        rateAvgEl.textContent = avg.toFixed(1);
+      });
+    });
   </script>
 </body>
 </html>
