@@ -2,10 +2,13 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>جغرافیا</title>
 <style>
-  @font-face{font-family:'iranyekan';src:url('iranyekanweblight.woff') format('woff')}
+  @font-face{
+    font-family:'iranyekan';
+    src:url('iranyekanweblight.woff') format('woff');
+  }
   *{box-sizing:border-box}
   body{
     font-family:'iranyekan',sans-serif;margin:0;padding:0;color:#fff;
@@ -16,332 +19,280 @@
                linear-gradient(180deg,#58a 0%,#2c3e50 100%);
     background-attachment:fixed;min-height:100vh;position:relative;
   }
-  body::before{
-    content:"";position:fixed;inset:0;
-    background:linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.25));
-    pointer-events:none;z-index:0;
-  }
-
+  body::before{content:"";position:fixed;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.25));pointer-events:none;z-index:0}
   header{
     text-align:center;font-weight:800;margin:26px 0 10px;font-size:38px;
     background:linear-gradient(90deg,#60a5fa,#a78bfa,#34d399,#fbbf24,#f87171);
     background-size:400% 400%;
     -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    animation:headGrad 18s ease infinite;text-shadow:0 0 10px rgba(255,255,255,.25);position:relative;z-index:1;
+    animation:headGrad 18s ease infinite;text-shadow:0 0 10px rgba(255,255,255,.25);position:relative;z-index:1
   }
-  @keyframes headGrad{
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
+  @keyframes headGrad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+  /* toolbar */
+  .toolbar{width:min(920px,95%);margin:0 auto 8px;display:flex;gap:10px;justify-content:space-between;align-items:center;z-index:2;position:relative}
+  .search-box{flex:1;position:relative}
+  .search-input{
+    width:100%;border:none;border-radius:12px;padding:12px 40px 12px 36px;
+    background:rgba(255,255,255,.14);color:#fff;font-family:inherit;outline:none;
+    box-shadow:0 8px 18px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.15)
+  }
+  .search-input::placeholder{color:#FFFFFF}
+  .search-clear{
+    position:absolute;left:10px;top:50%;transform:translateY(-50%);
+    width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);
+    display:none;align-items:center;justify-content:center;cursor:pointer;color:#fff;
+    box-shadow:0 4px 10px rgba(0,0,0,.3);font-weight:900
+  }
+  .search-icon{position:absolute;right:10px;top:50%;transform:translateY(-50%);opacity:.9}
+  .sort-btn{
+    border:none;border-radius:12px;padding:12px 16px;cursor:pointer;color:#fff;
+    background:linear-gradient(135deg,#1C93E3,#2ea3f2);
+    box-shadow:0 8px 18px rgba(28,147,227,.4);
+    font-family:inherit;
   }
 
   .panel{
-    width:min(920px,95%);margin:20px auto;padding:22px 20px 26px;background:rgba(255,255,255,.12);
+    width:min(920px,95%);margin:12px auto 20px;padding:22px 20px 26px;background:rgba(255,255,255,.12);
     border:1px solid rgba(255,255,255,.2);border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.35);
-    backdrop-filter:blur(6px);position:relative;z-index:1;
+    backdrop-filter:blur(6px);position:relative;z-index:1
   }
   .panel h2{margin:0 0 18px;font-size:22px;color:#f1f5f9;text-shadow:0 2px 8px rgba(0,0,0,.4)}
   ul.books{list-style:none;margin:0;padding:0}
   li{margin:10px 0}
 
-  /* نوار کنترل بالا */
-  .top-controls{
-    width:min(920px,95%);margin:8px auto 0;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap
-  }
-  .top-controls .field{
-    flex:1 1 240px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-    border-radius:12px;padding:8px 10px;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.25);backdrop-filter:blur(6px);
-    display:flex;align-items:center;gap:6px;position:relative;
-  }
-  .top-controls input#searchBox{
-    width:100%;border:none;background:transparent;color:#fff;font-family:'iranyekan';
-    outline:none;font-size:14px;
-  }
-  .top-controls input#searchBox::placeholder{color:#FFFFFF}
-  .clear-x{
-    position:absolute;left:10px;top:50%;transform:translateY(-50%);
-    width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.2);
-    display:none;align-items:center;justify-content:center;
-    cursor:pointer; user-select:none;
-  }
-  .clear-x span{line-height:0;font-size:14px;color:#fff;}
-
-  .sort-btn{
-    flex:1 1 240px;
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:12px;
-    padding:8px 10px;
-    color:#fff;
-    box-shadow:0 6px 16px rgba(0,0,0,.25);
-    backdrop-filter:blur(6px);
-    display:flex;align-items:center;justify-content:space-between;cursor:pointer;
-    font-size:14px;
-  }
-
-  /* کارت کتاب */
+  /* کارت کتاب – grid با ستون آیکون‌ها سمت چپ */
   .book-card{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;color:#fff;
-    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);padding:16px 18px;border-radius:12px;
+    display:grid; grid-template-columns:110px 1fr; align-items:center;
+    direction:ltr; /* ترتیب ستون‌ها چپ به راست؛ متن داخل rtl می‌ماند */
+    gap:10px;text-decoration:none;color:#fff;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);padding:14px 14px;border-radius:12px;
     box-shadow:0 6px 18px rgba(0,0,0,.28);transition:transform .18s ease,box-shadow .18s ease,background .18s ease;position:relative
   }
   .book-card:hover{transform:translateY(-3px);background:rgba(255,255,255,.16);box-shadow:0 12px 28px rgba(0,0,0,.45)}
-  .book-card .title{font-size:16.5px;line-height:1.6;white-space:normal;word-wrap:break-word;flex:1;text-shadow:0 2px 6px rgba(0,0,0,.45)}
-  .book-card .dlcount{font-size:12px;opacity:.95;margin-right:8px}
+  .title{font-size:16.5px;line-height:1.6;white-space:normal;word-wrap:break-word;text-shadow:0 2px 6px rgba(0,0,0,.45);direction:rtl}
+  .dcount{font-size:13px;opacity:.9}
 
-  /* ریل اکشن سمت چپ با گرید 2x3 */
-  .left-rail{
+  /* آیکون‌های چپ – گرید ۲×۴ (دو ردیف برچسب برای هر آیکون) */
+  .left-acts{
     display:grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto auto;
-    gap:6px 10px;
-    min-width:120px;
-    order:-1; /* می‌آید سمت چپ ردیف در RTL */
-    margin-left:12px;
+    grid-template-columns:38px 38px;
+    grid-template-rows:38px 14px 38px 14px; /* icon, label, icon, label */
+    gap:6px 8px; align-items:center; justify-items:center;
+    min-width: 110px;
   }
-  .badge{
-    width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));transition:transform .15s ease
+  .left-acts .icon-wrap{
+    width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+    border-radius:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 6px 16px rgba(0,0,0,.35); transition:transform .15s ease, background .15s ease
   }
-  .badge:hover{transform:translateY(-2px)}
-  .badge svg{width:100%;height:100%;fill:#fff}
+  .left-acts .icon-wrap:hover{ transform:translateY(-2px); background:rgba(255,255,255,.16) }
+  .left-acts svg{ width:22px;height:22px; fill:#fff; filter: drop-shadow(0 2px 4px rgba(0,0,0,.45));}
+  .under-txt, .under-txt2{font-size:11.5px;color:#eaeaea;direction:rtl}
+  /* جایگذاری در گرید */
+  .dl{grid-column:1;grid-row:1}
+  .u-size{grid-column:1;grid-row:2}
+  .star{grid-column:2;grid-row:1}
+  .u-rate{grid-column:2;grid-row:2}
+  .share{grid-column:1;grid-row:3}
+  .buy{grid-column:2;grid-row:3}
 
-  .size-lbl,.score-lbl{font-size:11.5px;color:#eaeaea;text-shadow:0 2px 6px rgba(0,0,0,.45)}
+  /* پیام ستاره (tooltip) */
+  .star-tip{
+    position:absolute; right:110px; bottom:10px; background:rgba(0,0,0,.65);
+    border:1px solid rgba(255,255,255,.15); color:#fff; font-size:12.5px; padding:6px 10px; border-radius:10px;
+    box-shadow:0 10px 25px rgba(0,0,0,.35);
+    opacity:0; transform:translateY(12px); pointer-events:none; transition:all .35s ease;
+    max-width: 68%; line-height:1.8; direction:rtl
+  }
+  .star-tip.show{ opacity:1; transform:translateY(0) }
+  .star-tip.hide{ opacity:0; transform:translateY(18px) }
 
-  .btn-back{display:inline-block;margin:24px auto 10px;background:linear-gradient(135deg,#1C93E3,#2ea3f2);padding:12px 26px;color:#fff;text-decoration:none;border-radius:12px;box-shadow:0 8px 18px rgba(28,147,227,.4);transition:transform .15s ease, box-shadow .15s ease}
+  .btn-back{
+    display:inline-block;margin:24px auto 10px;background:linear-gradient(135deg,#1C93E3,#2ea3f2);padding:12px 26px;color:#fff;text-decoration:none;border-radius:12px;box-shadow:0 8px 18px rgba(28,147,227,.4);transition:transform .15s ease, box-shadow .15s ease
+  }
   .btn-back:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(28,147,227,.6)}
 
-  #counter{text-align:center;margin:20px 0 30px;font-size:15px;color:#eaeaea;text-shadow:0 2px 6px rgba(0,0,0,.45)}
+  #counter{text-align:center;margin:12px 0 24px;font-size:15px;color:#eaeaea;text-shadow:0 2px 6px rgba(0,0,0,.45)}
 
   /* مودال پیش‌نمایش */
-  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:60}
-  .modal .box{width:min(820px,92%);border-radius:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);box-shadow:0 18px 40px rgba(0,0,0,.45);padding:14px 16px;backdrop-filter:blur(6px);color:#fff}
-  .modal h3{margin:6px 0 12px;font-size:18px}
-  .btn{border:none;border-radius:10px;padding:8px 16px;cursor:pointer;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.35);background:linear-gradient(135deg,#34d399,#10b981);font-family:'iranyekan'}
-  .btn.gray{background:linear-gradient(135deg,#64748b,#475569)}
-  .box iframe{width:100%;height:60vh;border:none;border-radius:12px;background:#fff}
-
-  /* توست پیام با انیمیشن */
-  .toast{position:fixed;left:50%;bottom:-120px;transform:translateX(-50%);z-index:70;background:rgba(0,0,0,.75);color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 8px 22px rgba(0,0,0,.4);font-size:13.5px;opacity:0;transition:all .35s ease}
-  .toast.show{bottom:14px;opacity:1}
-  .toast.hide{bottom:-140px;opacity:0}
-
-  /* مودال مرتب‌سازی با بلور */
-  .modal-sort{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:65}
-  .modal-sort .wrap{
-    width:min(380px,92%);border-radius:16px;background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.2);box-shadow:0 18px 40px rgba(0,0,0,.45);
-    padding:12px;backdrop-filter:blur(8px);color:#fff
+  .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.5); z-index:50 }
+  .modal .box{
+    width:min(680px,92%); border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+    box-shadow:0 18px 40px rgba(0,0,0,.45); padding:14px 16px; backdrop-filter:blur(6px); color:#fff; position:relative; transform:scale(.95); opacity:0; transition: all .25s ease; direction:rtl
   }
-  .modal-sort h4{margin:6px 0 10px;font-size:16px}
-  .sort-list{list-style:none;margin:0;padding:0}
-  .sort-list li{padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:10px;margin:8px 0;cursor:pointer;background:rgba(255,255,255,.10);transition:transform .12s ease}
-  .sort-list li:hover{transform:translateY(-2px)}
-  .sort-actions{display:flex;justify-content:flex-end;margin-top:10px}
+  .modal.show .box{ transform:scale(1); opacity:1; }
+  .modal h3{ margin:6px 0 12px; font-size:18px }
+  .modal .row{ display:flex; gap:8px; justify-content:flex-end; align-items:center; margin-top:8px; flex-wrap:wrap }
+  .btn{ border:none; border-radius:10px; padding:8px 16px; cursor:pointer; color:#fff; box-shadow:0 6px 16px rgba(0,0,0,.35); background:linear-gradient(135deg,#34d399,#10b981); font-family:inherit }
+  .btn.gray{ background:linear-gradient(135deg,#64748b,#475569) }
+
+  /* مودال مرتب‌سازی */
+  .modal-sort{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.5); z-index:60; }
+  .modal-sort .box{
+    width:min(520px,92%); border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+    box-shadow:0 18px 40px rgba(0,0,0,.45); padding:14px 16px; backdrop-filter:blur(6px); color:#fff; position:relative; transform:scale(.94); opacity:0; transition: all .2s ease; direction:rtl
+  }
+  .modal-sort.show .box{ transform:scale(1); opacity:1; }
+  .sort-title{ font-size:16px; margin-bottom:10px }
+  .sort-list{ list-style:none; margin:0; padding:0 }
+  .sort-list li{
+    margin:8px 0; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.15);
+    cursor:pointer; transition: all .15s ease;
+  }
+  .sort-list li:hover{ background: rgba(255,255,255,.16) }
+  .sort-list li.active{ background: linear-gradient(135deg,#34d399,#10b981) }
+  .modal-sort .row{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px }
 </style>
 </head>
 <body>
-  <header>جغرافیا 📘</header>
+<header>جغرافیا 📘</header>
 
-  <!-- کنترل‌ها -->
-  <div class="top-controls">
-    <div class="field">
-      <input id="searchBox" type="text" placeholder="جست‌وجو بین کتاب‌ها...">
-      <div class="clear-x" id="clearSearch"><span>×</span></div>
-    </div>
-    <div class="sort-btn" id="openSort">
-      <span>مرتب‌سازی: پیش‌فرض</span>
-      <!-- آیکون ساده -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="#fff" d="M7 10l5 5 5-5z"/></svg>
-    </div>
+<div class="toolbar">
+  <div class="search-box">
+    <input id="searchInput" class="search-input" type="text" placeholder="جست‌وجو بین کتاب‌ها"/>
+    <span class="search-icon">🔎</span>
+    <span id="searchClear" class="search-clear">×</span>
   </div>
+  <button id="btnSort" class="sort-btn">مرتب‌سازی: پیش‌فرض</button>
+</div>
 
-  <!-- یازدهم -->
-  <section class="panel">
-    <h2>کتاب‌های جغرافیا، پایه یازدهم</h2>
-    <ul class="books" id="list11">
-      <li>
-        <div class="book-card"
-             data-id="geo11-test"
-             data-title="پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز"
-             data-download="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs"
-             data-size="88"
-             data-buy="https://www.digikala.com/product/dkp-9512809/کتاب-پرسش-های-چهارگزینه-ای-جغرافیا-2-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/"
-             data-score="?" data-scoretext="برای این کتاب در دیجی‌کالا امتیازی ثبت نشده است."
-             data-dl="0">
-
-          <!-- ریل چپ (گرید 2x3): [دانلود][ستاره] / [حجم][امتیاز] / [اشتراک][خرید] -->
-          <div class="left-rail">
-            <a class="badge dl-btn" title="دانلود" target="_blank" rel="noopener">
-              <!-- دانلود -->
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
-            </a>
-            <div class="badge star-btn" title="امتیاز دیجی‌کالا">
-              <!-- ستاره -->
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
-            </div>
-
-            <div class="size-lbl">88MB</div>
-            <div class="score-lbl score-text">؟</div>
-
-            <div class="badge share-btn" title="اشتراک‌گذاری">
-              <!-- share -->
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-0.76 0-1.44 0.3-1.96 0.77l-7.13-4.11c0.05-0.25 0.09-0.5 0.09-0.76s-0.04-0.51-0.09-0.76l7.09-4.1c0.54 0.5 1.25 0.81 2.04 0.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 0.26 0.04 0.51 0.09 0.76l-7.09 4.1c-0.54-0.5-1.25-0.81-2.04-0.81-1.66 0-3 1.34-3 3s1.34 3 3 3c0.79 0 1.5-0.31 2.04-0.81l7.13 4.11c-0.05 0.23-0.08 0.47-0.08 0.72 0 1.61 1.31 2.92 2.92 2.92S21 17.69 21 16.08s-1.31-2.92-2.92-2.92z"/></svg>
-            </div>
-            <a class="badge buy-btn" title="خرید از دیجی‌کالا" target="_blank" rel="noopener">
-              <!-- cart -->
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h-2l-1 2h2l2.68 9H19l2-8H8l-.62-2zM7 20a2 2 0 110-4 2 2 0 010 4zm10 0a2 2 0 110-4 2 2 0 010 4z"/></svg>
-            </a>
+<!-- یازدهم -->
+<section class="panel" data-panel="11">
+  <h2>کتاب‌های جغرافیا، پایه یازدهم</h2>
+  <ul class="books" id="list11">
+    <li data-id="geo11-test">
+      <div class="book-card" data-href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs">
+        <div class="left-acts">
+          <!-- ردیف 1 -->
+          <div class="icon-wrap dl" title="دانلود">
+            <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
           </div>
-
-          <div class="title tclick">پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز <span class="dlcount">(0 دانلود)</span></div>
-        </div>
-      </li>
-
-      <li>
-        <div class="book-card"
-             data-id="geo11-shab"
-             data-title="شب امتحان – خیلی سبز"
-             data-download="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw"
-             data-size="23"
-             data-buy="https://www.digikala.com/product/dkp-820916/کتاب-شب-امتحان-جغرافیا-پایه-یازدهم-اثر-سیده-مریم-طاهری/"
-             data-score="4.4" data-scoretext="۴.۴ امتیاز از ۲۶ رأی ثبت‌شده در دیجی‌کالا"
-             data-dl="0">
-
-          <div class="left-rail">
-            <a class="badge dl-btn" title="دانلود" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
-            </a>
-            <div class="badge star-btn" title="امتیاز دیجی‌کالا">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
-            </div>
-
-            <div class="size-lbl">23MB</div>
-            <div class="score-lbl score-text">4.4</div>
-
-            <div class="badge share-btn" title="اشتراک‌گذاری">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-0.76 0-1.44 0.3-1.96 0.77l-7.13-4.11c0.05-0.25 0.09-0.5 0.09-0.76s-0.04-0.51-0.09-0.76l7.09-4.1c0.54 0.5 1.25 0.81 2.04 0.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 0.26 0.04 0.51 0.09 0.76l-7.09 4.1c-0.54-0.5-1.25-0.81-2.04-0.81-1.66 0-3 1.34-3 3s1.34 3 3 3c0.79 0 1.5-0.31 2.04-0.81l7.13 4.11c-0.05 0.23-0.08 0.47-0.08 0.72 0 1.61 1.31 2.92 2.92 2.92S21 17.69 21 16.08s-1.31-2.92-2.92-2.92z"/></svg>
-            </div>
-            <a class="badge buy-btn" title="خرید از دیجی‌کالا" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h-2l-1 2h2l2.68 9H19l2-8H8l-.62-2zM7 20a2 2 0 110-4 2 2 0 010 4zm10 0a2 2 0 110-4 2 2 0 010 4z"/></svg>
-            </a>
+          <div class="icon-wrap star" title="امتیاز">
+            <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
           </div>
-
-          <div class="title tclick">شب امتحان – خیلی سبز <span class="dlcount">(0 دانلود)</span></div>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <!-- دهم -->
-  <section class="panel">
-    <h2>کتاب‌های جغرافیا، پایه دهم</h2>
-    <ul class="books" id="list10">
-      <li>
-        <div class="book-card"
-             data-id="geo10-shab"
-             data-title="شب امتحان – خیلی سبز"
-             data-download="https://s32.picofile.com/file/8481978634/%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85%D8%8C_%D8%B4%D8%A8_%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86_B_U_L.pdf.html"
-             data-size="24"
-             data-buy="https://www.digikala.com/product/dkp-4123378/کتاب-شب-امتحان-جغرافیا-ایران-دهم-اثر-مهدی-کاردان-و-شادی-کاریان-انتشارات-خیلی-سبز/"
-             data-score="4.5" data-scoretext="۴.۵ امتیاز از ۶۷ رأی ثبت‌شده در دیجی‌کالا"
-             data-dl="0">
-
-          <div class="left-rail">
-            <a class="badge dl-btn" title="دانلود" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
-            </a>
-            <div class="badge star-btn" title="امتیاز دیجی‌کالا">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
-            </div>
-
-            <div class="size-lbl">24MB</div>
-            <div class="score-lbl score-text">4.5</div>
-
-            <div class="badge share-btn" title="اشتراک‌گذاری">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-0.76 0-1.44 0.3-1.96 0.77l-7.13-4.11c0.05-0.25 0.09-0.5 0.09-0.76s-0.04-0.51-0.09-0.76l7.09-4.1c0.54 0.5 1.25 0.81 2.04 0.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 0.26 0.04 0.51 0.09 0.76l-7.09 4.1c-0.54-0.5-1.25-0.81-2.04-0.81-1.66 0-3 1.34-3 3s1.34 3 3 3c0.79 0 1.5-0.31 2.04-0.81l7.13 4.11c-0.05 0.23-0.08 0.47-0.08 0.72 0 1.61 1.31 2.92 2.92 2.92S21 17.69 21 16.08s-1.31-2.92-2.92-2.92z"/></svg>
-            </div>
-            <a class="badge buy-btn" title="خرید از دیجی‌کالا" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h-2l-1 2h2l2.68 9H19l2-8H8l-.62-2zM7 20a2 2 0 110-4 2 2 0 010 4zm10 0a2 2 0 110-4 2 2 0 010 4z"/></svg>
-            </a>
+          <!-- ردیف 2 (برچسب‌ها) -->
+          <div class="under-txt u-size" data-size>88 MB</div>
+          <div class="under-txt2 u-rate" data-rate>؟</div>
+          <!-- ردیف 3 -->
+          <div class="icon-wrap share" title="اشتراک‌گذاری">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
           </div>
-
-          <div class="title tclick">شب امتحان – خیلی سبز <span class="dlcount">(0 دانلود)</span></div>
-        </div>
-      </li>
-
-      <li>
-        <div class="book-card"
-             data-id="geo10-dars"
-             data-title="درسنامه جغرافیا – خیلی سبز"
-             data-download="https://s32.picofile.com/file/8481961634/%D8%AF%D8%B1%D8%B3%D9%86%D8%A7%D9%85%D9%87_%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85_%D8%A8%D8%B1_%D8%B9%D9%85%D8%B1_%D9%84%D8%B9%D9%86%D8%AA.pdf.html"
-             data-size="36"
-             data-buy="https://www.digikala.com/product/dkp-1874006/کتاب-پرسش-های-چهار-گزینه-ای-جغرافیا-جامع-دهم-و-یازدهم-و-دوازدهم-رشته-انسانی-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/"
-             data-score="4.2" data-scoretext="۴.۲ امتیاز از ۴۵ رأی ثبت‌شده در دیجی‌کالا"
-             data-dl="0">
-
-          <div class="left-rail">
-            <a class="badge dl-btn" title="دانلود" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
-            </a>
-            <div class="badge star-btn" title="امتیاز دیجی‌کالا">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
-            </div>
-
-            <div class="size-lbl">36MB</div>
-            <div class="score-lbl score-text">4.2</div>
-
-            <div class="badge share-btn" title="اشتراک‌گذاری">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-0.76 0-1.44 0.3-1.96 0.77l-7.13-4.11c0.05-0.25 0.09-0.5 0.09-0.76s-0.04-0.51-0.09-0.76l7.09-4.1c0.54 0.5 1.25 0.81 2.04 0.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 0.26 0.04 0.51 0.09 0.76l-7.09 4.1c-0.54-0.5-1.25-0.81-2.04-0.81-1.66 0-3 1.34-3 3s1.34 3 3 3c0.79 0 1.5-0.31 2.04-0.81l7.13 4.11c-0.05 0.23-0.08 0.47-0.08 0.72 0 1.61 1.31 2.92 2.92 2.92S21 17.69 21 16.08s-1.31-2.92-2.92-2.92z"/></svg>
-            </div>
-            <a class="badge buy-btn" title="خرید از دیجی‌کالا" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h-2l-1 2h2l2.68 9H19l2-8H8l-.62-2zM7 20a2 2 0 110-4 2 2 0 010 4zm10 0a2 2 0 110-4 2 2 0 010 4z"/></svg>
-            </a>
+          <div class="icon-wrap buy" title="خرید">
+            <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
           </div>
-
-          <div class="title tclick">درسنامه جغرافیا – خیلی سبز <span class="dlcount">(0 دانلود)</span></div>
         </div>
-      </li>
-    </ul>
-  </section>
-
-  <div style="text-align:center">
-    <a class="btn-back" href="index.html">بازگشت به منوی اصلی</a>
-  </div>
-
-  <div id="counter"><span id="visit-count">بازدید این صفحه</span></div>
-
-  <!-- مودال پیش‌نمایش -->
-  <div class="modal" id="previewModal">
-    <div class="box">
-      <h3 id="prevTitle">پیش‌نمایش</h3>
-      <iframe id="prevFrame" src=""></iframe>
-      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
-        <button class="btn gray" id="closePrev">بستن</button>
+        <span class="title">پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
+        <div class="star-tip"></div>
       </div>
-    </div>
-  </div>
+    </li>
 
-  <!-- مودال مرتب‌سازی -->
-  <div class="modal-sort" id="sortModal">
-    <div class="wrap">
-      <h4>مرتب‌سازی بر اساس:</h4>
-      <ul class="sort-list">
-        <li data-mode="default">پیش‌فرض</li>
-        <li data-mode="score">بیشترین امتیاز</li>
-        <li data-mode="downloads">بیشترین دانلود</li>
-        <li data-mode="size">کم‌حجم‌ترین</li>
-      </ul>
-      <div class="sort-actions">
-        <button class="btn gray" id="closeSort">بستن</button>
+    <li data-id="geo11-shab">
+      <div class="book-card" data-href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw">
+        <div class="left-acts">
+          <div class="icon-wrap dl" title="دانلود">
+            <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
+          </div>
+          <div class="icon-wrap star" title="امتیاز">
+            <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
+          </div>
+          <div class="under-txt u-size" data-size>23 MB</div>
+          <div class="under-txt2 u-rate" data-rate>4.4</div>
+          <div class="icon-wrap share" title="اشتراک‌گذاری">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
+          </div>
+          <div class="icon-wrap buy" title="خرید">
+            <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
+          </div>
+        </div>
+        <span class="title">شب امتحان – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
+        <div class="star-tip"></div>
       </div>
-    </div>
-  </div>
+    </li>
+  </ul>
+</section>
 
-  <!-- توست -->
-  <div class="toast" id="toast"></div>
+<!-- دهم -->
+<section class="panel" data-panel="10">
+  <h2>کتاب‌های جغرافیا، پایه دهم</h2>
+  <ul class="books" id="list10">
+    <li data-id="geo10-shab">
+      <div class="book-card" data-href="https://s32.picofile.com/file/8481978634/%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85%D8%8C_%D8%B4%D8%A8_%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86_B_U_L.pdf.html">
+        <div class="left-acts">
+          <div class="icon-wrap dl" title="دانلود">
+            <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
+          </div>
+          <div class="icon-wrap star" title="امتیاز">
+            <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
+          </div>
+          <div class="under-txt u-size" data-size>24 MB</div>
+          <div class="under-txt2 u-rate" data-rate>4.5</div>
+          <div class="icon-wrap share" title="اشتراک‌گذاری">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
+          </div>
+          <div class="icon-wrap buy" title="خرید">
+            <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
+          </div>
+        </div>
+        <span class="title">شب امتحان – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
+        <div class="star-tip"></div>
+      </div>
+    </li>
+
+    <li data-id="geo10-dars">
+      <div class="book-card" data-href="https://s32.picofile.com/file/8481961634/%D8%AF%D8%B1%D8%B3%D9%86%D8%A7%D9%85%D9%87_%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85_%D8%A8%D8%B1_%D8%B9%D9%85%D8%B1_%D9%84%D8%B9%D9%86%D8%AA.pdf.html">
+        <div class="left-acts">
+          <div class="icon-wrap dl" title="دانلود">
+            <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
+          </div>
+          <div class="icon-wrap star" title="امتیاز">
+            <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
+          </div>
+          <div class="under-txt u-size" data-size>36 MB</div>
+          <div class="under-txt2 u-rate" data-rate>4.2</div>
+          <div class="icon-wrap share" title="اشتراک‌گذاری">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
+          </div>
+          <div class="icon-wrap buy" title="خرید">
+            <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
+          </div>
+        </div>
+        <span class="title">درسنامه جغرافیا – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
+        <div class="star-tip"></div>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<div style="text-align:center">
+  <a class="btn-back" href="index.html">بازگشت به منوی اصلی</a>
+</div>
+
+<div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
+
+<!-- مودال‌ها -->
+<div class="modal" id="previewModal">
+  <div class="box">
+    <h3 id="pvTitle">پیش‌نمایش</h3>
+    <div id="pvBody" style="line-height:1.9;font-size:14.5px;opacity:.95"></div>
+    <div class="row"><button id="pvClose" class="btn gray">بستن</button></div>
+  </div>
+</div>
+
+<div class="modal-sort" id="sortModal">
+  <div class="box">
+    <div class="sort-title">مرتب‌سازی بر اساس</div>
+    <ul class="sort-list" id="sortList">
+      <li data-sort="default" class="active">پیش‌فرض</li>
+      <li data-sort="rate">بیشترین امتیاز</li>
+      <li data-sort="downloads">بیشترین دانلود</li>
+      <li data-sort="size">کم‌حجم‌ترین</li>
+    </ul>
+    <div class="row"><button class="btn gray" id="btnSortClose">بستن</button></div>
+  </div>
+</div>
 
 <script>
-  // ---- شمارنده بازدید صفحه
   async function loadVisits(){
     const slug='geography';
     try{
@@ -359,183 +310,163 @@
   }
   loadVisits();
 
-  // ---- توست
-  let toastTimer=null;
-  function showToast(txt){
-    const t=document.getElementById('toast');
-    t.textContent=txt;
-    t.classList.remove('hide');
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer=setTimeout(()=>{
-      t.classList.remove('show');
-      t.classList.add('hide');
-    },6000); // 6s
-  }
+  const bookMeta={
+    'geo11-test':{size:'88 MB',rate:null,votes:null,buy:'https://www.digikala.com/product/dkp-9512809/کتاب-پرسش-های-چهارگزینه-ای-جغرافیا-2-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/'},
+    'geo11-shab':{size:'23 MB',rate:4.4,votes:26,buy:'https://www.digikala.com/product/dkp-820916/کتاب-شب-امتحان-جغرافیا-پایه-یازدهم-اثر-سیده-مریم-طاهری/'},
+    'geo10-shab':{size:'24 MB',rate:4.5,votes:67,buy:'https://www.digikala.com/product/dkp-4123378/کتاب-شب-امتحان-جغرافیا-ایران-دهم-اثر-مهدی-کاردان-و-شادی-کاریان-انتشارات-خیلی-سبز/'},
+    'geo10-dars':{size:'36 MB',rate:4.2,votes:45,buy:'https://www.digikala.com/product/dkp-1874006/کتاب-پرسش-های-چهار-گزینه-ای-جغرافیا-جامع-دهم-و-یازدهم-و-دوازدهم-رشته-انسانی-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/'}
+  };
 
-  // ---- LocalStorage helpers
   function lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
   function lsSet(k,v){localStorage.setItem(k,JSON.stringify(v))}
 
-  // ---- مودال پیش‌نمایش
-  const prevModal=document.getElementById('previewModal');
-  const prevTitle=document.getElementById('prevTitle');
-  const prevFrame=document.getElementById('prevFrame');
-  document.getElementById('closePrev').onclick=()=>{prevModal.style.display='none'; prevFrame.src=''};
-  prevModal.addEventListener('click',(e)=>{ if(e.target===prevModal){prevModal.style.display='none'; prevFrame.src=''} });
-
-  // ---- API برای شمارنده‌ی دانلود (فقط روی کلیک زیاد می‌شود!)
-  async function getGlobalDl(bookId){
+  async function getDownloads(book){
     try{
-      const r=await fetch(`/api/visits?slug=${encodeURIComponent('dl_'+bookId)}`,{cache:'no-store'});
-      const d=await r.json();
-      if(!r.ok||typeof d.value!=='number')throw 0;
+      const r=await fetch(`/api/downloads?book=${encodeURIComponent(book)}`,{cache:'no-store'});
+      const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
       return d.value;
-    }catch{return 0}
+    }catch{return lsGet('dl_'+book,0)}
   }
-  async function incGlobalDl(bookId){
+  async function addDownload(book){
     try{
-      await fetch(`/api/log?slug=${encodeURIComponent('dl_'+bookId)}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ua:navigator.userAgent})
-      });
-    }catch{}
-  }
-
-  // ---- کارت‌ها
-  const cards=document.querySelectorAll('.book-card');
-  cards.forEach(card=>{
-    const id=card.dataset.id,
-          title=card.dataset.title,
-          dlsrc=card.dataset.download,
-          size=card.dataset.size,
-          buyLink=card.dataset.buy,
-          score=card.dataset.score,
-          scoreText=card.dataset.scoretext;
-
-    // عناصر
-    const dlBtn=card.querySelector('.dl-btn');
-    const shareBtn=card.querySelector('.share-btn');
-    const buyBtn=card.querySelector('.buy-btn');
-    const starBtn=card.querySelector('.star-btn');
-    const scoreEl=card.querySelector('.score-text');
-    const dlCountEl=card.querySelector('.dlcount');
-    const titleEl=card.querySelector('.tclick');
-
-    // Set attributes
-    dlBtn.href=dlsrc;
-    if(buyLink) buyBtn.href=buyLink;
-    scoreEl.textContent=score || '؟';
-
-    // اول از سرور مقدار دانلود را می‌گیریم:
-    async function refreshCount(){
-      const remote = await getGlobalDl(id);
-      // هیچ افزایشی در اینجا انجام نمی‌شود؛ فقط خواندن است
-      // نشان دادن حتی وقتی صفر باشد:
-      card.dataset.dl = remote || 0;
-      dlCountEl.textContent = `(${card.dataset.dl} دانلود)`;
+      const r=await fetch('/api/downloads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({book,inc:1})});
+      const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
+      return d.value;
+    }catch{
+      const v=lsGet('dl_'+book,0)+1; lsSet('dl_'+book,v); return v;
     }
-    refreshCount();
+  }
 
-    // دانلود (افزایش فقط اینجا)
-    dlBtn.addEventListener('click', async (e)=>{
-      // افکت
-      dlBtn.style.transform='scale(1.15)';
-      setTimeout(()=>dlBtn.style.transform='',150);
-
-      // افزایش در سرور
-      await incGlobalDl(id);
-      // پس از اندکی تاخیر، از سرور بخوانیم تا عدد واقعی را ببینیم
-      setTimeout(refreshCount,500);
+  // --- جست‌وجو
+  const searchInput=document.getElementById('searchInput');
+  const searchClear=document.getElementById('searchClear');
+  function normalize(s){return (s||'').replace(/\s+/g,' ').toLowerCase()}
+  function filterBooks(){
+    const v=normalize(searchInput.value||'');
+    document.querySelectorAll('.books li').forEach(li=>{
+      const t=li.querySelector('.title').textContent;
+      li.style.display = normalize(t).includes(v) ? '' : 'none';
     });
+    searchClear.style.display = v? 'flex':'none';
+  }
+  searchInput.addEventListener('input',filterBooks);
+  searchClear.addEventListener('click',()=>{searchInput.value='';filterBooks();searchInput.focus()});
 
-    // اشتراک گذاری
-    shareBtn.addEventListener('click',async ()=>{
-      const shareData={title, text:title+' - دانلود', url:dlsrc};
-      try{
-        if(navigator.share){ await navigator.share(shareData); }
-        else{ await navigator.clipboard.writeText(dlsrc); showToast('لینک دانلود در کلیپ‌بورد کپی شد'); }
-      }catch{}
-    });
-
-    // امتیاز دیجی‌کالا
-    starBtn.addEventListener('click',()=>{
-      showToast(scoreText || 'امتیازی ثبت نشده است.');
-      starBtn.style.transform='scale(1.15)'; setTimeout(()=>starBtn.style.transform='',150);
-    });
-
-    // پیش‌نمایش: با کلیک روی عنوان
-    titleEl.addEventListener('click',()=>{
-      prevTitle.textContent='پیش‌نمایش «'+title+'»';
-      prevFrame.src='https://docs.google.com/gview?embedded=1&url='+encodeURIComponent(dlsrc);
-      prevModal.style.display='flex';
-    });
-  });
-
-  // ---- جست‌وجو با ضربدر
-  const searchBox=document.getElementById('searchBox');
-  const clearBtn=document.getElementById('clearSearch');
-  searchBox.addEventListener('input',()=>{
-    clearBtn.style.display = searchBox.value.trim()? 'flex':'none';
-    filterAndSort();
-  });
-  clearBtn.addEventListener('click',()=>{
-    searchBox.value='';
-    clearBtn.style.display='none';
-    filterAndSort();
-  });
-
-  // ---- مرتب‌سازی با مودال
+  // --- مرتب سازی
+  const sortBtn=document.getElementById('btnSort');
   const sortModal=document.getElementById('sortModal');
-  const openSort=document.getElementById('openSort');
-  const closeSort=document.getElementById('closeSort');
-  openSort.addEventListener('click',()=>{sortModal.style.display='flex'});
-  closeSort.addEventListener('click',()=>{sortModal.style.display='none'});
-  sortModal.addEventListener('click',(e)=>{ if(e.target===sortModal) sortModal.style.display='none' });
-
+  const sortList=document.getElementById('sortList');
+  const sortClose=document.getElementById('btnSortClose');
   let currentSort='default';
-  document.querySelectorAll('.sort-list li').forEach(li=>{
-    li.addEventListener('click',()=>{
-      currentSort=li.dataset.mode;
-      openSort.querySelector('span').textContent='مرتب‌سازی: ' + (
-        currentSort==='default'?'پیش‌فرض':
-        currentSort==='score'?'بیشترین امتیاز':
-        currentSort==='downloads'?'بیشترین دانلود':'کم‌حجم‌ترین'
-      );
-      sortModal.style.display='none';
-      filterAndSort();
-    });
+  function openSort(){sortModal.style.display='flex';setTimeout(()=>sortModal.classList.add('show'),10)}
+  function closeSort(){sortModal.classList.remove('show');setTimeout(()=>sortModal.style.display='none',160)}
+  sortBtn.addEventListener('click',openSort);
+  sortClose.addEventListener('click',closeSort);
+  sortModal.addEventListener('click',e=>{if(e.target===sortModal)closeSort()});
+  sortList.querySelectorAll('li').forEach(li=>{
+    li.addEventListener('click',async()=>{
+      sortList.querySelectorAll('li').forEach(x=>x.classList.remove('active'));
+      li.classList.add('active'); currentSort=li.dataset.sort;
+      await applySort(); sortBtn.textContent='مرتب‌سازی: '+li.textContent.trim(); closeSort();
+    })
   });
 
-  function filterAndSort(){
-    const q=searchBox.value.trim();
-    document.querySelectorAll('.books').forEach(ul=>{
-      const items=Array.from(ul.querySelectorAll('li'));
-      // فیلتر
-      items.forEach(li=>{
-        const card=li.querySelector('.book-card');
-        const t=card.dataset.title;
-        li.style.display = (!q || t.includes(q)) ? '' : 'none';
-      });
-      // مرتب‌سازی
-      const visible=items.filter(li=>li.style.display!=='none');
-      visible.sort((a,b)=>{
-        const ca=a.querySelector('.book-card'), cb=b.querySelector('.book-card');
-        if(currentSort==='size'){
-          const sA=parseFloat(ca.dataset.size||'0'), sB=parseFloat(cb.dataset.size||'0');
-          return sA - sB; // کم‌حجم‌ترین
-        }else if(currentSort==='score'){
-          const sA=parseFloat(ca.dataset.score)||0, sB=parseFloat(cb.dataset.score)||0;
-          return sB - sA;
-        }else if(currentSort==='downloads'){
-          const dA=parseInt(ca.dataset.dl||'0'), dB=parseInt(cb.dataset.dl||'0');
-          return dB - dA;
-        }
-        return 0;
-      });
-      visible.forEach(li=>ul.appendChild(li));
+  async function applySort(){
+    const items=[...document.querySelectorAll('.books li')].map(li=>{
+      const id=li.dataset.id, meta=bookMeta[id]||{};
+      const dlNum=parseInt((li.querySelector('[data-dlc]').textContent.match(/\d+/)||[0])[0],10)||0;
+      return {
+        li,id,
+        size: meta.size?parseInt(meta.size):9999999,
+        rate: (meta.rate==null?-1:meta.rate),
+        downloads: dlNum
+      };
+    });
+
+    switch(currentSort){
+      case 'rate': items.sort((a,b)=>b.rate-a.rate); break;
+      case 'downloads': items.sort((a,b)=>b.downloads-a.downloads); break;
+      case 'size': items.sort((a,b)=>a.size-b.size); break;
+      default: break;
+    }
+
+    const list11=document.getElementById('list11'), list10=document.getElementById('list10');
+    items.forEach(it=>{
+      const p=it.li.closest('.panel');
+      if(p.dataset.panel==='11') list11.appendChild(it.li);
+      else list10.appendChild(it.li);
     });
   }
+
+  // --- کارت‌ها
+  const pvModal=document.getElementById('previewModal');
+  const pvTitle=document.getElementById('pvTitle');
+  const pvBody=document.getElementById('pvBody');
+  const pvClose=document.getElementById('pvClose');
+  pvClose.addEventListener('click',()=>{pvModal.classList.remove('show');setTimeout(()=>pvModal.style.display='none',180)});
+  pvModal.addEventListener('click',e=>{if(e.target===pvModal) pvClose.click()});
+
+  function openPreview(card,id){
+    const title = card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
+    const href  = card.dataset.href;
+    const meta  = bookMeta[id]||{};
+    pvTitle.textContent='پیش‌نمایش «'+title+'»';
+    pvBody.innerHTML =
+      `<div>حجم فایل: <b>${meta.size||'نامشخص'}</b></div>
+       <div>لینک دانلود: ${href?`<a href="${href}" target="_blank" rel="noopener" style="color:#aef">باز کردن</a>`:'نامشخص'}</div>
+       <div>امتیاز دیجی‌کالا: <b>${meta.rate==null?'ناموجود':meta.rate}</b> ${meta.votes?`(از ${meta.votes} رأی)`:''}</div>
+       <div style="margin-top:6px">خرید: ${meta.buy?`<a href="${meta.buy}" target="_blank" rel="noopener" style="color:#aef">مشاهده در دیجی‌کالا</a>`:'—'}</div>`;
+    pvModal.style.display='flex'; setTimeout(()=>pvModal.classList.add('show'),10);
+  }
+
+  function initCards(){
+    document.querySelectorAll('.book-card').forEach(card=>{
+      const li=card.closest('li'); const id=li.dataset.id;
+      const countEl=card.querySelector('[data-dlc]');
+      const starTip=card.querySelector('.star-tip');
+      const meta=bookMeta[id]||{};
+      // بارگذاری دانلود
+      getDownloads(id).then(v=>{countEl.textContent=`(${v} دانلود)`});
+
+      // ستاره
+      card.querySelector('.icon-wrap.star').addEventListener('click',e=>{
+        e.stopPropagation();
+        let msg = (meta.rate==null)?'برای این کتاب امتیازی در دیجی‌کالا ثبت نشده است':`${meta.rate} از 5 بر اساس ${meta.votes} رأی ثبت‌شده در دیجی‌کالا`;
+        starTip.textContent = msg;
+        starTip.classList.remove('hide'); starTip.classList.add('show');
+        setTimeout(()=>{ starTip.classList.remove('show'); starTip.classList.add('hide') }, 6000);
+      });
+
+      // خرید
+      card.querySelector('.icon-wrap.buy').addEventListener('click',e=>{
+        e.stopPropagation();
+        if(meta.buy) window.open(meta.buy,'_blank','noopener');
+      });
+
+      // اشتراک‌گذاری
+      card.querySelector('.icon-wrap.share').addEventListener('click',async e=>{
+        e.stopPropagation();
+        const t=card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
+        const url=location.href;
+        if(navigator.share){ try{ await navigator.share({title:t,text:'کتاب پیشنهادی:',url}); }catch{} }
+        else{
+          try{ await navigator.clipboard.writeText(`${t}\n${url}`); alert('لینک صفحه کپی شد') }catch{ alert('کپی نشد؛ دستی کپی کنید.') }
+        }
+      });
+
+      // دانلود
+      card.querySelector('.icon-wrap.dl').addEventListener('click',async e=>{
+        e.stopPropagation();
+        const nv=await addDownload(id); countEl.textContent=`(${nv} دانلود)`;
+        const href=card.dataset.href; if(href) window.open(href,'_blank','noopener');
+      });
+
+      // کلیک روی بدنه کارت -> فقط پیش‌نمایش
+      card.addEventListener('click',()=> openPreview(card,id));
+    });
+  }
+
+  initCards();
 </script>
 </body>
 </html>
