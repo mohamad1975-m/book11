@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>جغرافیا</title>
 <style>
-  /* ====== فونت ====== */
   @font-face{
     font-family:'iranyekanX';
     src:url('IRANYekanX-Light.woff2') format('woff2');
@@ -30,7 +29,7 @@
   }
   @keyframes headGrad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-  /* ====== نوار جست‌وجو + مرتب‌سازی ====== */
+  /* toolbar */
   .toolbar{width:min(920px,95%);margin:0 auto 8px;display:flex;gap:10px;justify-content:space-between;align-items:center;z-index:2;position:relative}
   .search-box{flex:1;position:relative}
   .search-input{
@@ -53,7 +52,6 @@
     font-family:inherit;
   }
 
-  /* ===== پنل ===== */
   .panel{
     width:min(920px,95%);margin:12px auto 20px;padding:22px 20px 26px;background:rgba(255,255,255,.12);
     border:1px solid rgba(255,255,255,.2);border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.35);
@@ -63,10 +61,11 @@
   ul.books{list-style:none;margin:0;padding:0}
   li{margin:10px 0}
 
-  /* ===== کارت کتاب ===== */
+  /* کارت کتاب – grid با ستون آیکون‌ها سمت چپ */
   .book-card{
-    display:grid; grid-template-columns:162px 1fr; align-items:center;
-    direction:ltr; gap:10px;text-decoration:none;color:#fff;
+    display:grid; grid-template-columns:110px 1fr; align-items:center;
+    direction:ltr; /* ترتیب ستون‌ها چپ به راست؛ متن داخل rtl می‌ماند */
+    gap:10px;text-decoration:none;color:#fff;
     background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);padding:14px 14px;border-radius:12px;
     box-shadow:0 6px 18px rgba(0,0,0,.28);transition:transform .18s ease,box-shadow .18s ease,background .18s ease;position:relative
   }
@@ -74,13 +73,13 @@
   .title{font-size:16.5px;line-height:1.6;white-space:normal;word-wrap:break-word;text-shadow:0 2px 6px rgba(0,0,0,.45);direction:rtl}
   .dcount{font-size:13px;opacity:.9}
 
-  /* ===== آیکون‌های سمت چپ ===== */
+  /* آیکون‌های چپ – گرید ۳ ردیف + ردیف کامنت (جدا) */
   .left-acts{
     display:grid;
-    grid-template-columns:38px 38px 38px;        /* دانلود | ستاره | (جای کامنت در ردیف پایین) */
-    grid-template-rows:38px 14px 38px 14px;      /* icon, label, icon, label */
+    grid-template-columns:38px 38px;
+    grid-template-rows:38px 14px 38px 14px 38px 14px; /* icon,label,icon,label,icon,label (for comment) */
     gap:6px 8px; align-items:center; justify-items:center;
-    min-width: 162px;
+    min-width:110px;
   }
   .left-acts .icon-wrap{
     width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;
@@ -89,7 +88,7 @@
   }
   .left-acts .icon-wrap:hover{ transform:translateY(-2px); background:rgba(255,255,255,.16) }
   .left-acts svg{ width:22px;height:22px; fill:#fff; filter: drop-shadow(0 2px 4px rgba(0,0,0,.45));}
-  .under-txt, .under-txt2, .under-cmt{font-size:11.5px;color:#eaeaea;direction:rtl}
+  .under-txt, .under-txt2{font-size:11.5px;color:#eaeaea;direction:rtl}
   /* جایگذاری در گرید */
   .dl{grid-column:1;grid-row:1}
   .u-size{grid-column:1;grid-row:2}
@@ -97,12 +96,12 @@
   .u-rate{grid-column:2;grid-row:2}
   .share{grid-column:1;grid-row:3}
   .buy{grid-column:2;grid-row:3}
-  .comment{grid-column:3;grid-row:3}
-  .c-count{grid-column:3;grid-row:4}
+  .cmt{grid-column:1;grid-row:5}       /* آیکون کامنت زیرِ اشتراک‌گذاری */
+  .u-cmt{grid-column:1;grid-row:6}     /* تعداد کامنت‌ها زیر آن */
 
-  /* پیام ستاره */
+  /* پیام ستاره (tooltip) */
   .star-tip{
-    position:absolute; right:162px; bottom:10px; background:rgba(0,0,0,.65);
+    position:absolute; right:110px; bottom:10px; background:rgba(0,0,0,.65);
     border:1px solid rgba(255,255,255,.15); color:#fff; font-size:12.5px; padding:6px 10px; border-radius:10px;
     box-shadow:0 10px 25px rgba(0,0,0,.35);
     opacity:0; transform:translateY(12px); pointer-events:none; transition:all .35s ease;
@@ -118,7 +117,7 @@
 
   #counter{text-align:center;margin:12px 0 24px;font-size:15px;color:#eaeaea;text-shadow:0 2px 6px rgba(0,0,0,.45)}
 
-  /* ===== مودال عمومی ===== */
+  /* مودال پیش‌نمایش */
   .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.5); z-index:50 }
   .modal .box{
     width:min(680px,92%); border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
@@ -130,7 +129,7 @@
   .btn{ border:none; border-radius:10px; padding:8px 16px; cursor:pointer; color:#fff; box-shadow:0 6px 16px rgba(0,0,0,.35); background:linear-gradient(135deg,#34d399,#10b981); font-family:inherit }
   .btn.gray{ background:linear-gradient(135deg,#64748b,#475569) }
 
-  /* ===== مودال مرتب‌سازی ===== */
+  /* مودال مرتب‌سازی */
   .modal-sort{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.5); z-index:60; }
   .modal-sort .box{
     width:min(520px,92%); border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
@@ -147,17 +146,26 @@
   .sort-list li.active{ background: linear-gradient(135deg,#34d399,#10b981) }
   .modal-sort .row{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px }
 
-  /* ===== مودال کامنت ===== */
-  .cmt-list{ list-style:none; margin:0; padding:0; max-height:260px; overflow-y:auto }
-  .cmt-item{
-    background: rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.15); border-radius:10px; padding:8px 10px; margin:8px 0;
+  /* مودال کامنت‌ها */
+  .modal-cmt{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.55); z-index:65; }
+  .modal-cmt .box{
+    width:min(720px,92%); border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+    box-shadow:0 18px 40px rgba(0,0,0,.45); padding:14px 16px; backdrop-filter:blur(6px); color:#fff; position:relative; transform:translateY(12px); opacity:0; transition:.22s ease; direction:rtl
   }
-  .cmt-head{ display:flex; align-items:center; gap:8px; font-size:13px; opacity:.9 }
-  .cmt-actions{ margin-right:auto; display:flex; gap:6px }
-  .cmt-text{ margin-top:6px; line-height:1.8; font-size:14px }
-  .cmt-del{
-    background:linear-gradient(135deg,#ef4444,#dc2626); border:none; border-radius:8px; padding:4px 10px; cursor:pointer; color:#fff; font-family:inherit
+  .modal-cmt.show .box{ transform:translateY(0); opacity:1; }
+  .c-title{ font-size:16px; margin-bottom:8px }
+  .c-list{ list-style:none; margin:8px 0 10px; padding:0; max-height:280px; overflow:auto }
+  .c-item{
+    background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.15); border-radius:10px; padding:10px; margin:6px 0;
   }
+  .c-meta{ display:flex; align-items:center; gap:8px; font-size:12.5px; opacity:.9 }
+  .c-text{ margin-top:6px; line-height:1.8; font-size:14.2px }
+  .c-actions{ display:flex; gap:6px; margin-top:6px }
+  .c-del{ background:linear-gradient(135deg,#ef4444,#dc2626) }
+  .c-reply{ background:linear-gradient(135deg,#1C93E3,#2ea3f2) }
+  .c-new{ width:100%; min-height:70px; border-radius:10px; border:none; padding:10px; resize:vertical; font-family:inherit }
+  .c-foot{ display:flex; gap:8px; justify-content:flex-end; align-items:center; margin-top:10px }
+  .c-help{ font-size:12.5px; opacity:.85 }
 </style>
 </head>
 <body>
@@ -179,7 +187,6 @@
     <li data-id="geo11-test">
       <div class="book-card" data-href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs">
         <div class="left-acts">
-          <!-- بالا -->
           <div class="icon-wrap dl" title="دانلود">
             <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
           </div>
@@ -188,18 +195,21 @@
           </div>
           <div class="under-txt u-size" data-size>88 MB</div>
           <div class="under-txt2 u-rate" data-rate>؟</div>
-          <!-- پایین -->
+
           <div class="icon-wrap share" title="اشتراک‌گذاری">
             <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
           </div>
           <div class="icon-wrap buy" title="خرید">
             <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
           </div>
-          <div class="icon-wrap comment" title="کامنت‌ها">
+
+          <!-- آیکون و شمارنده نظر -->
+          <div class="icon-wrap cmt" title="نظرها">
             <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
           </div>
-          <div class="under-cmt c-count" data-cmtc>0</div>
+          <div class="under-txt u-cmt" data-cc>0</div>
         </div>
+
         <span class="title">پرسش‌های چهارگزینه‌ای (به همراه درسنامه) – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
         <div class="star-tip"></div>
       </div>
@@ -208,24 +218,15 @@
     <li data-id="geo11-shab">
       <div class="book-card" data-href="https://mega.nz/file/R2YkAK7L#s2sUeQnr4IZ4IEx2vr9vFQMNZmSAcdDw4ggAtAatlqw">
         <div class="left-acts">
-          <div class="icon-wrap dl" title="دانلود">
-            <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
-          </div>
-          <div class="icon-wrap star" title="امتیاز">
-            <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
-          </div>
+          <div class="icon-wrap dl" title="دانلود"><svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></div>
+          <div class="icon-wrap star" title="امتیاز"><svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
           <div class="under-txt u-size" data-size>23 MB</div>
           <div class="under-txt2 u-rate" data-rate>4.4</div>
-          <div class="icon-wrap share" title="اشتراک‌گذاری">
-            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
-          </div>
-          <div class="icon-wrap buy" title="خرید">
-            <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
-          </div>
-          <div class="icon-wrap comment" title="کامنت‌ها">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
-          </div>
-          <div class="under-cmt c-count" data-cmtc>0</div>
+          <div class="icon-wrap share" title="اشتراک‌گذاری"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg></div>
+          <div class="icon-wrap buy" title="خرید"><svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg></div>
+
+          <div class="icon-wrap cmt" title="نظرها"><svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
+          <div class="under-txt u-cmt" data-cc>0</div>
         </div>
         <span class="title">شب امتحان – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
         <div class="star-tip"></div>
@@ -241,24 +242,15 @@
     <li data-id="geo10-shab">
       <div class="book-card" data-href="https://s32.picofile.com/file/8481978634/%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85%D8%8C_%D8%B4%D8%A8_%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86_B_U_L.pdf.html">
         <div class="left-acts">
-          <div class="icon-wrap dl" title="دانلود">
-            <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
-          </div>
-          <div class="icon-wrap star" title="امتیاز">
-            <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
-          </div>
+          <div class="icon-wrap dl" title="دانلود"><svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></div>
+          <div class="icon-wrap star" title="امتیاز"><svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
           <div class="under-txt u-size" data-size>24 MB</div>
           <div class="under-txt2 u-rate" data-rate>4.5</div>
-          <div class="icon-wrap share" title="اشتراک‌گذاری">
-            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
-          </div>
-          <div class="icon-wrap buy" title="خرید">
-            <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
-          </div>
-          <div class="icon-wrap comment" title="کامنت‌ها">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
-          </div>
-          <div class="under-cmt c-count" data-cmtc>0</div>
+          <div class="icon-wrap share" title="اشتراک‌گذاری"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg></div>
+          <div class="icon-wrap buy" title="خرید"><svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg></div>
+
+          <div class="icon-wrap cmt" title="نظرها"><svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
+          <div class="under-txt u-cmt" data-cc>0</div>
         </div>
         <span class="title">شب امتحان – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
         <div class="star-tip"></div>
@@ -268,24 +260,15 @@
     <li data-id="geo10-dars">
       <div class="book-card" data-href="https://s32.picofile.com/file/8481961634/%D8%AF%D8%B1%D8%B3%D9%86%D8%A7%D9%85%D9%87_%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7_%D8%AF%D9%87%D9%85_%D8%A8%D8%B1_%D8%B9%D9%85%D8%B1_%D9%84%D8%B9%D9%86%D8%AA.pdf.html">
         <div class="left-acts">
-          <div class="icon-wrap dl" title="دانلود">
-            <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
-          </div>
-          <div class="icon-wrap star" title="امتیاز">
-            <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
-          </div>
+          <div class="icon-wrap dl" title="دانلود"><svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg></div>
+          <div class="icon-wrap star" title="امتیاز"><svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg></div>
           <div class="under-txt u-size" data-size>36 MB</div>
           <div class="under-txt2 u-rate" data-rate>4.2</div>
-          <div class="icon-wrap share" title="اشتراک‌گذاری">
-            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
-          </div>
-          <div class="icon-wrap buy" title="خرید">
-            <svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg>
-          </div>
-          <div class="icon-wrap comment" title="کامنت‌ها">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
-          </div>
-          <div class="under-cmt c-count" data-cmtc>0</div>
+          <div class="icon-wrap share" title="اشتراک‌گذاری"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg></div>
+          <div class="icon-wrap buy" title="خرید"><svg viewBox="0 0 24 24"><path d="M7 4H5L4 6H0v2h2l3.6 7.59c-.35.59-.6 1.27-.6 2.01A3.5 3.5 0 008.5 21c1.61 0 2.96-1.07 3.36-2.5h2.28A3.5 3.5 0 0017.5 21 3.5 3.5 0 0021 17.5c0-1.23-.66-2.29-1.64-2.86l1.66-7.64H7V4zm0 4h11.1l-1.25 5.75H8.53L7 8z"/></svg></div>
+
+          <div class="icon-wrap cmt" title="نظرها"><svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
+          <div class="under-txt u-cmt" data-cc>0</div>
         </div>
         <span class="title">درسنامه جغرافیا – خیلی سبز <span class="dcount" data-dlc>(0 دانلود)</span></span>
         <div class="star-tip"></div>
@@ -300,7 +283,7 @@
 
 <div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
 
-<!-- مودال پیش‌نمایش -->
+<!-- مودال‌ها -->
 <div class="modal" id="previewModal">
   <div class="box">
     <h3 id="pvTitle">پیش‌نمایش</h3>
@@ -309,7 +292,6 @@
   </div>
 </div>
 
-<!-- مودال مرتب‌سازی -->
 <div class="modal-sort" id="sortModal">
   <div class="box">
     <div class="sort-title">مرتب‌سازی بر اساس</div>
@@ -324,21 +306,21 @@
 </div>
 
 <!-- مودال کامنت -->
-<div class="modal" id="cmtModal">
+<div class="modal-cmt" id="cmtModal">
   <div class="box">
-    <h3 id="cmtTitle">کامنت‌ها</h3>
-    <ul class="cmt-list" id="cmtList"></ul>
-    <textarea id="cmtInput" placeholder="کامنت جدید" style="width:100%;min-height:80px;border:none;border-radius:12px;padding:10px;font-family:inherit"></textarea>
-    <div style="font-size:12px;opacity:.85;margin-top:6px">برای هر کتاب حداکثر <b>3</b> کامنت اصلی می‌توانید ثبت کنید (پاسخ‌ها نامحدود هستند).</div>
-    <div class="row">
-      <button class="btn gray" id="btnCmtClose">بستن</button>
-      <button class="btn" id="btnCmtSend">ارسال کامنت</button>
+    <div class="c-title" id="cmtTitle">کامنت‌ها</div>
+    <ul class="c-list" id="cmtList"></ul>
+    <textarea id="cmtInput" class="c-new" placeholder="کامنت جدید"></textarea>
+    <div class="c-foot">
+      <span class="c-help">برای هر کتاب حداکثر ۳ کامنت اصلی می‌توانید ثبت کنید (پاسخ‌ها نامحدود هستند).</span>
+      <button class="btn gray" id="cmtClose">بستن</button>
+      <button class="btn" id="cmtSend">ارسال کامنت</button>
     </div>
   </div>
 </div>
 
 <script>
-  /* ===== شمارنده بازدید صفحه ===== */
+  // ---- بازدید
   async function loadVisits(){
     const slug='geography';
     try{
@@ -356,10 +338,7 @@
   }
   loadVisits();
 
-  /* ===== شناسه کاربر ===== */
-  const devId = localStorage.getItem('device_id') || (()=>{const v='dvc_'+Math.random().toString(36).slice(2); localStorage.setItem('device_id',v); return v})();
-
-  /* ===== اطلاعات کتاب‌ها ===== */
+  // -- متادیتا
   const bookMeta={
     'geo11-test':{size:'88 MB',rate:null,votes:null,buy:'https://www.digikala.com/product/dkp-9512809/کتاب-پرسش-های-چهارگزینه-ای-جغرافیا-2-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/'},
     'geo11-shab':{size:'23 MB',rate:4.4,votes:26,buy:'https://www.digikala.com/product/dkp-820916/کتاب-شب-امتحان-جغرافیا-پایه-یازدهم-اثر-سیده-مریم-طاهری/'},
@@ -367,11 +346,11 @@
     'geo10-dars':{size:'36 MB',rate:4.2,votes:45,buy:'https://www.digikala.com/product/dkp-1874006/کتاب-پرسش-های-چهار-گزینه-ای-جغرافیا-جامع-دهم-و-یازدهم-و-دوازدهم-رشته-انسانی-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/'}
   };
 
-  /* ===== ابزارک‌های ذخیره‌سازی محلی ===== */
+  const devId=(localStorage.getItem('device_id')||(()=>{const v='dvc_'+Math.random().toString(36).slice(2);localStorage.setItem('device_id',v);return v})());
   function lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
   function lsSet(k,v){localStorage.setItem(k,JSON.stringify(v))}
 
-  /* ===== API دانلودها ===== */
+  // --- شمارنده دانلود
   async function getDownloads(book){
     try{
       const r=await fetch(`/api/downloads?book=${encodeURIComponent(book)}`,{cache:'no-store'});
@@ -389,7 +368,7 @@
     }
   }
 
-  /* ===== جست‌وجو ===== */
+  // --- جست‌وجو
   const searchInput=document.getElementById('searchInput');
   const searchClear=document.getElementById('searchClear');
   function normalize(s){return (s||'').replace(/\s+/g,' ').toLowerCase()}
@@ -404,7 +383,7 @@
   searchInput.addEventListener('input',filterBooks);
   searchClear.addEventListener('click',()=>{searchInput.value='';filterBooks();searchInput.focus()});
 
-  /* ===== مرتب سازی ===== */
+  // --- مرتب سازی
   const sortBtn=document.getElementById('btnSort');
   const sortModal=document.getElementById('sortModal');
   const sortList=document.getElementById('sortList');
@@ -434,14 +413,12 @@
         downloads: dlNum
       };
     });
-
     switch(currentSort){
       case 'rate': items.sort((a,b)=>b.rate-a.rate); break;
       case 'downloads': items.sort((a,b)=>b.downloads-a.downloads); break;
       case 'size': items.sort((a,b)=>a.size-b.size); break;
       default: break;
     }
-
     const list11=document.getElementById('list11'), list10=document.getElementById('list10');
     items.forEach(it=>{
       const p=it.li.closest('.panel');
@@ -450,14 +427,13 @@
     });
   }
 
-  /* ===== مودال پیش‌نمایش ===== */
+  // --- مودال پیش نمایش
   const pvModal=document.getElementById('previewModal');
   const pvTitle=document.getElementById('pvTitle');
   const pvBody=document.getElementById('pvBody');
   const pvClose=document.getElementById('pvClose');
   pvClose.addEventListener('click',()=>{pvModal.classList.remove('show');setTimeout(()=>pvModal.style.display='none',180)});
   pvModal.addEventListener('click',e=>{if(e.target===pvModal) pvClose.click()});
-
   function openPreview(card,id){
     const title = card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
     const href  = card.dataset.href;
@@ -471,122 +447,131 @@
     pvModal.style.display='flex'; setTimeout(()=>pvModal.classList.add('show'),10);
   }
 
-  /* ===== کامنت‌ها ===== */
+  // --- بخش کامنت‌ها
   const cmtModal=document.getElementById('cmtModal');
   const cmtTitle=document.getElementById('cmtTitle');
-  const cmtList = document.getElementById('cmtList');
-  const cmtInput= document.getElementById('cmtInput');
-  const btnCmtClose=document.getElementById('btnCmtClose');
-  const btnCmtSend=document.getElementById('btnCmtSend');
-  let currentBook=null, currentCounterEl=null;
+  const cmtList=document.getElementById('cmtList');
+  const cmtInput=document.getElementById('cmtInput');
+  const cmtClose=document.getElementById('cmtClose');
+  const cmtSend=document.getElementById('cmtSend');
+  let currentSlug=null, currentCountEl=null;
 
-  function openCmt(bookId, bookTitle, counterEl){
-    currentBook=bookId; currentCounterEl=counterEl;
-    cmtTitle.textContent='کامنت‌های «'+bookTitle+'»';
-    cmtInput.value='';
-    cmtModal.style.display='flex'; setTimeout(()=>cmtModal.classList.add('show'),10);
-    loadComments();
+  function fmtTime(ms){
+    const d=new Date(ms||0); if(isNaN(d.getTime())) return '-';
+    return d.toLocaleString('fa-IR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
   }
-  function closeCmt(){
-    cmtModal.classList.remove('show'); setTimeout(()=>cmtModal.style.display='none',180);
-  }
-  btnCmtClose.addEventListener('click',closeCmt);
-  cmtModal.addEventListener('click',e=>{ if(e.target===cmtModal) closeCmt() });
+  function isHidden(id){ return !!localStorage.getItem('hide_cmt_'+id) }
+  function markHidden(id){ localStorage.setItem('hide_cmt_'+id,'1') }
 
-  function toFarsiDate(ts){
-    if(!ts) return '';
-    const d=new Date(ts);
-    return d.toLocaleString('fa-IR',{hour:'2-digit',minute:'2-digit',year:'numeric',month:'2-digit',day:'2-digit'});
-  }
-  function hiddenSetKey(book){ return `hide_cmts_${book}_${devId}` }
-
-  async function loadComments(){
-    cmtList.innerHTML='<li style="opacity:.8">در حال بارگذاری...</li>';
+  async function loadComments(slug){
     try{
-      const r=await fetch(`/api/comments?slug=${encodeURIComponent(currentBook)}`,{cache:'no-store'});
+      const r=await fetch(`/api/comments?slug=${encodeURIComponent(slug)}`,{cache:'no-store'});
       const arr=await r.json();
       if(!Array.isArray(arr)) throw 0;
-      renderComments(arr);
-    }catch(e){
-      cmtList.innerHTML='<li style="opacity:.8">خطا در دریافت کامنت‌ها</li>';
-    }
+      return arr;
+    }catch{return []}
+  }
+  async function postComment(slug,text,parentId=null){
+    const body={ text, parentId, userId:devId };
+    const r=await fetch(`/api/comments?slug=${encodeURIComponent(slug)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)
+    });
+    const d=await r.json();
+    if(!r.ok||!d||d.ok!==true) throw new Error('send-fail');
+    return d.doc;
   }
 
   function renderComments(list){
-    const hidden = lsGet(hiddenSetKey(currentBook),[]);
-    // شمارش تعیین سقف
-    const myCount = list.filter(x=>x.userId===devId).length;
-
     cmtList.innerHTML='';
-    list.forEach(c=>{
-      if(hidden.includes(c.id)) return; // از دید کاربر حذف شده
-      const li=document.createElement('li'); li.className='cmt-item';
+    const visible=list.filter(x=>!isHidden(x.id));
+    visible.sort((a,b)=>a.time-b.time);
 
-      const head=document.createElement('div'); head.className='cmt-head';
-      head.innerHTML = `<b>کاربر ناشناس</b> · <span>${toFarsiDate(c.time)}</span>`;
-      const actions=document.createElement('div'); actions.className='cmt-actions';
-
-      if(c.userId===devId){
-        const del=document.createElement('button'); del.className='cmt-del'; del.textContent='حذف';
-        del.onclick=()=>{ 
-          const h=lsGet(hiddenSetKey(currentBook),[]);
-          if(!h.includes(c.id)) h.push(c.id);
-          lsSet(hiddenSetKey(currentBook),h);
-          li.remove();
-          // بروزرسانی شمارش روی کارت
-          if(currentCounterEl){ 
-            const nowCount = Number(currentCounterEl.textContent||'0'); 
-            currentCounterEl.textContent = Math.max(0, nowCount-1);
-          }
-        };
-        actions.appendChild(del);
-      }
-
-      head.appendChild(actions);
-      const txt=document.createElement('div'); txt.className='cmt-text'; txt.textContent=c.text||'';
-      li.appendChild(head); li.appendChild(txt);
+    visible.forEach(cm=>{
+      const li=document.createElement('li');
+      li.className='c-item';
+      li.innerHTML=
+        `<div class="c-meta">
+           <b>کاربر ناشناس</b>
+           <span>•</span>
+           <span>${fmtTime(cm.time)}</span>
+         </div>
+         <div class="c-text">${escapeHtml(cm.text)}</div>
+         <div class="c-actions">
+           ${cm.userId===devId?'<button class="btn c-del" data-del="'+cm.id+'">حذف</button>':''}
+           <button class="btn c-reply" data-rp="'+cm.id+'">پاسخ</button>
+         </div>`;
       cmtList.appendChild(li);
     });
 
-    // مقدار شمارش برای کارت
-    if(currentCounterEl) currentCounterEl.textContent = String(list.length);
-    // پیام محدودیت
-    btnCmtSend.dataset.lock = (myCount>=3) ? '1':'0';
+    if(currentCountEl) currentCountEl.textContent = String(visible.length);
+
+    cmtList.querySelectorAll('[data-del]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const id=btn.getAttribute('data-del'); markHidden(id);
+        renderComments(list);
+      })
+    });
+
+    // پاسخ (برای سادگی: فقط واردکردن @id در ورودی)
+    cmtList.querySelectorAll('[data-rp]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const pid=btn.getAttribute('data-rp');
+        cmtInput.value = cmtInput.value.trim()+` @${pid} `;
+        cmtInput.focus();
+      });
+    });
   }
 
-  btnCmtSend.addEventListener('click',async()=>{
-    const text=(cmtInput.value||'').trim();
-    if(!currentBook) return;
-    if(!text){ alert('متن کامنت خالی است'); return; }
-    if(btnCmtSend.dataset.lock==='1'){ alert('برای هر کتاب حداکثر ۳ کامنت مجاز است'); return; }
+  function escapeHtml(s){return (s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
+
+  function openComments(slug,title,countEl){
+    currentSlug=slug; currentCountEl=countEl;
+    cmtTitle.textContent='کامنت‌های '+title;
+    cmtInput.value='';
+    cmtModal.style.display='flex'; setTimeout(()=>cmtModal.classList.add('show'),10);
+    loadComments(slug).then(renderComments);
+  }
+  function closeComments(){ cmtModal.classList.remove('show'); setTimeout(()=>cmtModal.style.display='none',160) }
+  cmtClose.addEventListener('click',closeComments);
+  cmtModal.addEventListener('click',e=>{ if(e.target===cmtModal) closeComments() });
+
+  cmtSend.addEventListener('click',async()=>{
+    const text=cmtInput.value.trim();
+    if(!text) return;
+    // محدودیت ۳ کامنت اصلی برای هر وسیله
+    const myKey='myc_'+currentSlug+'_'+devId;
+    const myCount=Number(localStorage.getItem(myKey)||'0');
+    if(myCount>=3 && !text.includes('@')){ alert('حداکثر ۳ کامنت اصلی مجاز است (پاسخ‌ها نامحدود).'); return; }
 
     try{
-      const r=await fetch(`/api/comments?slug=${encodeURIComponent(currentBook)}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({text,userId:devId})
-      });
-      const data=await r.json();
-      if(!r.ok || !data?.ok){ throw 0 }
+      const pid=(text.match(/@([A-Za-z0-9_]+)/)||[])[1]||null;
+      const cleanText= text.replace(/@[A-Za-z0-9_]+/g,'').trim();
+      const doc=await postComment(currentSlug,cleanText,pid||null);
+      if(!pid) localStorage.setItem(myKey,String(myCount+1));
       cmtInput.value='';
-      // دوباره بارگذاری
-      loadComments();
-    }catch(e){
-      alert('خطا در ارسال کامنت');
-    }
+      const list=await loadComments(currentSlug);
+      renderComments(list);
+    }catch(e){ alert('خطا در ارسال کامنت'); }
   });
 
-  /* ===== کارت‌ها ===== */
-  const pvModalEl=document.getElementById('previewModal');
+  // --- کارت‌ها
+  const starMsgTimeout = 6000;
   function initCards(){
     document.querySelectorAll('.book-card').forEach(card=>{
       const li=card.closest('li'); const id=li.dataset.id;
       const countEl=card.querySelector('[data-dlc]');
       const starTip=card.querySelector('.star-tip');
       const meta=bookMeta[id]||{};
-      const cmtCount=card.querySelector('[data-cmtc]');
+      const cmtCountEl = card.querySelector('[data-cc]');
 
-      // دانلودها
+      // بارگذاری دانلود
       getDownloads(id).then(v=>{countEl.textContent=`(${v} دانلود)`});
+
+      // بارگذاری شمارش کامنت
+      loadComments(id).then(arr=>{
+        const vis=arr.filter(x=>!isHidden(x.id)).length;
+        if(cmtCountEl) cmtCountEl.textContent=String(vis);
+      });
 
       // ستاره
       card.querySelector('.icon-wrap.star').addEventListener('click',e=>{
@@ -594,7 +579,7 @@
         let msg = (meta.rate==null)?'برای این کتاب امتیازی در دیجی‌کالا ثبت نشده است':`${meta.rate} از 5 بر اساس ${meta.votes} رأی ثبت‌شده در دیجی‌کالا`;
         starTip.textContent = msg;
         starTip.classList.remove('hide'); starTip.classList.add('show');
-        setTimeout(()=>{ starTip.classList.remove('show'); starTip.classList.add('hide') }, 6000);
+        setTimeout(()=>{ starTip.classList.remove('show'); starTip.classList.add('hide') }, starMsgTimeout);
       });
 
       // خرید
@@ -614,25 +599,22 @@
         }
       });
 
-      // کامنت‌ها (باز کردن مودال و دریافت شمارش اولیه)
-      card.querySelector('.icon-wrap.comment').addEventListener('click',async e=>{
-        e.stopPropagation();
-        const title = card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
-        openCmt(id, title, cmtCount);
-      });
-
-      // شمارش کامنت برای کارت (شروع صفحه)
-      fetch(`/api/comments?slug=${encodeURIComponent(id)}`,{cache:'no-store'})
-        .then(r=>r.json()).then(arr=>{
-          if(Array.isArray(arr)) cmtCount.textContent = String(arr.length || 0);
-        }).catch(()=>{ cmtCount.textContent='0' });
-
       // دانلود
       card.querySelector('.icon-wrap.dl').addEventListener('click',async e=>{
         e.stopPropagation();
         const nv=await addDownload(id); countEl.textContent=`(${nv} دانلود)`;
         const href=card.dataset.href; if(href) window.open(href,'_blank','noopener');
       });
+
+      // آیکون کامنت
+      const cmtBtn=card.querySelector('.icon-wrap.cmt');
+      if(cmtBtn){ 
+        cmtBtn.addEventListener('click',e=>{
+          e.stopPropagation();
+          const t=card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
+          openComments(id, t, cmtCountEl);
+        });
+      }
 
       // کلیک روی بدنه کارت -> فقط پیش‌نمایش
       card.addEventListener('click',()=> openPreview(card,id));
