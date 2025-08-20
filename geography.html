@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>جغرافیا</title>
 <style>
-  
   @font-face{
     font-family:'iranyekanX';
     src:url('IRANYekanX-Light.woff2') format('woff2');
@@ -30,7 +29,6 @@
   }
   @keyframes headGrad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-  /* toolbar */
   .toolbar{width:min(920px,95%);margin:0 auto 8px;display:flex;gap:10px;justify-content:space-between;align-items:center;z-index:2;position:relative}
   .search-box{flex:1;position:relative}
   .search-input{
@@ -62,10 +60,9 @@
   ul.books{list-style:none;margin:0;padding:0}
   li{margin:10px 0}
 
-  /* کارت کتاب – grid با ستون آیکون‌ها سمت چپ */
   .book-card{
     display:grid; grid-template-columns:110px 1fr; align-items:center;
-    direction:ltr; /* ترتیب ستون‌ها چپ به راست؛ متن داخل rtl می‌ماند */
+    direction:ltr; 
     gap:10px;text-decoration:none;color:#fff;
     background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);padding:14px 14px;border-radius:12px;
     box-shadow:0 6px 18px rgba(0,0,0,.28);transition:transform .18s ease,box-shadow .18s ease,background .18s ease;position:relative
@@ -74,11 +71,10 @@
   .title{font-size:16.5px;line-height:1.6;white-space:normal;word-wrap:break-word;text-shadow:0 2px 6px rgba(0,0,0,.45);direction:rtl}
   .dcount{font-size:13px;opacity:.9}
 
-  /* آیکون‌های چپ – گرید ۲×۴ (دو ردیف برچسب برای هر آیکون) */
   .left-acts{
     display:grid;
     grid-template-columns:38px 38px;
-    grid-template-rows:38px 14px 38px 14px; /* icon, label, icon, label */
+    grid-template-rows:38px 14px 38px 14px;
     gap:6px 8px; align-items:center; justify-items:center;
     min-width: 110px;
   }
@@ -90,7 +86,7 @@
   .left-acts .icon-wrap:hover{ transform:translateY(-2px); background:rgba(255,255,255,.16) }
   .left-acts svg{ width:22px;height:22px; fill:#fff; filter: drop-shadow(0 2px 4px rgba(0,0,0,.45));}
   .under-txt, .under-txt2{font-size:11.5px;color:#eaeaea;direction:rtl}
-  /* جایگذاری در گرید */
+
   .dl{grid-column:1;grid-row:1}
   .u-size{grid-column:1;grid-row:2}
   .star{grid-column:2;grid-row:1}
@@ -98,7 +94,6 @@
   .share{grid-column:1;grid-row:3}
   .buy{grid-column:2;grid-row:3}
 
-  /* پیام ستاره (tooltip) */
   .star-tip{
     position:absolute; right:110px; bottom:10px; background:rgba(0,0,0,.65);
     border:1px solid rgba(255,255,255,.15); color:#fff; font-size:12.5px; padding:6px 10px; border-radius:10px;
@@ -116,7 +111,6 @@
 
   #counter{text-align:center;margin:12px 0 24px;font-size:15px;color:#eaeaea;text-shadow:0 2px 6px rgba(0,0,0,.45)}
 
-  /* مودال پیش‌نمایش */
   .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.5); z-index:50 }
   .modal .box{
     width:min(680px,92%); border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
@@ -128,7 +122,6 @@
   .btn{ border:none; border-radius:10px; padding:8px 16px; cursor:pointer; color:#fff; box-shadow:0 6px 16px rgba(0,0,0,.35); background:linear-gradient(135deg,#34d399,#10b981); font-family:inherit }
   .btn.gray{ background:linear-gradient(135deg,#64748b,#475569) }
 
-  /* مودال مرتب‌سازی */
   .modal-sort{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.5); z-index:60; }
   .modal-sort .box{
     width:min(520px,92%); border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
@@ -165,17 +158,14 @@
     <li data-id="geo11-test">
       <div class="book-card" data-href="https://mega.nz/file/EygHRLaZ#XYM70813eKudH6DVdHsdduHbCb9I5d-W6NqhVDMngfs">
         <div class="left-acts">
-          <!-- ردیف 1 -->
           <div class="icon-wrap dl" title="دانلود">
             <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
           </div>
           <div class="icon-wrap star" title="امتیاز">
             <svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431L24 9.753l-6 5.847 1.416 8.263L12 19.771 4.584 23.863 6 15.6 0 9.753l8.332-1.735z"/></svg>
           </div>
-          <!-- ردیف 2 (برچسب‌ها) -->
           <div class="under-txt u-size" data-size>88 MB</div>
           <div class="under-txt2 u-rate" data-rate>؟</div>
-          <!-- ردیف 3 -->
           <div class="icon-wrap share" title="اشتراک‌گذاری">
             <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 000-1.39l7.05-4.11A2.99 2.99 0 0018 7.91c1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .23.03.45.08.66L7.91 9.77A2.99 2.99 0 006 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1018 16.08z"/></svg>
           </div>
@@ -321,20 +311,29 @@
   function lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
   function lsSet(k,v){localStorage.setItem(k,JSON.stringify(v))}
 
-  async function getDownloads(book){
+  // ✅ کاملاً به API جدید وصل شد
+  async function getDownloads(bookId){
     try{
-      const r=await fetch(`/api/downloads?book=${encodeURIComponent(book)}`,{cache:'no-store'});
-      const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
-      return d.value;
-    }catch{return lsGet('dl_'+book,0)}
-  }
-  async function addDownload(book){
-    try{
-      const r=await fetch('/api/downloads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({book,inc:1})});
-      const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
+      const r=await fetch(`/api/downloads?id=${encodeURIComponent(bookId)}`,{cache:'no-store'});
+      const d=await r.json();
+      if(!r.ok || typeof d.value!=='number') throw 0;
       return d.value;
     }catch{
-      const v=lsGet('dl_'+book,0)+1; lsSet('dl_'+book,v); return v;
+      return lsGet('dl_'+bookId,0); // fallback localStorage
+    }
+  }
+
+  // ✅ فقط وقتی دکمه‌ی دانلود کلیک می‌شه +1 می‌زنیم
+  async function addDownload(bookId){
+    try{
+      const r=await fetch('/api/downloads?id='+encodeURIComponent(bookId),{
+        method:'POST',headers:{'Content-Type':'application/json'}
+      });
+      const d=await r.json();
+      if(!r.ok || typeof d.value!=='number') throw 0;
+      return d.value;
+    }catch{
+      const v=lsGet('dl_'+bookId,0)+1; lsSet('dl_'+bookId,v); return v;
     }
   }
 
@@ -399,7 +398,7 @@
     });
   }
 
-  // --- کارت‌ها
+  // --- مودال پیش‌نمایش
   const pvModal=document.getElementById('previewModal');
   const pvTitle=document.getElementById('pvTitle');
   const pvBody=document.getElementById('pvBody');
@@ -426,7 +425,8 @@
       const countEl=card.querySelector('[data-dlc]');
       const starTip=card.querySelector('.star-tip');
       const meta=bookMeta[id]||{};
-      // بارگذاری دانلود
+
+      // بارگذاری مقدار فعلی دانلود از API (fallback محلی در صورت خطا)
       getDownloads(id).then(v=>{countEl.textContent=`(${v} دانلود)`});
 
       // ستاره
@@ -455,11 +455,13 @@
         }
       });
 
-      // دانلود
+      // دانلود — فقط با کلیک روی آیکن دانلود +1
       card.querySelector('.icon-wrap.dl').addEventListener('click',async e=>{
         e.stopPropagation();
-        const nv=await addDownload(id); countEl.textContent=`(${nv} دانلود)`;
-        const href=card.dataset.href; if(href) window.open(href,'_blank','noopener');
+        const nv=await addDownload(id);
+        countEl.textContent=`(${nv} دانلود)`;
+        const href=card.dataset.href; 
+        if(href) window.open(href,'_blank','noopener');
       });
 
       // کلیک روی بدنه کارت -> فقط پیش‌نمایش
