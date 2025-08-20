@@ -1,61 +1,57 @@
-// pages/api/downloads.js
 export default async function handler(req, res) {
   try {
-    const { id = "unknown" } = req.query || {}; // id کتاب
-
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
     if (!url || !token) {
       return res.status(500).json({
-        error:
-          "Missing Upstash config (set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in Vercel).",
+        error: "Upstash config missing. Set UPSTASH_REDIS_REST_URL & UPSTASH_REDIS_REST_TOKEN in Vercel."
       });
     }
 
-    // فقط وقتی که کاربر دکمه‌ی دانلود رو بزنه باید +1 بشه
-    if (req.method === "POST") {
-      const incr = await fetch(`${url}/incr/downloads:${id}`, {
+    if (req.method === 'GET') {
+      const { book } = req.query || {};
+      if (!book) return res.status(400).json({ error: 'Missing book param' });
+
+      // get current count
+      const getRes = await fetch(`${url}/get/downloads:${book}`, {
         headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
+        cache: 'no-store'
       });
 
-      if (!incr.ok) {
-        const t = await incr.text();
+      let value = 0;
+      if (getRes.ok) {
+        const data = await getRes.json(); // {result: "number" or null}
+        value = parseInt(data?.result, 10) || 0;
+      }
+
+      res.setHeader("Cache-Control", "no-store");
+      return res.status(200).json({ value });
+    }
+
+    if (req.method === 'POST') {
+      const { book, inc = 1 } = req.body || {};
+      if (!book) return res.status(400).json({ error: 'Missing book' });
+
+      const incrRes = await fetch(`${url}/incrby/downloads:${book}/${inc}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store'
+      });
+
+      if (!incrRes.ok) {
+        const t = await incrRes.text();
         return res.status(500).json({ error: "Upstash incr error", details: t });
       }
-
-      const incrData = await incr.json();
-      const value =
-        typeof incrData.result === "number" ? incrData.result : 0;
+      const d = await incrRes.json(); // { result: number }
+      const value = typeof d.result === "number" ? d.result : 0;
 
       res.setHeader("Cache-Control", "no-store");
       return res.status(200).json({ value });
     }
 
-    // اگر فقط بخوای مقدار فعلی رو بخونی (GET request)
-    if (req.method === "GET") {
-      const getRes = await fetch(`${url}/get/downloads:${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
-      });
+    return res.status(405).json({ error: 'Method not allowed' });
 
-      if (!getRes.ok) {
-        const t = await getRes.text();
-        return res.status(500).json({ error: "Upstash get error", details: t });
-      }
-
-      const getData = await getRes.json();
-      const value = parseInt(getData.result || "0", 10);
-
-      res.setHeader("Cache-Control", "no-store");
-      return res.status(200).json({ value });
-    }
-
-    return res.status(405).json({ error: "Method not allowed" });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ error: "Server error", details: String(err) });
+    return res.status(500).json({ error: 'Server error downloads', details: String(err) });
   }
 }
