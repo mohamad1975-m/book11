@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
     const key = `comments:${slug}`;
 
-    // GET -> list
+    // ----------------- GET -----------------
     if (req.method === "GET") {
       const r = await fetch(`${url}/lrange/${key}/0/-1`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -43,16 +43,10 @@ export default async function handler(req, res) {
       return res.status(200).json({ list });
     }
 
-    // POST -> add
+    // ----------------- POST -----------------
     if (req.method === "POST") {
-      let body = {};
-      try {
-        // Next.js may parse body already
-        body = req.body ?? await req.json?.() ?? {};
-      } catch {
-        body = req.body || {};
-      }
-
+      // در Next.js req.body از قبل parse میشه
+      const body = req.body || {};
       const text = (body?.text || "").toString().trim();
       if (!text) return res.status(400).json({ error: "Empty text" });
 
@@ -85,8 +79,10 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, doc });
     }
 
+    // ----------------- METHOD NOT ALLOWED -----------------
     res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "Method not allowed" });
+
   } catch (e) {
     return res
       .status(500)
