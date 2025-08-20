@@ -1,50 +1,67 @@
-import fs from 'fs';
-import path from 'path';
+// /pages/api/comments.js
+export default async function handler(req, res) {
+  try {
+    const { slug, action } = req.query;
+    const url = process.env.UPSTASH_REDIS_REST_URL;
+    const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-const filePath = path.join(process.cwd(), 'comments.json');
-
-function readComments() {
-  if (!fs.existsSync(filePath)) return [];
-  const data = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(data || '[]');
-}
-
-function saveComments(comments) {
-  fs.writeFileSync(filePath, JSON.stringify(comments, null, 2));
-}
-
-export default function handler(req, res) {
-  const { method, query, body } = req;
-
-  if (method === 'GET') {
-    // حالت ادمین
-    if (query.admin && query.password === process.env.ADMIN_PASSWORD) {
-      return res.status(200).json(readComments());
+    if (!url || !token) {
+      return res.status(500).json({
+        error:
+          "Missing Upstash config (set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN).",
+      });
     }
-    return res.status(403).json({ error: 'Forbidden' });
-  }
 
-  if (method === 'POST') {
-    const comments = readComments();
-    const newComment = {
-      id: Date.now().toString(),
-      book: body.book,
-      text: body.text
-    };
-    comments.push(newComment);
-    saveComments(comments);
-    return res.status(201).json(newComment);
-  }
+    if (req.method === "GET") {
+      // 📌 گرفتن کامنت‌ها
+      const resp = await fetch(`${url}/lrange/comments:${slug}/0/-1`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-  if (method === 'DELETE') {
-    if (query.password !== process.env.ADMIN_PASSWORD) {
-      return res.status(403).json({ error: 'Forbidden' });
+      const data = await resp.json();
+      const comments = (data.result || []).map((c) => JSON.parse(c));
+      return res.status(200).json(comments);
     }
-    const comments = readComments().filter(c => c.id !== query.id);
-    saveComments(comments);
-    return res.status(200).json({ success: true });
-  }
 
-  res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
-  res.status(405).end(`Method ${method} Not Allowed`);
+    if (req.method === "POST") {
+      // 📌 ثبت کامنت یا ریپلای
+      const body = JSON.parse(req.body || "{}");
+      const { text, parentId, userId } = body;
+
+      if (!text || !userId) {
+        return res.status(400).json({ error: "Missing text or userId" });
+      }
+
+      const newComment = {
+        id: Date.now().toString(),
+        text,
+        parentId: parentId || null,
+        userId,
+        time: new Date().toISOString(),
+      };
+
+      // اضافه کردن به لیست
+      const pushRes = await fetch(`${url}/rpush/comments:${slug}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([JSON.stringify(newComment)]),
+      });
+
+      if (!pushRes.ok) {
+        const err = await pushRes.text();
+        return res.status(500).json({ error: "Failed to save", details: err });
+      }
+
+      return res.status(200).json(newComment);
+    }
+
+    return res.status(405).json({ error: "Method not allowed" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Server error", details: String(err) });
+  }
 }
