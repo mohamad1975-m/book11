@@ -362,15 +362,14 @@
   }
   loadVisits();
 
-  /* ---- اطلاعات ثابت (حجم / امتیاز / خرید) ---- */
+  /* ---- اطلاعات ثابت ---- */
   const bookMeta={
-    'geo11-test':{size:'88 MB',rate:null,votes:null,buy:'https://www.digikala.com/product/dkp-9512809/کتاب-پرسش-های-چهارگزینه-ای-جغرافیا-2-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/'},
-    'geo11-shab':{size:'23 MB',rate:4.4,votes:26,buy:'https://www.digikala.com/product/dkp-820916/کتاب-شب-امتحان-جغرافیا-پایه-یازدهم-اثر-سیده-مریم-طاهری/'},
-    'geo10-shab':{size:'24 MB',rate:4.5,votes:67,buy:'https://www.digikala.com/product/dkp-4123378/کتاب-شب-امتحان-جغرافیا-ایران-دهم-اثر-مهدی-کاردان-و-شادی-کاریان-انتشارات-خیلی-سبز/'},
-    'geo10-dars':{size:'36 MB',rate:4.2,votes:45,buy:'https://www.digikala.com/product/dkp-1874006/کتاب-پرسش-های-چهار-گزینه-ای-جغرافیا-جامع-دهم-و-یازدهم-و-دوازدهم-رشته-انسانی-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/'}
+    'geo11-test':{size:'88 MB',rate:null,votes:null,buy:'#'},
+    'geo11-shab':{size:'23 MB',rate:4.4,votes:26,buy:'#'},
+    'geo10-shab':{size:'24 MB',rate:4.5,votes:67,buy:'#'},
+    'geo10-dars':{size:'36 MB',rate:4.2,votes:45,buy:'#'}
   };
 
-  /* ---- ابزارهای ذخیره محلی ---- */
   function lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
   function lsSet(k,v){localStorage.setItem(k,JSON.stringify(v))}
 
@@ -392,7 +391,7 @@
     }
   }
 
-  /* ---- جستجو و مرتب‌سازی ---- */
+  /* ---- جست‌وجو ---- */
   const searchInput=document.getElementById('searchInput');
   const searchClear=document.getElementById('searchClear');
   function normalize(s){return (s||'').replace(/\s+/g,' ').toLowerCase()}
@@ -407,6 +406,7 @@
   searchInput.addEventListener('input',filterBooks);
   searchClear.addEventListener('click',()=>{searchInput.value='';filterBooks();searchInput.focus()});
 
+  /* ---- مرتب‌سازی ---- */
   const sortBtn=document.getElementById('btnSort');
   const sortModal=document.getElementById('sortModal');
   const sortList=document.getElementById('sortList');
@@ -431,12 +431,14 @@
       const dlNum=parseInt((li.querySelector('[data-dlc]').textContent.match(/\d+/)||[0])[0],10)||0;
       return { li,id, size: meta.size?parseInt(meta.size):9999999, rate: (meta.rate==null?-1:meta.rate), downloads: dlNum };
     });
+
     switch(currentSort){
       case 'rate': items.sort((a,b)=>b.rate-a.rate); break;
       case 'downloads': items.sort((a,b)=>b.downloads-a.downloads); break;
       case 'size': items.sort((a,b)=>a.size-b.size); break;
       default: break;
     }
+
     const list11=document.getElementById('list11'), list10=document.getElementById('list10');
     items.forEach(it=>{
       const p=it.li.closest('.panel');
@@ -466,20 +468,24 @@
     pvModal.style.display='flex'; setTimeout(()=>pvModal.classList.add('show'),10);
   }
 
-  /* ---- مودال کامنت ---- */
+  /* ---- مودال کامنت‌ها ---- */
   const cmtModal=document.getElementById('cmtModal');
   const cmtTitle=document.getElementById('cmtTitle');
   const cmtList=document.getElementById('cmtList');
   const cmtInput=document.getElementById('cmtInput');
   const cmtSend=document.getElementById('cmtSend');
   const cmtClose=document.getElementById('cmtClose');
+
   let currentBookForCmt=null, currentCmtCounterEl=null;
 
+  // تاریخ فقط (شمسی)
   function fmtDate(ts){
+    let n = Number(ts);
+    if (!Number.isFinite(n)) return '';
+    if (n < 1e12) n *= 1000; // اگر ثانیه بود تبدیل به میلی‌ثانیه
     try{
-      const n = (typeof ts === 'number') ? ts : Number(ts);
       return new Date(n).toLocaleDateString('fa-IR');
-    }catch{ return '' }
+    }catch{ return ''; }
   }
 
   function openCmtModal(bookId,title,counterEl){
@@ -497,9 +503,9 @@
     try{
       const r=await fetch(`/api/book-comments?slug=${encodeURIComponent(bookId)}`,{cache:'no-store'});
       const d=await r.json();
-      if(!r.ok || !Array.isArray(d.list)) throw 0;
+      if(!r.ok||!Array.isArray(d.list)) throw 0;
       renderComments(d.list);
-      if(currentCmtCounterEl) currentCmtCounterEl.textContent= d.list.length;
+      if(currentCmtCounterEl) currentCmtCounterEl.textContent=d.list.length;
     }catch{
       renderComments([]); if(currentCmtCounterEl) currentCmtCounterEl.textContent='0';
     }
@@ -511,8 +517,9 @@
       const head=document.createElement('div'); head.className='cmt-head';
       head.textContent=`کاربر ناشناس • ${fmtDate(c.ts)}`;
       const text=document.createElement('div'); text.className='cmt-text';
-      text.textContent = c.text || '';
-      li.appendChild(head); li.appendChild(text); cmtList.appendChild(li);
+      text.textContent= (typeof c.text === 'string') ? c.text : '';
+      li.appendChild(head); li.appendChild(text);
+      cmtList.appendChild(li);
     });
   }
 
@@ -524,17 +531,9 @@
         body:JSON.stringify({text:txt})
       });
       const d=await r.json();
-      if(r.ok && d && d.ok){
-        cmtInput.value='';
-        await loadComments(currentBookForCmt);
-      }else{
-        alert('ارسال نشد.');
-        console.error(d);
-      }
-    }catch(err){
-      alert('ارسال نشد.');
-      console.error(err);
-    }
+      if(r.ok && d && d.ok){ cmtInput.value=''; await loadComments(currentBookForCmt); }
+      else alert('ارسال نشد.');
+    }catch{ alert('ارسال نشد.'); }
   });
 
   /* ---- کارت‌ها ---- */
@@ -549,11 +548,11 @@
       const cmtCountEl=card.querySelector('[data-cmtcount]');
       const titleText=card.querySelector('.title').firstChild.textContent.trim();
 
-      // اطلاعات ثابت
+      // داده‌های ثابت در برچسب‌ها
       if(sizeEl) sizeEl.textContent=meta.size||'—';
       rateEl.textContent=(meta.rate==null?'؟':meta.rate);
 
-      // دانلود
+      // بارگذاری دانلود
       getDownloads(id).then(v=>{countEl.textContent=`(${v} دانلود)`});
 
       // ستاره
@@ -593,13 +592,13 @@
         openCmtModal(id, '«'+titleText+'»', cmtCountEl);
       });
 
-      // شمارنده‌ی کامنت‌ها (فقط نمایش)
+      // بارگیری شمارنده‌ی کامنت‌ها
       fetch(`/api/book-comments?slug=${encodeURIComponent(id)}`,{cache:'no-store'})
-        .then(r=>r.json())
-        .then(d=>{ cmtCountEl.textContent = Array.isArray(d.list)? d.list.length : 0; })
-        .catch(()=>{ cmtCountEl.textContent='0' });
+      .then(r=>r.json()).then(d=>{
+        cmtCountEl.textContent = Array.isArray(d.list)? d.list.length : 0;
+      }).catch(()=>{ cmtCountEl.textContent='0' });
 
-      // کلیک روی بدنه -> پیش‌نمایش
+      // کلیک روی بدنه کارت -> فقط پیش‌نمایش
       card.addEventListener('click',()=> openPreview(card,id));
     });
   }
