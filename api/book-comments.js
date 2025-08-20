@@ -1,98 +1,69 @@
 export default async function handler(req, res) {
   try {
-    const url = process.env.UPSTASH_REDIS_REST_URL;
+    const url   = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
     if (!url || !token) {
       return res.status(500).json({
         error:
-          "Upstash config missing. Set UPSTASH_REDIS_REST_URL & UPSTASH_REDIS_REST_TOKEN in Vercel.",
+          "Missing Upstash config. Set UPSTASH_REDIS_REST_URL & UPSTASH_REDIS_REST_TOKEN in Vercel.",
       });
     }
 
-    const { slug } = req.query || {};
-    if (!slug) return res.status(400).json({ error: "Missing slug (book id)" });
+    const slug = req.query.slug;
+    if (!slug) return res.status(400).json({ error: "Missing slug" });
 
-    const listKey = `comments:${slug}`;
+    const key = `comments:${slug}`;
 
-    // Parser امن
-    const safeParse = (raw) => {
-      let v = raw;
-      try {
-        v = JSON.parse(raw);
-      } catch {}
-      if (typeof v === "string") {
-        try {
-          v = JSON.parse(v);
-        } catch {}
-      }
-      return v;
-    };
-
-    // -------------------
-    // گرفتن کامنت‌ها (GET)
-    // -------------------
+    // GET -> list
     if (req.method === "GET") {
-      const lr = await fetch(`${url}/lrange/${listKey}/0/-1`, {
+      const r = await fetch(`${url}/lrange/${key}/0/-1`, {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       });
-
-      if (!lr.ok) {
-        const t = await lr.text();
-        return res
-          .status(500)
-          .json({ error: "Upstash lrange error", details: t });
+      if (!r.ok) {
+        const t = await r.text();
+        return res.status(500).json({ error: "Upstash lrange error", details: t });
       }
+      const data = await r.json();
+      const arr = Array.isArray(data?.result) ? data.result : [];
 
-      const data = await lr.json();
-      const rawArr = Array.isArray(data?.result) ? data.result : [];
-
-      const arr = rawArr
-        .map((raw) => safeParse(raw))
-        .filter((obj) => obj && typeof obj === "object")
-        .map((obj) => ({
-          id: String(obj.id || ""),
-          parentId: obj.parentId || null,
-          userId: String(obj.userId || "anon").slice(0, 64),
-          text: typeof obj.text === "string" ? obj.text : "",
-          time: Number(obj.time) || 0,
+      const list = arr
+        .map((s) => {
+          try { return JSON.parse(s); } catch { return null; }
+        })
+        .filter(Boolean)
+        .map((o) => ({
+          id: String(o.id || ""),
+          text: String(o.text || ""),
+          ts: Number(o.ts) || Date.now()
         }));
 
-      arr.sort((a, b) => (a.time || 0) - (b.time || 0));
-      return res.status(200).json(arr);
+      res.setHeader("Cache-Control", "no-store");
+      return res.status(200).json({ list });
     }
 
-    // -------------------
-    // ثبت کامنت جدید (POST)
-    // -------------------
+    // POST -> add
     if (req.method === "POST") {
       let body = {};
       try {
+        // Next.js may parse body already
+        body = req.body ?? await req.json?.() ?? {};
+      } catch {
         body = req.body || {};
-        if (req.headers["content-type"]?.includes("application/json")) {
-          if (typeof req.body === "string") {
-            body = JSON.parse(req.body);
-          }
-        }
-      } catch {}
-
-      const { text, parentId = null, userId = "anon" } = body || {};
-      if (!text || typeof text !== "string" || !text.trim()) {
-        return res.status(400).json({ error: "Bad text" });
       }
 
+      const text = (body?.text || "").toString().trim();
+      if (!text) return res.status(400).json({ error: "Empty text" });
+
       const doc = {
-        id: "cmt_" + Math.random().toString(36).slice(2),
-        parentId: parentId || null,
-        userId: String(userId || "anon").slice(0, 64),
-        text: text.trim().slice(0, 1500),
-        time: Date.now(),
+        id: "c_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8),
+        text,
+        ts: Date.now(),
       };
 
       const payload = [JSON.stringify(doc)];
-
-      const pushRes = await fetch(`${url}/rpush/${listKey}`, {
+      const p = await fetch(`${url}/rpush/${key}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -101,82 +72,24 @@ export default async function handler(req, res) {
         body: JSON.stringify(payload),
       });
 
-      if (!pushRes.ok) {
-        const t = await pushRes.text();
-        return res
-          .status(500)
-          .json({ error: "Upstash rpush error", details: t });
+      if (!p.ok) {
+        const t = await p.text();
+        return res.status(500).json({ error: "Upstash rpush error", details: t });
       }
 
-      await fetch(`${url}/ltrim/${listKey}/0/999`, {
+      // نگهداری 1000 مورد آخر (دلخواه)
+      await fetch(`${url}/ltrim/${key}/0/999`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       return res.status(200).json({ ok: true, doc });
     }
 
-    // -------------------
-    // حذف کامنت (DELETE)
-    // -------------------
-    if (req.method === "DELETE") {
-      let body = {};
-      try {
-        body = req.body || {};
-        if (req.headers["content-type"]?.includes("application/json")) {
-          if (typeof req.body === "string") {
-            body = JSON.parse(req.body);
-          }
-        }
-      } catch {}
-
-      const { commentId } = body || {};
-      if (!commentId) {
-        return res.status(400).json({ error: "Missing commentId" });
-      }
-
-      // ابتدا کل لیست رو می‌گیریم
-      const lr = await fetch(`${url}/lrange/${listKey}/0/-1`, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
-      });
-
-      const data = await lr.json();
-      const rawArr = Array.isArray(data?.result) ? data.result : [];
-
-      // پیدا کردن همون آیتم
-      const target = rawArr.find((raw) => {
-        const obj = safeParse(raw);
-        return obj?.id === commentId;
-      });
-
-      if (!target) {
-        return res.status(404).json({ error: "Comment not found" });
-      }
-
-      // حذف با LREM
-      const delRes = await fetch(`${url}/lrem/${listKey}/1`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify([target]),
-      });
-
-      if (!delRes.ok) {
-        const t = await delRes.text();
-        return res
-          .status(500)
-          .json({ error: "Upstash lrem error", details: t });
-      }
-
-      return res.status(200).json({ ok: true, deletedId: commentId });
-    }
-
+    res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "Method not allowed" });
   } catch (e) {
     return res
       .status(500)
-      .json({ error: "Server error comments", details: String(e) });
+      .json({ error: "Server error book-comments", details: String(e) });
   }
 }
