@@ -30,15 +30,10 @@ export default async function handler(req, res) {
       const list = arr
         .map((s) => {
           try {
-            // مرحله اول: Parse
             const outer = JSON.parse(s);
-
-            // اگر به صورت ["{...}"] ذخیره شده
             if (Array.isArray(outer) && outer.length > 0) {
-              return JSON.parse(outer[0]); // مرحله دوم: Parse به آبجکت واقعی
+              return JSON.parse(outer[0]);
             }
-
-            // در غیر این صورت مستقیم آبجکت JSON است
             return outer;
           } catch {
             return null;
@@ -47,8 +42,10 @@ export default async function handler(req, res) {
         .filter(Boolean)
         .map((o) => ({
           id: String(o.id || ""),
-          text: typeof o.text === "string" ? o.text : "",
-          nickname: (o.nickname && typeof o.nickname === "string") ? o.nickname : "کاربر ناشناس",
+          text: String(o.text || ""),
+          nickname: String(o.nickname || "ناشناس"),
+          likes: Number(o.likes) || 0,
+          dislikes: Number(o.dislikes) || 0,
           ts: Number(o.ts) || Date.now(),
         }));
 
@@ -56,44 +53,38 @@ export default async function handler(req, res) {
       return res.status(200).json({ list });
     }
 
-    // --- POST -> add ---
+    // --- POST -> add new comment ---
     if (req.method === "POST") {
       let body = {};
-      const ct = req.headers["content-type"] || "";
-
       try {
-        // اگر Next.js امکان req.json داشته باشه و content-type درست باشه
-        if (ct.includes("application/json") && typeof req.json === "function") {
-          body = await req.json();
-        } else {
-          body = req.body || {};
-        }
+        body = req.body ?? await req.json?.() ?? {};
       } catch {
         body = req.body || {};
       }
 
       const text = (body?.text || "").toString().trim();
-      const nickname = (body?.nickname || "").toString().trim();
+      const nickname = (body?.nickname || "ناشناس").toString().trim();
+
       if (!text) return res.status(400).json({ error: "Empty text" });
 
       const doc = {
         id: "c_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8),
         text,
-        nickname: nickname || "کاربر ناشناس",
+        nickname,
+        likes: 0,
+        dislikes: 0,
         ts: Date.now(),
       };
 
-      // 🔴 نکته مهم: Upstash برای rpush انتظار آرایه از strings را دارد.
-      // پس اول doc را به رشته JSON تبدیل می‌کنیم...
-      const singleJson = JSON.stringify(doc);
-      // ...بعد همان رشته را داخل یک آرایه قرار می‌دهیم و به API می‌دهیم:
+      const payload = JSON.stringify(doc);
+
       const p = await fetch(`${url}/rpush/${key}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify([singleJson]),
+        body: JSON.stringify([payload]),
       });
 
       if (!p.ok) {
@@ -101,7 +92,6 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "Upstash rpush error", details: t });
       }
 
-      // نگه‌داشتن 1000 رکورد آخر (اختیاری)
       await fetch(`${url}/ltrim/${key}/0/999`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -109,7 +99,67 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, doc });
     }
 
-    res.setHeader("Allow", "GET, POST");
+    // --- PATCH -> like/dislike update ---
+    if (req.method === "PATCH") {
+      let body = {};
+      try {
+        body = req.body ?? await req.json?.() ?? {};
+      } catch {
+        body = req.body || {};
+      }
+
+      const { id, action } = body;
+      if (!id || !["like", "dislike"].includes(action)) {
+        return res.status(400).json({ error: "Invalid id or action" });
+      }
+
+      // دریافت لیست کامل
+      const r = await fetch(`${url}/lrange/${key}/0/-1`, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      });
+      const data = await r.json();
+      const arr = Array.isArray(data?.result) ? data.result : [];
+
+      let updatedDoc = null;
+
+      const newArr = arr.map((s) => {
+        try {
+          const outer = JSON.parse(s);
+          const obj = Array.isArray(outer) && outer.length > 0 ? JSON.parse(outer[0]) : outer;
+          if (obj.id === id) {
+            if (action === "like") obj.likes = (obj.likes || 0) + 1;
+            if (action === "dislike") obj.dislikes = (obj.dislikes || 0) + 1;
+            updatedDoc = obj;
+            return JSON.stringify(obj);
+          }
+          return s;
+        } catch {
+          return s;
+        }
+      });
+
+      if (!updatedDoc) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+
+      // ذخیره لیست جدید
+      await fetch(`${url}/del/${key}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      await fetch(`${url}/rpush/${key}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newArr),
+      });
+
+      return res.status(200).json({ ok: true, doc: updatedDoc });
+    }
+
+    res.setHeader("Allow", "GET, POST, PATCH");
     return res.status(405).json({ error: "Method not allowed" });
   } catch (e) {
     return res
