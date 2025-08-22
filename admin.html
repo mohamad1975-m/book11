@@ -2,137 +2,89 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>پنل مدیریت</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مدیریت کامنت‌ها</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     @font-face {
-      font-family: 'IranYekan';
-      src: url('https://cdn.fontcdn.ir/Font/Persian/Yekan/Yekan.woff2') format('woff2');
+      font-family: 'IranYekanX';
+      src: url('/fonts/iranyekanx.woff2') format('woff2');
     }
-
-      body {
-       font-family: 'IranYekan', sans-serif;
-       background: linear-gradient(to bottom, #f0f9ff, #cbebff);
-         display: flex;
-      justify-content: center;
-      align-items: center;
-     height: 100vh;   /* ✅ اضافه شد */
-        margin: 0;       /* ✅ اضافه شد */
+    body {
+      font-family: 'IranYekanX', sans-serif;
       direction: rtl;
-        }
-        
-
-    .login-box, .panel {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      width: 400px;
-      text-align: center;
-    }
-
-    .login-box h2 {
-      margin-bottom: 15px;
-      font-size: 20px;
-    }
-
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-family: inherit;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #0077ff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      font-family: inherit;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background: #005ecc;
-    }
-
-    .comment {
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 10px;
-      text-align: right;
-    }
-
-    .comment button {
-      background: red;
-      margin-top: 5px;
-      font-size: 14px;
-    }
-
-    .hidden {
-      display: none;
+      background: linear-gradient(to right, #f8fafc, #f1f5f9);
     }
   </style>
 </head>
-<body>
-  <!-- فرم لاگین -->
-  <div class="login-box" id="loginBox">
-    <h2>ورود به پنل مدیریت</h2>
-    <input type="password" id="adminPass" placeholder="رمز عبور را وارد کنید">
-    <button onclick="login()">ورود</button>
-  </div>
+<body class="p-6">
 
-  <!-- پنل مدیریت -->
-  <div class="panel hidden" id="panel">
-    <h2>مدیریت نظرات کاربران</h2>
-    <div id="commentsList">در حال بارگذاری...</div>
-  </div>
+  <h1 class="text-2xl font-bold mb-6">🛠 مدیریت کامنت‌ها</h1>
 
- <script>
-  async function login() {
-    const password = document.getElementById("password").value;
+  <div id="commentsList" class="space-y-4"></div>
 
-    const res = await fetch(`/api/comments?admin=true&password=${password}`);
-    if (res.ok) {
-      const comments = await res.json();
+  <template id="comment-template">
+    <div class="p-4 bg-white rounded-2xl shadow-md flex justify-between items-center">
+      <div class="flex-1">
+        <p class="text-gray-900 font-medium mb-1 comment-text"></p>
+        <p class="text-sm text-gray-500">نام مستعار: <span class="comment-name"></span></p>
+      </div>
+      <div class="flex gap-2">
+        <button class="edit-btn px-3 py-1 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white text-sm">ویرایش</button>
+        <button class="delete-btn px-3 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm">حذف</button>
+      </div>
+    </div>
+  </template>
 
-      // نمایش پنل مدیریت
-      document.body.innerHTML = `
-        <div style="font-family: IranYekan; padding: 20px; direction: rtl;">
-          <h2>پنل مدیریت</h2>
-          <ul id="comments-list">
-            ${comments.map(c => `
-              <li style="margin: 8px 0; padding: 6px; border: 1px solid #ccc; border-radius: 6px;">
-                <b>کتاب:</b> ${c.book}<br/>
-                <b>نظر:</b> ${c.text}
-                <button onclick="deleteComment('${c.id}')" style="margin-right: 10px; color: red;">حذف</button>
-              </li>
-            `).join("")}
-          </ul>
-        </div>
-      `;
-    } else {
-      alert("رمز اشتباه است!");
+  <script>
+    async function fetchComments() {
+      const container = document.getElementById("commentsList");
+      container.innerHTML = "<p>در حال بارگذاری...</p>";
+
+      try {
+        const res = await fetch(`/api/book-comments?slug=geography`);
+        const data = await res.json();
+
+        container.innerHTML = "";
+        if (!data.list || data.list.length === 0) {
+          container.innerHTML = "<p>هیچ کامنتی وجود ندارد.</p>";
+          return;
+        }
+
+        data.list.forEach(c => {
+          const tmpl = document.getElementById("comment-template").content.cloneNode(true);
+          tmpl.querySelector(".comment-text").textContent = c.text;
+          tmpl.querySelector(".comment-name").textContent = c.name || "بدون نام";
+
+          // حذف
+          tmpl.querySelector(".delete-btn").addEventListener("click", async () => {
+            if (confirm("آیا مطمئن هستید که می‌خواهید این کامنت را حذف کنید؟")) {
+              await fetch(`/api/admin-delete?slug=geography&id=${c.id}`, { method: "DELETE" });
+              fetchComments();
+            }
+          });
+
+          // ویرایش
+          tmpl.querySelector(".edit-btn").addEventListener("click", async () => {
+            const newText = prompt("متن جدید کامنت:", c.text);
+            if (newText && newText.trim()) {
+              await fetch(`/api/admin-edit`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ slug: "geography", id: c.id, text: newText.trim(), name: c.name })
+              });
+              fetchComments();
+            }
+          });
+
+          container.appendChild(tmpl);
+        });
+      } catch (err) {
+        container.innerHTML = "<p class='text-red-500'>خطا در دریافت کامنت‌ها</p>";
+      }
     }
-  }
 
-  async function deleteComment(id) {
-    const res = await fetch(`/api/comments?id=${id}&password=${document.getElementById("password")?.value || prompt("رمز ادمین را وارد کنید:")}`, {
-      method: "DELETE"
-    });
-
-    if (res.ok) {
-      location.reload();
-    } else {
-      alert("خطا در حذف نظر");
-    }
-  }
-</script>
+    fetchComments();
+  </script>
 </body>
 </html>
