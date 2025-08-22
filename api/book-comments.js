@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
     if (!url || !token) {
       return res.status(500).json({
-        error: "Missing Upstash config. Set UPSTASH_REDIS_REST_URL & UPSTASH_REDIS_REST_TOKEN in Vercel.",
+        error: "Missing Upstash config. Set UPSTASH_REDIS_REST_URL & UPSTASH_REST_TOKEN in Vercel.",
       });
     }
 
@@ -43,17 +43,15 @@ export default async function handler(req, res) {
         .map((o) => ({
           id: String(o.id || ""),
           text: String(o.text || ""),
-          nickname: String(o.nickname || "ناشناس"),
-          likes: Number(o.likes) || 0,
-          dislikes: Number(o.dislikes) || 0,
-          ts: Number(o.ts) || Date.now(),
+          likes: Number(o.likes || 0),
+          dislikes: Number(o.dislikes || 0),
         }));
 
       res.setHeader("Cache-Control", "no-store");
       return res.status(200).json({ list });
     }
 
-    // --- POST -> add new comment ---
+    // --- POST -> add comment ---
     if (req.method === "POST") {
       let body = {};
       try {
@@ -63,21 +61,17 @@ export default async function handler(req, res) {
       }
 
       const text = (body?.text || "").toString().trim();
-      const nickname = (body?.nickname || "ناشناس").toString().trim();
-
       if (!text) return res.status(400).json({ error: "Empty text" });
 
       const doc = {
         id: "c_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8),
         text,
-        nickname,
         likes: 0,
         dislikes: 0,
         ts: Date.now(),
       };
 
       const payload = JSON.stringify(doc);
-
       const p = await fetch(`${url}/rpush/${key}`, {
         method: "POST",
         headers: {
@@ -101,19 +95,12 @@ export default async function handler(req, res) {
 
     // --- PATCH -> like/dislike update ---
     if (req.method === "PATCH") {
-      let body = {};
-      try {
-        body = req.body ?? await req.json?.() ?? {};
-      } catch {
-        body = req.body || {};
-      }
-
-      const { id, action } = body;
+      const { id, action } = req.body || {};
       if (!id || !["like", "dislike"].includes(action)) {
-        return res.status(400).json({ error: "Invalid id or action" });
+        return res.status(400).json({ error: "Invalid parameters" });
       }
 
-      // دریافت لیست کامل
+      // کل لیست رو می‌گیریم
       const r = await fetch(`${url}/lrange/${key}/0/-1`, {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
@@ -121,17 +108,16 @@ export default async function handler(req, res) {
       const data = await r.json();
       const arr = Array.isArray(data?.result) ? data.result : [];
 
-      let updatedDoc = null;
-
+      let updated = null;
       const newArr = arr.map((s) => {
         try {
           const outer = JSON.parse(s);
-          const obj = Array.isArray(outer) && outer.length > 0 ? JSON.parse(outer[0]) : outer;
-          if (obj.id === id) {
-            if (action === "like") obj.likes = (obj.likes || 0) + 1;
-            if (action === "dislike") obj.dislikes = (obj.dislikes || 0) + 1;
-            updatedDoc = obj;
-            return JSON.stringify(obj);
+          const o = Array.isArray(outer) && outer[0] ? JSON.parse(outer[0]) : outer;
+          if (o.id === id) {
+            if (action === "like") o.likes = (o.likes || 0) + 1;
+            if (action === "dislike") o.dislikes = (o.dislikes || 0) + 1;
+            updated = o;
+            return JSON.stringify(o);
           }
           return s;
         } catch {
@@ -139,24 +125,26 @@ export default async function handler(req, res) {
         }
       });
 
-      if (!updatedDoc) {
-        return res.status(404).json({ error: "Comment not found" });
-      }
+      if (!updated) return res.status(404).json({ error: "Comment not found" });
 
-      // ذخیره لیست جدید
+      // لیست جدید ذخیره بشه
       await fetch(`${url}/del/${key}`, {
+        method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
-      await fetch(`${url}/rpush/${key}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newArr),
-      });
 
-      return res.status(200).json({ ok: true, doc: updatedDoc });
+      if (newArr.length > 0) {
+        await fetch(`${url}/rpush/${key}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newArr),
+        });
+      }
+
+      return res.status(200).json({ ok: true, doc: updated });
     }
 
     res.setHeader("Allow", "GET, POST, PATCH");
