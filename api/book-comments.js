@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
     if (!url || !token) {
       return res.status(500).json({
-        error: "Missing Upstash config. Set UPSTASH_REDIS_REST_URL & UPSTASH_REST_TOKEN in Vercel.",
+        error: "Missing Upstash config. Set UPSTASH_REDIS_REST_URL & UPSTASH_REDIS_REST_TOKEN in Vercel.",
       });
     }
 
@@ -30,10 +30,15 @@ export default async function handler(req, res) {
       const list = arr
         .map((s) => {
           try {
+            // مرحله اول: Parse
             const outer = JSON.parse(s);
+
+            // اگر به صورت ["{...}"] ذخیره شده
             if (Array.isArray(outer) && outer.length > 0) {
-              return JSON.parse(outer[0]);
+              return JSON.parse(outer[0]); // مرحله دوم: Parse به آبجکت واقعی
             }
+
+            // در غیر این صورت مستقیم آبجکت JSON است
             return outer;
           } catch {
             return null;
@@ -42,43 +47,53 @@ export default async function handler(req, res) {
         .filter(Boolean)
         .map((o) => ({
           id: String(o.id || ""),
-          text: String(o.text || ""),
-          likes: Number(o.likes || 0),
-          dislikes: Number(o.dislikes || 0),
+          text: typeof o.text === "string" ? o.text : "",
+          nickname: (o.nickname && typeof o.nickname === "string") ? o.nickname : "کاربر ناشناس",
+          ts: Number(o.ts) || Date.now(),
         }));
 
       res.setHeader("Cache-Control", "no-store");
       return res.status(200).json({ list });
     }
 
-    // --- POST -> add comment ---
+    // --- POST -> add ---
     if (req.method === "POST") {
       let body = {};
+      const ct = req.headers["content-type"] || "";
+
       try {
-        body = req.body ?? await req.json?.() ?? {};
+        // اگر Next.js امکان req.json داشته باشه و content-type درست باشه
+        if (ct.includes("application/json") && typeof req.json === "function") {
+          body = await req.json();
+        } else {
+          body = req.body || {};
+        }
       } catch {
         body = req.body || {};
       }
 
       const text = (body?.text || "").toString().trim();
+      const nickname = (body?.nickname || "").toString().trim();
       if (!text) return res.status(400).json({ error: "Empty text" });
 
       const doc = {
         id: "c_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8),
         text,
-        likes: 0,
-        dislikes: 0,
+        nickname: nickname || "کاربر ناشناس",
         ts: Date.now(),
       };
 
-      const payload = JSON.stringify(doc);
+      // 🔴 نکته مهم: Upstash برای rpush انتظار آرایه از strings را دارد.
+      // پس اول doc را به رشته JSON تبدیل می‌کنیم...
+      const singleJson = JSON.stringify(doc);
+      // ...بعد همان رشته را داخل یک آرایه قرار می‌دهیم و به API می‌دهیم:
       const p = await fetch(`${url}/rpush/${key}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify([payload]),
+        body: JSON.stringify([singleJson]),
       });
 
       if (!p.ok) {
@@ -86,6 +101,7 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "Upstash rpush error", details: t });
       }
 
+      // نگه‌داشتن 1000 رکورد آخر (اختیاری)
       await fetch(`${url}/ltrim/${key}/0/999`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -93,61 +109,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, doc });
     }
 
-    // --- PATCH -> like/dislike update ---
-    if (req.method === "PATCH") {
-      const { id, action } = req.body || {};
-      if (!id || !["like", "dislike"].includes(action)) {
-        return res.status(400).json({ error: "Invalid parameters" });
-      }
-
-      // کل لیست رو می‌گیریم
-      const r = await fetch(`${url}/lrange/${key}/0/-1`, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
-      });
-      const data = await r.json();
-      const arr = Array.isArray(data?.result) ? data.result : [];
-
-      let updated = null;
-      const newArr = arr.map((s) => {
-        try {
-          const outer = JSON.parse(s);
-          const o = Array.isArray(outer) && outer[0] ? JSON.parse(outer[0]) : outer;
-          if (o.id === id) {
-            if (action === "like") o.likes = (o.likes || 0) + 1;
-            if (action === "dislike") o.dislikes = (o.dislikes || 0) + 1;
-            updated = o;
-            return JSON.stringify(o);
-          }
-          return s;
-        } catch {
-          return s;
-        }
-      });
-
-      if (!updated) return res.status(404).json({ error: "Comment not found" });
-
-      // لیست جدید ذخیره بشه
-      await fetch(`${url}/del/${key}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (newArr.length > 0) {
-        await fetch(`${url}/rpush/${key}`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newArr),
-        });
-      }
-
-      return res.status(200).json({ ok: true, doc: updated });
-    }
-
-    res.setHeader("Allow", "GET, POST, PATCH");
+    res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "Method not allowed" });
   } catch (e) {
     return res
