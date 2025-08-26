@@ -8,8 +8,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // یک کلید ثابت و سراسری (برای تمام صفحات مشترک)
-    const key = "global:counter:salawat"; // نام را می‌تونی عوض کنی
+    const key = "global:counter:salawat"; // global shared key
 
     if (req.method === "GET") {
       const r = await fetch(`${url}/get/${key}`, {
@@ -35,7 +34,7 @@ export default async function handler(req, res) {
         const t = await r.text();
         return res.status(500).json({ error: "Upstash incr error", details: t });
       }
-      const data = await r.json(); // {result: number}
+      const data = await r.json();
       const value = typeof data.result === "number" ? data.result : 0;
       res.setHeader("Cache-Control", "no-store");
       return res.status(200).json({ value });
