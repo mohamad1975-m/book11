@@ -601,68 +601,124 @@
   initCards();
 </script>
 
-<!-- Global Counter (Salawat) -->
-<div id="global-counter" style="
-  position:fixed; right:16px; bottom:16px; z-index:9999;
-  direction:rtl; font-family:inherit;
+<!-- === Salawat Global Counter (Fixed Alignment) === -->
+<div id="gc-widget" style="
+  position:fixed; right:16px; bottom:16px; z-index:9999; direction:rtl; font-family:inherit;
+  transition: transform .18s ease, opacity .18s ease;
 ">
   <div style="
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.2);
     box-shadow: 0 10px 25px rgba(0,0,0,.35);
     backdrop-filter: blur(6px);
-    color:#fff; padding:10px 12px; border-radius:14px; min-width:210px
+    color:#fff; padding:10px 12px; border-radius:14px; min-width:230px;
   ">
-    <div style="font-weight:800; font-size:14.5px; margin-bottom:6px; text-shadow:0 2px 6px rgba(0,0,0,.45)">
-      «بر عمر لعنت» شمار
+    <!-- Header: title + close (aligned) -->
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px">
+      <div style="font-weight:800; font-size:14.5px; text-shadow:0 2px 6px rgba(0,0,0,.45)">
+        «بر عمر لعنت» شمار
+      </div>
+      <button id="gc-close" aria-label="بستن" title="بستن" style="
+        width:26px; height:26px; border:none; border-radius:8px; cursor:pointer; color:#fff;
+        background:rgba(255,255,255,.18); box-shadow:0 3px 10px rgba(0,0,0,.3);
+        display:flex; align-items:center; justify-content:center; font-weight:900;
+        transition: transform .14s ease, background .14s ease;
+      ">×</button>
     </div>
+
+    <!-- Body: value + increment -->
     <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
       <div style="opacity:.95; font-size:13.5px">
-        مجموع لعن ها: <b id="gc-value">—</b>
+        مجموع لعن‌ها: <b id="gc-value">—</b>
       </div>
       <button id="gc-inc" style="
         border:none; cursor:pointer; color:#fff;
         background: linear-gradient(135deg,#34d399,#10b981);
         box-shadow: 0 6px 16px rgba(0,0,0,.35);
         border-radius:10px; padding:8px 12px; font-family:inherit;
+        transition: transform .12s ease;
       ">+ اضافه</button>
     </div>
   </div>
 </div>
 
+<!-- Toast -->
+<div id="gc-toast" style="
+  position:fixed; left:50%; transform:translateX(-50%) translateY(20px);
+  bottom:12px; z-index:10000; pointer-events:none;
+  opacity:0; transition: opacity .25s ease, transform .25s ease;
+">
+  <div style="
+    background: rgba(0,0,0,.6); color:#fff; padding:10px 14px; border-radius:10px;
+    border:1px solid rgba(255,255,255,.2); box-shadow:0 8px 20px rgba(0,0,0,.35);
+    font-size:13.5px; backdrop-filter: blur(4px); white-space:nowrap;
+  " id="gc-toast-text"></div>
+</div>
+
 <script>
-  (function(){
-    const valEl = document.getElementById('gc-value');
-    const btn   = document.getElementById('gc-inc');
+(function(){
+  const w  = document.getElementById('gc-widget');
+  const valEl = document.getElementById('gc-value');
+  const btnInc = document.getElementById('gc-inc');
+  const btnClose = document.getElementById('gc-close');
+  const toast = document.getElementById('gc-toast');
+  const toastText = document.getElementById('gc-toast-text');
 
-    async function refresh(){
-      try{
-        const r = await fetch('/api/global-counter',{cache:'no-store'});
-        const d = await r.json();
-        if(!r.ok || typeof d.value!=='number') throw 0;
-        valEl.textContent = d.value.toLocaleString('fa-IR');
-      }catch{
-        valEl.textContent = 'خطا';
-      }
+  // tiny press animation
+  btnInc.addEventListener('pointerdown', ()=> btnInc.style.transform='scale(0.96)');
+  btnInc.addEventListener('pointerup',   ()=> btnInc.style.transform='scale(1)');
+
+  async function refresh(){
+    try{
+      const r = await fetch('/api/global-counter',{cache:'no-store'});
+      const d = await r.json();
+      if(!r.ok || typeof d.value!=='number') throw 0;
+      valEl.textContent = d.value.toLocaleString('fa-IR');
+    }catch{
+      valEl.textContent = 'خطا';
     }
+  }
 
-    async function inc(){
-      btn.disabled = true;
-      try{
-        const r = await fetch('/api/global-counter', { method:'POST' });
-        const d = await r.json();
-        if(!r.ok || typeof d.value!=='number') throw 0;
-        valEl.textContent = d.value.toLocaleString('fa-IR');
-      }catch{
-        alert('نتونستم افزایش بدم. دوباره تلاش کن.');
-      }finally{
-        btn.disabled = false;
-      }
+  async function inc(){
+    btnInc.disabled = true;
+    try{
+      const r = await fetch('/api/global-counter', { method:'POST' });
+      const d = await r.json();
+      if(!r.ok || typeof d.value!=='number') throw 0;
+      valEl.textContent = d.value.toLocaleString('fa-IR');
+    }catch{
+      showToast('نتونستم افزایش بدم؛ دوباره تلاش کن.');
+    }finally{
+      btnInc.disabled = false;
     }
+  }
 
-    btn.addEventListener('click', inc);
-    refresh();
-  })();
+  function showToast(msg){
+    toastText.textContent = msg;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>{
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 5000);
+  }
+
+  function closeWidget(){
+    // graceful hide for this session (until refresh)
+    w.style.opacity = '0';
+    w.style.transform = 'translateY(10px) scale(0.98)';
+    setTimeout(()=>{ w.style.display='none'; }, 180);
+    showToast('‌لعن‌شمار بسته شد؛ برای برگشتن، صفحه را رفرش کنید.');
+  }
+
+  btnInc.addEventListener('click', inc);
+  btnClose.addEventListener('click', closeWidget);
+
+  refresh();
+})();
 </script>
+<!-- === /Salawat Global Counter === -->
+
 </body>
 </html>
