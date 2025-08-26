@@ -295,7 +295,7 @@
           </div>
           <div class="under-txt share-label"></div>
           <div class="icon-wrap comment" title="کامنت‌ها">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18ل4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
           </div>
           <div class="under-txt cmt-label" data-cmtcount>۰</div>
         </div>
@@ -368,12 +368,24 @@
   }
   loadVisits();
 
-  /* ---- داده‌های ثابت هر کتاب ---- */
+  /* ---- داده‌های ثابت هر کتاب (با لینک خرید دیجی‌کالا) ---- */
   const bookMeta={
-    'geo11-test':{size:'88 MB',rate:null,votes:null,buy:'#'},
-    'geo11-shab':{size:'23 MB',rate:4.4,votes:26,buy:'#'},
-    'geo10-shab':{size:'24 MB',rate:4.5,votes:67,buy:'#'},
-    'geo10-dars':{size:'36 MB',rate:4.2,votes:45,buy:'#'}
+    'geo11-test':{
+      size:'88 MB', rate:null, votes:null,
+      buy:'https://www.digikala.com/product/dkp-5746151/%DA%A9%D8%AA%D8%A7%D8%A8-%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7-2-%D9%BE%D8%A7%DB%8C%D9%87-%DB%8C%D8%A7%D8%B2%D8%AF%D9%87%D9%85-%D8%B1%D8%B4%D8%AA%D9%87-%D8%A7%D9%86%D8%B3%D8%A7%D9%86%DB%8C-%D8%A7%D8%AB%D8%B1-%D8%B2%D9%87%D8%B1%D8%A7-%D9%86%D8%B9%D9%85%D8%AA%DB%8C-%D9%88-%D8%A7%D9%84%D9%87%D9%87-%D9%87%D9%85%D8%A7%DB%8C%D9%88%D9%86-%D8%B2%D8%A7%D8%AF%D9%87-%D8%A7%D9%86%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA-%D8%AE%DB%8C%D9%84%DB%8C-%D8%B3%D8%A8%D8%B2/'
+    },
+    'geo11-shab':{
+      size:'23 MB', rate:4.4, votes:26,
+      buy:'https://www.digikala.com/product/dkp-820916/%DA%A9%D8%AA%D8%A7%D8%A8-%D8%B4%D8%A8-%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86-%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7-%D9%BE%D8%A7%DB%8C%D9%87-%DB%8C%D8%A7%D8%B2%D8%AF%D9%87%D9%85-%D8%A7%D8%AB%D8%B1-%D8%B3%DB%8C%D8%AF%D9%87-%D9%85%D8%B1%DB%8C%D9%85-%D8%B7%D8%A7%D9%87%D8%B1%DB%8C/'
+    },
+    'geo10-shab':{
+      size:'24 MB', rate:4.5, votes:67,
+      buy:'https://www.digikala.com/product/dkp-4123378/%DA%A9%D8%AA%D8%A7%D8%A8-%D8%B4%D8%A8-%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86-%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%AF%D9%87%D9%85-%D8%A7%D8%AB%D8%B1-%D9%85%D9%87%D8%AF%DB%8C-%DA%A9%D8%A7%D8%B1%D8%AF%D8%A7%D9%86-%D9%88-%D8%B4%D8%A7%D8%AF%DB%8C-%DA%A9%D8%A7%D8%B1%DB%8C%D8%A7%D9%86-%D8%A7%D9%86%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA-%D8%AE%DB%8C%D9%84%DB%8C-%D8%B3%D8%A8%D8%B2/'
+    },
+    'geo10-dars':{
+      size:'36 MB', rate:4.2, votes:45,
+      buy:'https://www.digikala.com/product/dkp-16924367/%DA%A9%D8%AA%D8%A7%D8%A8-%D9%BE%D8%B1%D8%B3%D8%B4-%D9%87%D8%A7%DB%8C-%DA%86%D9%87%D8%A7%D8%B1%DA%AF%D8%B2%DB%8C%D9%86%D9%87-%D8%A7%DB%8C-%D8%AC%D8%BA%D8%B1%D8%A7%D9%81%DB%8C%D8%A7-%D8%AC%D8%A7%D9%85%D8%B9-%D8%A7%D8%AB%D8%B1-%D8%AF%DA%A9%D8%AA%D8%B1-%D8%B2%D9%87%D8%B1%D8%A7-%D9%86%D8%B9%D9%85%D8%AA%DB%8C-%D9%88-%D8%AF%DA%A9%D8%AA%D8%B1-%D8%AD%D9%85%DB%8C%D8%AF%D8%B1%D8%B6%D8%A7-%D8%A8%D9%87%DB%8C%D8%A7%D8%AF-%D8%A7%D9%86%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA-%D8%AE%DB%8C%D9%84%DB%8C-%D8%B3%D8%A8%D8%B2/'
+    }
   };
 
   /* ---- ابزارهای محلی/عمومی ---- */
@@ -455,24 +467,6 @@
     });
   }
 
-  /* ---- کمک‌کننده‌های لینک خرید (Fix) ---- */
-  function ensureAbs(u){
-    if(!u) return '';
-    const s=String(u).trim();
-    if(s===' #' || s==='#' || s==='/') return '';
-    if(/^https?:\/\//i.test(s)) return s;
-    return 'https://' + s.replace(/^\/+/, '');
-  }
-  function buildDigiKalaLink(title){
-    // حذف گیومه‌ها و فاصله‌های اضافی برای جست‌وجوی تمیزتر
-    const t=(title||'').replace(/[«»]/g,'').trim();
-    return 'https://www.digikala.com/search/?q=' + encodeURIComponent(t);
-  }
-  function getBuyUrl(metaBuy,title){
-    const abs=ensureAbs(metaBuy);
-    return abs || buildDigiKalaLink(title);
-  }
-
   /* ---- مودال پیش‌نمایش ---- */
   const pvModal=document.getElementById('previewModal');
   const pvTitle=document.getElementById('pvTitle');
@@ -485,13 +479,12 @@
     const title = card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
     const href  = card.dataset.href;
     const meta  = bookMeta[id]||{};
-    const buyUrl= getBuyUrl(meta.buy, title);
     pvTitle.textContent='پیش‌نمایش «'+title+'»';
     pvBody.innerHTML =
       `<div>حجم فایل: <b>${meta.size || 'نامشخص'}</b></div>
        <div>لینک دانلود: ${href?`<a href="${href}" target="_blank" rel="noopener" style="color:#aef">باز کردن</a>`:'نامشخص'}</div>
        <div>امتیاز دیجی‌کالا: <b>${meta.rate==null?'ناموجود':meta.rate}</b> ${meta.votes?`(از ${meta.votes} رأی)`:''}</div>
-       <div style="margin-top:6px">خرید: <a href="${buyUrl}" target="_blank" rel="noopener" style="color:#aef">مشاهده در دیجی‌کالا</a></div>`;
+       <div style="margin-top:6px">خرید: ${meta.buy?`<a href="${meta.buy}" target="_blank" rel="noopener" style="color:#aef">مشاهده در دیجی‌کالا</a>`:'—'}</div>`;
     pvModal.style.display='flex'; setTimeout(()=>pvModal.classList.add('show'),10);
   }
 
@@ -587,9 +580,7 @@
 
       card.querySelector('.icon-wrap.buy').addEventListener('click',e=>{
         e.stopPropagation();
-        const buyUrl = getBuyUrl(meta.buy, titleText);
-        const w = window.open(buyUrl,'_blank');
-        if (w) w.opener = null; // امنیت
+        if(meta.buy){ const w=window.open(meta.buy,'_blank'); if(w) w.opener=null; }
       });
 
       card.querySelector('.icon-wrap.share').addEventListener('click',async e=>{
