@@ -1,4 +1,4 @@
-// api/counters.js
+// /api/counters.js
 export default async function handler(req, res) {
   try {
     const url = process.env.UPSTASH_REDIS_REST_URL;
@@ -7,42 +7,40 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Upstash config missing" });
     }
     const headers = { Authorization: `Bearer ${token}` };
+    const valid = new Set(["shares", "buys"]);
+    const keyFor = (type, book) => `counter:${type}:${book}`;
 
-    // فقط همین دو نوع
-    const valid = new Set(['shares', 'buys']);
-    const keyFor = (type, book) => `c:${type}:${book}`;
-
-    if (req.method === 'GET') {
+    if (req.method === "GET") {
       const { type, book } = req.query;
-      if (!type || !book || !valid.has(type)) {
-        return res.status(400).json({ error: "type(shares|buys) & book required" });
+      if (!valid.has(type) || !book) {
+        return res.status(400).json({ error: "type(shares|buys) and book required" });
       }
       const key = keyFor(type, book);
-      const r = await fetch(`${url}/get/${key}`, { headers, cache:'no-store' });
+      const r = await fetch(`${url}/get/${key}`, { headers, cache: "no-store" });
       let value = 0;
       if (r.ok) {
         const data = await r.json();
         value = parseInt(data?.result, 10) || 0;
       }
-      res.setHeader("Cache-Control","no-store");
+      res.setHeader("Cache-Control", "no-store");
       return res.status(200).json({ value });
     }
 
-    if (req.method === 'POST') {
+    if (req.method === "POST") {
       const { type, book, inc } = req.body || {};
-      if (!type || !book || !valid.has(type)) {
-        return res.status(400).json({ error: "type(shares|buys) & book required" });
+      if (!valid.has(type) || !book) {
+        return res.status(400).json({ error: "type(shares|buys) and book required" });
       }
-      const step = Number.isFinite(inc) ? inc : 1;
+      const by = Number.isFinite(inc) ? inc : 1;
       const key = keyFor(type, book);
-      const r = await fetch(`${url}/incrby/${key}/${step}`, { headers, cache:'no-store' });
+      const r = await fetch(`${url}/incrby/${key}/${by}`, { headers, cache: "no-store" });
       if (!r.ok) {
         const t = await r.text();
-        return res.status(500).json({ error: "redis incr error", details: t });
+        return res.status(500).json({ error: "redis error", details: t });
       }
       const data = await r.json();
-      const value = typeof data.result === 'number' ? data.result : 0;
-      res.setHeader("Cache-Control","no-store");
+      const value = typeof data.result === "number" ? data.result : 0;
+      res.setHeader("Cache-Control", "no-store");
       return res.status(200).json({ value });
     }
 
