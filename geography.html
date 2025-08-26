@@ -295,7 +295,7 @@
           </div>
           <div class="under-txt share-label"></div>
           <div class="icon-wrap comment" title="کامنت‌ها">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 00-2 2v18ل4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
           </div>
           <div class="under-txt cmt-label" data-cmtcount>۰</div>
         </div>
@@ -455,6 +455,24 @@
     });
   }
 
+  /* ---- کمک‌کننده‌های لینک خرید (Fix) ---- */
+  function ensureAbs(u){
+    if(!u) return '';
+    const s=String(u).trim();
+    if(s===' #' || s==='#' || s==='/') return '';
+    if(/^https?:\/\//i.test(s)) return s;
+    return 'https://' + s.replace(/^\/+/, '');
+  }
+  function buildDigiKalaLink(title){
+    // حذف گیومه‌ها و فاصله‌های اضافی برای جست‌وجوی تمیزتر
+    const t=(title||'').replace(/[«»]/g,'').trim();
+    return 'https://www.digikala.com/search/?q=' + encodeURIComponent(t);
+  }
+  function getBuyUrl(metaBuy,title){
+    const abs=ensureAbs(metaBuy);
+    return abs || buildDigiKalaLink(title);
+  }
+
   /* ---- مودال پیش‌نمایش ---- */
   const pvModal=document.getElementById('previewModal');
   const pvTitle=document.getElementById('pvTitle');
@@ -467,12 +485,13 @@
     const title = card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
     const href  = card.dataset.href;
     const meta  = bookMeta[id]||{};
+    const buyUrl= getBuyUrl(meta.buy, title);
     pvTitle.textContent='پیش‌نمایش «'+title+'»';
     pvBody.innerHTML =
       `<div>حجم فایل: <b>${meta.size || 'نامشخص'}</b></div>
        <div>لینک دانلود: ${href?`<a href="${href}" target="_blank" rel="noopener" style="color:#aef">باز کردن</a>`:'نامشخص'}</div>
        <div>امتیاز دیجی‌کالا: <b>${meta.rate==null?'ناموجود':meta.rate}</b> ${meta.votes?`(از ${meta.votes} رأی)`:''}</div>
-       <div style="margin-top:6px">خرید: ${meta.buy?`<a href="${meta.buy}" target="_blank" rel="noopener" style="color:#aef">مشاهده در دیجی‌کالا</a>`:'—'}</div>`;
+       <div style="margin-top:6px">خرید: <a href="${buyUrl}" target="_blank" rel="noopener" style="color:#aef">مشاهده در دیجی‌کالا</a></div>`;
     pvModal.style.display='flex'; setTimeout(()=>pvModal.classList.add('show'),10);
   }
 
@@ -567,7 +586,10 @@
       });
 
       card.querySelector('.icon-wrap.buy').addEventListener('click',e=>{
-        e.stopPropagation(); if(meta.buy) window.open(meta.buy,'_blank','noopener');
+        e.stopPropagation();
+        const buyUrl = getBuyUrl(meta.buy, titleText);
+        const w = window.open(buyUrl,'_blank');
+        if (w) w.opener = null; // امنیت
       });
 
       card.querySelector('.icon-wrap.share').addEventListener('click',async e=>{
