@@ -146,5 +146,69 @@
     }
     loadVisits();
   </script>
+
+<!-- Global Counter (Salawat) -->
+<div id="global-counter" style="
+  position:fixed; right:16px; bottom:16px; z-index:9999;
+  direction:rtl; font-family:inherit;
+">
+  <div style="
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,.35);
+    backdrop-filter: blur(6px);
+    color:#fff; padding:10px 12px; border-radius:14px; min-width:210px
+  ">
+    <div style="font-weight:800; font-size:14.5px; margin-bottom:6px; text-shadow:0 2px 6px rgba(0,0,0,.45)">
+      «بر عمر لعنت» شمار
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+      <div style="opacity:.95; font-size:13.5px">
+        مجموع لعن ها: <b id="gc-value">—</b>
+      </div>
+      <button id="gc-inc" style="
+        border:none; cursor:pointer; color:#fff;
+        background: linear-gradient(135deg,#34d399,#10b981);
+        box-shadow: 0 6px 16px rgba(0,0,0,.35);
+        border-radius:10px; padding:8px 12px; font-family:inherit;
+      ">+ اضافه</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const valEl = document.getElementById('gc-value');
+    const btn   = document.getElementById('gc-inc');
+
+    async function refresh(){
+      try{
+        const r = await fetch('/api/global-counter',{cache:'no-store'});
+        const d = await r.json();
+        if(!r.ok || typeof d.value!=='number') throw 0;
+        valEl.textContent = d.value.toLocaleString('fa-IR');
+      }catch{
+        valEl.textContent = 'خطا';
+      }
+    }
+
+    async function inc(){
+      btn.disabled = true;
+      try{
+        const r = await fetch('/api/global-counter', { method:'POST' });
+        const d = await r.json();
+        if(!r.ok || typeof d.value!=='number') throw 0;
+        valEl.textContent = d.value.toLocaleString('fa-IR');
+      }catch{
+        alert('نتونستم افزایش بدم. دوباره تلاش کن.');
+      }finally{
+        btn.disabled = false;
+      }
+    }
+
+    btn.addEventListener('click', inc);
+    refresh();
+  })();
+</script>
 </body>
 </html>
