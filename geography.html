@@ -165,17 +165,39 @@
   .cmt-rule{ font-size:12px; opacity:.85; margin-top:6px; text-align:center }
   .cmt-name{ width:100%; border-radius:10px; border:none; padding:10px; margin:8px 0; font-family:inherit }
 
-  /* --- Favorites (heart) positioning & states --- */
-  .left-acts .fav{ grid-column:1; grid-row:5; }
-  .left-acts .fav-label{ grid-column:1; grid-row:6; }
-  .icon-wrap.fav.active{ background: rgba(255,255,255,.2); box-shadow: 0 8px 20px rgba(0,0,0,.45); }
-  .icon-wrap.fav .heart-filled{ display:none }
-  .icon-wrap.fav.active .heart-filled{ display:block }
-  .icon-wrap.fav.active .heart-outline{ display:none }
+/* === Tags modal (grouped chips) & Font fix === */
+#tagsModal .box, #tagsModal .sort-title, #tagsModal .tag-group-title, #tagsModal .chip {
+  font-family: 'iranyekanX', sans-serif !important;
+}
+.tags-container{ display:block; }
+.tag-group{ margin:10px 0 12px; }
+.tag-group-title{ font-weight:800; opacity:.95; margin:6px 0; }
+.tag-group-body{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 12px; border-radius:999px; cursor:pointer;
+  background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.15);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+  user-select:none; font-size:14px; line-height:1; color:inherit;
+}
+.chip:active{ transform:scale(.98); }
+.chip.active{
+  background:linear-gradient(135deg,#34d399,#10b981);
+  border-color:transparent; color:#fff;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+.btn-danger{
+  background:rgba(239,68,68,.12);
+  border:1px solid rgba(239,68,68,.7);
+  color:#fecaca;
+}
 
-  /* --- Tag chip in preview (only look) --- */
-  .tag-chip{ display:inline-block; margin:3px; padding:4px 8px; border-radius:999px;
-    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); font-size:12px }
+/* === Heart icon placement in existing grid (no layout change) === */
+.left-acts .fav{ grid-column:2; grid-row:5; }
+.left-acts .fav-label{ grid-column:2; grid-row:6; }
+.icon-wrap.fav .heart-filled{ display:none }
+.icon-wrap.fav.active .heart-filled{ display:block }
+.icon-wrap.fav.active .heart-outline{ display:none }
 </style>
 </head>
 <body>
@@ -381,12 +403,7 @@
   loadVisits();
 
   /* ---- داده‌های ثابت هر کتاب ---- */
-  const bookMeta={
-    'geo11-test':{size:'88 MB',rate:null,votes:null,buy:'#', publisher:'خیلی سبز', tags:['تست','درسنامه','خیلی‌سبز']},
-    'geo11-shab':{size:'23 MB',rate:4.4,votes:26,buy:'#', publisher:'خیلی سبز', tags:['شب‌امتحان','خیلی‌سبز']},
-    'geo10-shab':{size:'24 MB',rate:4.5,votes:67,buy:'#', publisher:'خیلی سبز', tags:['شب‌امتحان','خیلی‌سبز']},
-    'geo10-dars':{size:'36 MB',rate:4.2,votes:45,buy:'#', publisher:'خیلی سبز', tags:['درسنامه','خیلی‌سبز']}
-  };
+  const bookMeta={"geo11-test": {"size": "88 MB", "rate": null, "votes": null, "buy": "https://www.digikala.com/product/dkp-5746151/کتاب-جغرافیا-2-پایه-یازدهم-رشته-انسانی-اثر-زهرا-نعمتی-و-الهه-همایون-زاده-انتشارات-خیلی-سبز/", "publisher": "خیلی سبز", "tags": ["تست", "درسنامه", "پایه یازدهم", "خیلی سبز", "مرور"]}, "geo11-shab": {"size": "23 MB", "rate": 4.4, "votes": 26, "buy": "https://www.digikala.com/product/dkp-820916/کتاب-شب-امتحان-جغرافیا-پایه-یازدهم-اثر-سیده-مریم-طاهری/", "publisher": "خیلی سبز", "tags": ["شب امتحان", "خیلی سبز", "درسنامه", "مرور", "پایه یازدهم", "سوال", "تشریحی", "امتحان نهایی"]}, "geo10-shab": {"size": "24 MB", "rate": 4.5, "votes": 67, "buy": "https://www.digikala.com/product/dkp-4123378/کتاب-شب-امتحان-جغرافیا-ایران-دهم-اثر-مهدی-کاردان-و-شادی-کاریان-انتشارات-خیلی-سبز/", "publisher": "خیلی سبز", "tags": ["شب امتحان", "پایه دهم", "خیلی سبز", "درسنامه", "مرور", "سوال", "تشریحی", "امتحان نهایی"]}, "geo10-dars": {"size": "36 MB", "rate": 4.2, "votes": 45, "buy": "https://www.digikala.com/product/dkp-16924367/کتاب-پرسش-های-چهارگزینه-ای-جغرافیا-جامع-اثر-دکتر-زهرا-نعمتی-و-دکتر-حمیدرضا-بهیاد-انتشارات-خیلی-سبز/", "publisher": "خیلی سبز", "tags": ["درسنامه", "پایه دهم", "خیلی سبز"]}};
 
   /* ---- ابزارهای محلی/عمومی ---- */
   function lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
@@ -614,286 +631,182 @@
 </script>
 
 <script>
+// === Tag Filter (chip-style, normalized) + Heart restore ===
 (function(){
-  const deviceId = (localStorage.getItem('device_id') || (()=>{const v='dvc_'+Math.random().toString(36).slice(2);localStorage.setItem('device_id',v);return v})());
-
-  const FAVS_KEY='my_favs';
-  function getMyFavs(){ try{return JSON.parse(localStorage.getItem(FAVS_KEY))||[]}catch{return []} }
-  function setMyFavs(v){ localStorage.setItem(FAVS_KEY, JSON.stringify(v)) }
-  function isMyFav(id){ return getMyFavs().includes(id) }
-  function addMyFav(id){ const s=new Set(getMyFavs()); s.add(id); setMyFavs([...s]) }
-  function removeMyFav(id){ const s=new Set(getMyFavs()); s.delete(id); setMyFavs([...s]) }
-
-  async function favGet(book){
-    const r = await fetch(`/api/favorites?book=${encodeURIComponent(book)}&device=${encodeURIComponent(deviceId)}`, { cache:'no-store' });
-    const d = await r.json(); return { count: d?.count ?? 0, isFav: !!d?.isFav };
-  }
-  async function favToggle(book, toAdd){
-    const r = await fetch('/api/favorites', { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ book, device: deviceId, op: toAdd?'add':'remove' }) });
-    const d = await r.json();
-    if(!r.ok) throw new Error(d?.error||'fav error');
-    return { count: d?.count ?? 0, isFav: !!d?.isFav };
-  }
-
+  // ---- toolbar tags button ----
   const toolbar = document.querySelector('.toolbar');
-  if(toolbar && !document.getElementById('btnTags')){
-    const btn = document.createElement('button');
-    btn.id='btnTags'; btn.className='sort-btn'; btn.textContent='برچسب';
-    toolbar.appendChild(btn);
+  let btnTags = document.getElementById('btnTags');
+  if (toolbar && !btnTags) {
+    btnTags = document.createElement('button');
+    btnTags.id = 'btnTags';
+    btnTags.className = 'sort-btn';
+    btnTags.textContent = 'برچسب';
+    toolbar.appendChild(btnTags);
   }
 
-  if(!document.getElementById('tagsModal')){
-    const modal = document.createElement('div');
-    modal.className='modal-sort'; modal.id='tagsModal'; modal.innerHTML = `
+  // ---- modal skeleton ----
+  let tagsModal = document.getElementById('tagsModal');
+  if (!tagsModal) {
+    tagsModal = document.createElement('div');
+    tagsModal.className = 'modal-sort';
+    tagsModal.id = 'tagsModal';
+    tagsModal.innerHTML = `
       <div class="box">
         <div class="sort-title">فیلتر بر اساس برچسب‌ها</div>
-        <div id="tagsContainer" style="display:flex; flex-wrap:wrap; gap:8px"></div>
-        <div class="row">
-          <button class="btn gray" id="btnTagsClear">پاک کردن</button>
-          <button class="btn" id="btnTagsApply">اعمال</button>
+        <div id="tagsContainer" class="tags-container"></div>
+        <div class="row" style="gap:8px; flex-wrap:wrap">
+          <button class="btn btn-danger" type="button" id="btnTagsDeleteAll">حذف همه‌ی فیلترها</button>
+          <div style="flex:1"></div>
+          <button class="btn gray" type="button" id="btnTagsCancel">لغو</button>
+          <button class="btn" type="button" id="btnTagsApply">اعمال</button>
         </div>
       </div>`;
-    document.body.appendChild(modal);
+    document.body.appendChild(tagsModal);
   }
 
-  const btnTags = document.getElementById('btnTags');
-  const tagsModal = document.getElementById('tagsModal');
   const tagsContainer = document.getElementById('tagsContainer');
-  const btnTagsClear = document.getElementById('btnTagsClear');
-  const btnTagsApply = document.getElementById('btnTagsApply');
-  let selectedTags = new Set();
+  const btnTagsApply  = document.getElementById('btnTagsApply');
+  const btnTagsDeleteAll  = document.getElementById('btnTagsDeleteAll');
+  const btnTagsCancel = document.getElementById('btnTagsCancel');
 
-  function openTags(){ buildTagsList(); tagsModal.style.display='flex'; setTimeout(()=>tagsModal.classList.add('show'),10) }
-  function closeTags(){ tagsModal.classList.remove('show'); setTimeout(()=>tagsModal.style.display='none',160) }
+  // selections
+  let selectedTags = new Set(); // applied
+  let tempSelected = new Set(); // in-modal
+
+  // groups (always shown)
+  const TAG_GROUPS = {
+    'نوع': ['تست','درسنامه','امتحان نهایی'],
+    'ناشر': ['خیلی سبز','گاج','مبتکران','مهر و ماه','مشاوران'],
+    'مدل کتاب': ['شب امتحان','ماجرای بیست','فرمول بیست','ماجراهای من و درسام','جی بی نکته باز','فصل آزمون','واقعا جامع کنکور','کتابچه جامع کنکور','امتحانت'],
+    'پایه ی مد نظر': ['پایه دهم','پایه یازدهم','پایه دوازدهم','جامع ( ویژه ی هر سه پایه )']
+  };
+
+  // normalize persian strings
+  function normalizeTag(s){
+    if (!s) return '';
+    return String(s)
+      .replace(/\u200c/g,' ')          // ZWNJ -> space
+      .replace(/[‌\u00A0]/g,' ')       // other NBSP/ZWNJ-like -> space
+      .replace(/ي/g,'ی')                // Arabic ya -> Persian
+      .replace(/ك/g,'ک')                // Arabic kaf -> Persian
+      .replace(/\s+/g,' ')             // collapse spaces
+      .trim();
+  }
+
+  function openTags(){
+    tempSelected = new Set(selectedTags);
+    buildTagsList();
+    tagsModal.style.display = 'flex';
+    setTimeout(()=>tagsModal.classList.add('show'),10);
+  }
+  function closeTags(){
+    tagsModal.classList.remove('show');
+    setTimeout(()=>tagsModal.style.display='none',160);
+  }
   btnTags && btnTags.addEventListener('click', openTags);
-  tagsModal && tagsModal.addEventListener('click', e=>{ if(e.target===tagsModal) closeTags() });
+  tagsModal && tagsModal.addEventListener('click', e => { if (e.target === tagsModal) closeTags(); });
 
   function buildTagsList(){
-    const all = new Set();
-    Object.values(bookMeta).forEach(m => (m.tags||[]).forEach(t=>all.add(t)));
-    const list = [...all].sort((a,b)=> a.localeCompare(b,'fa'));
-    tagsContainer.innerHTML = list.map(t=>`
-      <label style="display:inline-flex;align-items:center;gap:6px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.15); padding:6px 10px; border-radius:999px; cursor:pointer">
-        <input type="checkbox" value="${t}" ${selectedTags.has(t)?'checked':''} />
-        <span>${t}</span>
-      </label>
-    `).join('');
+    let html='';
+    Object.entries(TAG_GROUPS).forEach(([group, tags])=>{
+      const chips = tags.map(t => `<button type="button" class="chip" data-tag="${t}">${t}</button>`).join('');
+      html += `
+        <div class="tag-group">
+          <div class="tag-group-title">${group}</div>
+          <div class="tag-group-body">${chips}</div>
+        </div>`;
+    });
+    // show "other" tags present in bookMeta
+    const grouped = new Set(Object.values(TAG_GROUPS).flat().map(normalizeTag));
+    const existing = new Set();
+    (window.bookMeta?Object.values(bookMeta):[]).forEach(m => (m.tags||[]).forEach(t=>existing.add(normalizeTag(t))));
+    const others = [...existing].filter(t=> !grouped.has(t));
+    if (others.length){
+      const chips = others.sort((a,b)=>a.localeCompare(b,'fa')).map(t => `<button type="button" class="chip" data-tag="${t}">${t}</button>`).join('');
+      html += `
+        <div class="tag-group">
+          <div class="tag-group-title">سایر</div>
+          <div class="tag-group-body">${chips}</div>
+        </div>`;
+    }
+    tagsContainer.innerHTML = html;
+
+    // restore temp selection
+    tempSelected.forEach(t=>{
+      const sel = normalizeTag(t);
+      tagsContainer.querySelectorAll('.chip').forEach(el=>{
+        if (normalizeTag(el.dataset.tag) === sel) el.classList.add('active');
+      });
+    });
   }
-  btnTagsClear && btnTagsClear.addEventListener('click', ()=>{ selectedTags.clear(); buildTagsList(); });
-  btnTagsApply && btnTagsApply.addEventListener('click', ()=>{
-    selectedTags = new Set([...tagsContainer.querySelectorAll('input[type=checkbox]:checked')].map(i=>i.value));
+
+  tagsContainer.addEventListener('click', e=>{
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const tag = chip.dataset.tag;
+    chip.classList.toggle('active');
+    const norm = normalizeTag(tag);
+    if (chip.classList.contains('active')) tempSelected.add(norm);
+    else { tempSelected.delete(norm); tempSelected.delete(tag); }
+  });
+
+  btnTagsDeleteAll && btnTagsDeleteAll.addEventListener('click', ()=>{
+    selectedTags.clear(); tempSelected = new Set();
     applyTagFilter(); closeTags();
+  });
+  btnTagsApply && btnTagsApply.addEventListener('click', ()=>{
+    selectedTags = new Set(tempSelected);
+    applyTagFilter(); closeTags();
+  });
+  btnTagsCancel && btnTagsCancel.addEventListener('click', ()=>{
+    tempSelected = new Set(selectedTags); closeTags();
   });
 
   function applyTagFilter(){
-    const active = [...selectedTags];
+    const activeN = [...selectedTags].map(normalizeTag);
     document.querySelectorAll('.books li').forEach(li=>{
-      const id=li.dataset.id, meta=bookMeta[id]||{};
-      const tags = meta.tags || [];
-      const ok = active.length===0 ? true : active.every(t=>tags.includes(t));
+      const id = li.dataset.id, meta = (window.bookMeta||{})[id] || {};
+      const tags = (meta.tags || []).map(normalizeTag);
+      const ok = activeN.length===0 ? true : activeN.every(t => tags.includes(t));
       li.style.display = ok ? '' : 'none';
     });
   }
 
-  function enhanceCards(){
+  // ---- HEART restore (localStorage only; keeps UI intact) ----
+  const FAV_KEY='my_favs_v1';
+  function getFavs(){ try{return JSON.parse(localStorage.getItem(FAV_KEY))||[]}catch{return []} }
+  function setFavs(v){ localStorage.setItem(FAV_KEY, JSON.stringify(v)) }
+  function isFav(id){ return getFavs().includes(id) }
+  function toggleFav(id, state){
+    const s=new Set(getFavs());
+    if(state===true) s.add(id);
+    else if(state===false) s.delete(id);
+    else { s.has(id)?s.delete(id):s.add(id); }
+    setFavs([...s]);
+  }
+
+  function enhanceHearts(){
     document.querySelectorAll('.book-card').forEach(card=>{
       const li=card.closest('li'); const id=li.dataset.id;
       const left=card.querySelector('.left-acts');
-
-      if(left && !left.querySelector('.icon-wrap.fav')){
-        const favBtn = document.createElement('div');
-        favBtn.className='icon-wrap fav'; favBtn.title='علاقه‌مندی';
-        favBtn.innerHTML = '<svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6c-1.67 1.67-1.67 4.38 0 6.05l6.3 6.3 6.3-6.3c1.67-1.67 1.67-4.38 0-6.05-1.6-1.6-4.64-1.7-6.3.04z" fill="none" stroke="white" stroke-width="1.6"/></svg><svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>';
-        left.appendChild(favBtn);
-        const favLbl = document.createElement('div');
-        favLbl.className='under-txt fav-label'; favLbl.setAttribute('data-favcount',''); favLbl.textContent='۰';
-        left.appendChild(favLbl);
-
-        favGet(id).then(({count,isFav})=>{
-          favLbl.textContent = (count||0).toLocaleString('fa-IR');
-          const myFav = isMyFav(id);
-          if(isFav && !myFav) addMyFav(id);
-          if(!isFav && myFav) removeMyFav(id);
-          favBtn.classList.toggle('active', isMyFav(id));
-        }).catch(()=>{});
-
-        favBtn.addEventListener('click', async (e)=>{
-          e.stopPropagation();
-          const willAdd = !favBtn.classList.contains('active');
-          favBtn.style.transform='translateY(-2px)'; setTimeout(()=>favBtn.style.transform='',130);
-          try{
-            const {count,isFav} = await favToggle(id, willAdd);
-            favLbl.textContent = (count||0).toLocaleString('fa-IR');
-            favBtn.classList.toggle('active', isFav);
-            if(isFav) addMyFav(id); else removeMyFav(id);
-          }catch{}
-        });
-      }
-
-      const shareEl = card.querySelector('.icon-wrap.share');
-      if(shareEl && !shareEl._enhanced){
-        shareEl.addEventListener('click', async (e)=>{
-          e.stopImmediatePropagation(); e.preventDefault();
-          const title = card.querySelector('.title').firstChild.textContent.trim();
-          const href  = card.dataset.href;
-          const meta  = bookMeta[id]||{};
-          const pub = meta.publisher ? `ناشر: ${meta.publisher}\n` : '';
-          const rating = (meta.rate==null)? '' : `امتیاز: ${meta.rate}${meta.votes?` از ${meta.votes} رأی`:''}\n`;
-          const buy = meta.buy ? `خرید: ${meta.buy}\n` : '';
-          const download = href ? `دانلود PDF: ${href}\n` : '';
-          const more = `\nبرای مشاهده‌ی کتاب‌های بیشتر روی لینک زیر کلیک کنید:\nhttps://book11-one.vercel.app/`;
-          const text = `«${title}»\n${pub}${rating}${buy}${download}${more}`;
-          if(navigator.share){ try{ await navigator.share({title, text}); }catch{} }
-          else{ try{ await navigator.clipboard.writeText(text); alert('متن اشتراک‌گذاری کپی شد'); }catch{ alert('کپی نشد؛ دستی کپی کنید.') } }
-        }, true);
-        shareEl._enhanced = true;
-      }
+      if(!left || left.querySelector('.icon-wrap.fav')) return;
+      // add heart button at col2/row5 + label col2/row6
+      const favBtn=document.createElement('div');
+      favBtn.className='icon-wrap fav'; favBtn.title='علاقه‌مندی';
+      favBtn.innerHTML = '<svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6c-1.67 1.67-1.67 4.38 0 6.05l6.3 6.3 6.3-6.3c1.67-1.67 1.67-4.38 0-6.05-1.6-1.6-4.64-1.7-6.3.04z" fill="none" stroke="white" stroke-width="1.6"/></svg><svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>';
+      const favLbl=document.createElement('div');
+      favLbl.className='under-txt fav-label'; favLbl.textContent=' ';
+      left.appendChild(favBtn); left.appendChild(favLbl);
+      const setState=()=>favBtn.classList.toggle('active', isFav(id));
+      setState();
+      favBtn.addEventListener('click', e=>{ e.stopPropagation(); toggleFav(id); setState(); });
     });
   }
 
-  const originalOpenPreview = window.openPreview;
-  window.openPreview = function(card, id){
-    const meta = bookMeta[id]||{};
-    const title = card.querySelector('.title').textContent.replace(/\(\d+ دانلود\)/,'').trim();
-    const href  = card.dataset.href;
-    const tagsHtml = (meta.tags && meta.tags.length)
-      ? meta.tags.map(t=>`<span class="tag-chip">${t}</span>`).join('')
-      : '<span style="opacity:.8">—</span>';
-    document.getElementById('pvTitle').textContent='پیش‌نمایش «'+title+'»';
-    document.getElementById('pvBody').innerHTML =
-      `<div>ناشر: <b>${meta.publisher||'—'}</b></div>
-       <div>حجم فایل: <b>${meta.size||'نامشخص'}</b></div>
-       <div>برچسب‌ها: ${tagsHtml}</div>
-       <div>لینک دانلود: ${href?`<a href="${href}" target="_blank" rel="noopener" style="color:#aef">باز کردن</a>`:'نامشخص'}</div>
-       <div>امتیاز دیجی‌کالا: <b>${meta.rate==null?'ناموجود':meta.rate}</b> ${meta.votes?`(از ${meta.votes} رأی)`:''}</div>
-       <div style="margin-top:6px">خرید: ${meta.buy?`<a href="${meta.buy}" target="_blank" rel="noopener" style="color:#aef">مشاهده در دیجی‌کالا</a>`:'—'}</div>`;
-    const pvModal=document.getElementById('previewModal'); pvModal.style.display='flex'; setTimeout(()=>pvModal.classList.add('show'),10);
-  }
-
-  enhanceCards();
-  setTimeout(enhanceCards, 500);
-
-  if(location.hash){
-    const id = location.hash.slice(1);
-    const li = document.querySelector(`.books li[data-id="${id}"]`);
-    if(li){ li.scrollIntoView({behavior:'smooth', block:'center'}); li.style.outline='2px solid rgba(255,255,255,.4)'; setTimeout(()=>li.style.outline='',2500); }
-  }
+  // init
+  enhanceHearts();
+  setTimeout(enhanceHearts, 400);
 })();
 </script>
-
-<!-- === Salawat Global Counter (Fixed Alignment) === -->
-<div id="gc-widget" style="
-  position:fixed; right:16px; bottom:16px; z-index:9999; direction:rtl; font-family:inherit;
-  transition: transform .18s ease, opacity .18s ease;
-">
-  <div style="
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 10px 25px rgba(0,0,0,.35);
-    backdrop-filter: blur(6px);
-    color:#fff; padding:10px 12px; border-radius:14px; min-width:230px;
-  ">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px">
-      <div style="font-weight:800; font-size:14.5px; text-shadow:0 2px 6px rgba(0,0,0,.45)">
-        صلوات‌شمار
-      </div>
-      <button id="gc-close" aria-label="بستن" title="بستن" style="
-        width:26px; height:26px; border:none; border-radius:8px; cursor:pointer; color:#fff;
-        background:rgba(255,255,255,.18); box-shadow:0 3px 10px rgba(0,0,0,.3);
-        display:flex; align-items:center; justify-content:center; font-weight:900;
-        transition: transform .14s ease, background .14s ease;
-      ">×</button>
-    </div>
-
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
-      <div style="opacity:.95; font-size:13.5px">
-        مجموع: <b id="gc-value">—</b>
-      </div>
-      <button id="gc-inc" style="
-        border:none; cursor:pointer; color:#fff;
-        background: linear-gradient(135deg,#34d399,#10b981);
-        box-shadow: 0 6px 16px rgba(0,0,0,.35);
-        border-radius:10px; padding:8px 12px; font-family:inherit;
-        transition: transform .12s ease;
-      ">+ اضافه</button>
-    </div>
-  </div>
-</div>
-
-<div id="gc-toast" style="
-  position:fixed; left:50%; transform:translateX(-50%) translateY(20px);
-  bottom:12px; z-index:10000; pointer-events:none;
-  opacity:0; transition: opacity .25s ease, transform .25s ease;
-">
-  <div style="
-    background: rgba(0,0,0,.6); color:#fff; padding:10px 14px; border-radius:10px;
-    border:1px solid rgba(255,255,255,.2); box-shadow:0 8px 20px rgba(0,0,0,.35);
-    font-size:13.5px; backdrop-filter: blur(4px); white-space:nowrap;
-  " id="gc-toast-text"></div>
-</div>
-
-<script>
-(function(){
-  const w  = document.getElementById('gc-widget');
-  const valEl = document.getElementById('gc-value');
-  const btnInc = document.getElementById('gc-inc');
-  const btnClose = document.getElementById('gc-close');
-  const toast = document.getElementById('gc-toast');
-  const toastText = document.getElementById('gc-toast-text');
-
-  btnInc.addEventListener('pointerdown', ()=> btnInc.style.transform='scale(0.96)');
-  btnInc.addEventListener('pointerup',   ()=> btnInc.style.transform='scale(1)');
-
-  async function refresh(){
-    try{
-      const r = await fetch('/api/global-counter',{cache:'no-store'});
-      const d = await r.json();
-      if(!r.ok || typeof d.value!=='number') throw 0;
-      valEl.textContent = d.value.toLocaleString('fa-IR');
-    }catch{
-      valEl.textContent = 'خطا';
-    }
-  }
-
-  async function inc(){
-    btnInc.disabled = true;
-    try{
-      const r = await fetch('/api/global-counter', { method:'POST' });
-      const d = await r.json();
-      if(!r.ok || typeof d.value!=='number') throw 0;
-      valEl.textContent = d.value.toLocaleString('fa-IR');
-    }catch{
-      showToast('نتونستم افزایش بدم؛ دوباره تلاش کن.');
-    }finally{
-      btnInc.disabled = false;
-    }
-  }
-
-  function showToast(msg){
-    toastText.textContent = msg;
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateX(-50%) translateY(0)';
-    clearTimeout(showToast._t);
-    showToast._t = setTimeout(()=>{
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(-50%) translateY(20px)';
-    }, 5000);
-  }
-
-  function closeWidget(){
-    w.style.opacity = '0';
-    w.style.transform = 'translateY(10px) scale(0.98)';
-    setTimeout(()=>{ w.style.display='none'; }, 180);
-    showToast('صلوات‌شمار بسته شد؛ برای برگشتن، صفحه را رفرش کنید.');
-  }
-
-  btnInc.addEventListener('click', inc);
-  btnClose.addEventListener('click', closeWidget);
-
-  refresh();
-})();
-</script>
-<!-- === /Salawat Global Counter === -->
 </body>
 </html>
