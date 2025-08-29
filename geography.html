@@ -606,26 +606,39 @@ cmtSend.addEventListener('click',async()=>{
 });
 
 /* ---- کارت‌ها + علاقه‌مندی‌ها + اشتراک‌گذاری جدید ---- */
-  function makeShareText(title, dl, meta){
-    const buy = meta.buy || '—';
-    const rating = makeRatingText(meta);
-    return [
-      `${RTL}📘 نام کتاب:`,
-      title,
-      '',
-      `${RTL}📥 لینک دانلود PDF:`,
-      dl || '—',
-      '',
-      `${RTL}🛒 لینک خرید (دیجی‌کالا):`,
-      buy,
-      '',
-      `${RTL}⭐ امتیاز:`,
-      rating,
+function initCards(){
+  const SITE_URL = (window.SITE_URL_OVERRIDE || 'https://book11-one.vercel.app/');
+  const RTL = '\u200F';
+  const makeRatingText = (meta)=>{
+    if (meta.rate==null) return 'ناموجود';
+    const r = faRate(meta.rate);
+    return `${r}${meta.votes?` (از ${faDigits(meta.votes)} رأی)`:''}`;
+  };
+  const makeShareText = (title, dl, meta, includeSiteLink = false)=>{
+  const buy = meta.buy || '—';
+  const rating = makeRatingText(meta);
+  const lines = [
+    `${RTL}📘 نام کتاب:`,
+    title,
+    '',
+    `${RTL}📥 لینک دانلود PDF:`,
+    dl || '—',
+    '',
+    `${RTL}🛒 لینک خرید (دیجی‌کالا):`,
+    buy,
+    '',
+    `${RTL}⭐ امتیاز:`,
+    rating
+  ];
+  if (includeSiteLink) {
+    lines.push(
       '',
       `${RTL}🌐 برای کتاب‌های بیشتر:`,
       SITE_URL
-    ].join('\n');
+    );
   }
+  return lines.join('\n');
+};
 
   document.querySelectorAll('.book-card').forEach(card=>{
     const li=card.closest('li'); const id=li.dataset.id;
@@ -665,7 +678,7 @@ cmtSend.addEventListener('click',async()=>{
     // متن بدون لینک سایت + url جداگانه (دیگه دوتایی نمی‌شه)
     const text = makeShareText(titleText, dl, meta, /*includeSiteLink=*/false);
     try {
-      await navigator.share({ title: titleText, text });
+      await navigator.share({ title: titleText, text, url: SITE_URL });
     } catch {}
   } else {
     // دستگاه share ندارد: متنِ کپی شامل لینک سایت باشد
