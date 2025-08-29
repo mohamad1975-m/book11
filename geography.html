@@ -631,12 +631,12 @@ function initCards(){
     rating
   ];
   if (includeSiteLink) {
-    lines.push(
-      '',
-      `${RTL}🌐 برای کتاب‌های بیشتر:`,
-      SITE_URL
-    );
-  }
+  lines.push(
+    '',
+    `${RTL}🌐 برای کتاب‌های بیشتر:`,
+    SITE_URL
+  );
+}
   return lines.join('\n');
 };
 
@@ -678,7 +678,7 @@ function initCards(){
     // متن بدون لینک سایت + url جداگانه (دیگه دوتایی نمی‌شه)
     const text = makeShareText(titleText, dl, meta, /*includeSiteLink=*/false);
     try {
-      await navigator.share({ title: titleText, text, url: SITE_URL });
+      await navigator.share({ title: titleText, text });
     } catch {}
   } else {
     // دستگاه share ندارد: متنِ کپی شامل لینک سایت باشد
