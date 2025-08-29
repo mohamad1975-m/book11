@@ -662,7 +662,7 @@ function initCards(){
       const dl = card.dataset.href || '';
       const text = makeShareText(titleText, dl, meta);
       if (navigator.share){
-        try{ await navigator.share({ title: titleText, text, url: SITE_URL }); }catch{}
+        await navigator.share({ title: titleText, text }); }catch{}
       }else{
         try{ await navigator.clipboard.writeText(text); alert('متن اشتراک‌گذاری کپی شد ✅'); }
         catch{ alert('کپی نشد؛ لطفاً دستی کپی کنید.'); }
