@@ -614,10 +614,9 @@ function initCards(){
     const r = faRate(meta.rate);
     return `${r}${meta.votes?` (از ${faDigits(meta.votes)} رأی)`:''}`;
   };
-  function makeShareText(title, dl, meta, includeSiteLink){
-  const RTL = '\u200F';
-  const rating = (meta.rate==null) ? 'ناموجود' : `${toFa(meta.rate)} (از ${toFa(meta.votes||0)} رأی)`;
-
+  const makeShareText = (title, dl, meta, includeSiteLink = false)=>{
+  const buy = meta.buy || '—';
+  const rating = makeRatingText(meta);
   const lines = [
     `${RTL}📘 نام کتاب:`,
     title,
@@ -626,21 +625,20 @@ function initCards(){
     dl || '—',
     '',
     `${RTL}🛒 لینک خرید (دیجی‌کالا):`,
-    meta.buy || '—',
+    buy,
     '',
     `${RTL}⭐ امتیاز:`,
     rating
   ];
-
   if (includeSiteLink) {
-    lines.push(
-      '',
-      `${RTL}🌐 برای کتاب‌های بیشتر:`,
-      SITE_URL
-    );
-  }
-  return lines.join('\n');
+  lines.push(
+    '',
+    `${RTL}🌐 برای کتاب‌های بیشتر:`,
+    SITE_URL
+  );
 }
+  return lines.join('\n');
+};
 
   document.querySelectorAll('.book-card').forEach(card=>{
     const li=card.closest('li'); const id=li.dataset.id;
@@ -674,19 +672,21 @@ function initCards(){
 
     card.querySelector('.icon-wrap.share').addEventListener('click', async e=>{
   e.stopPropagation();
-  const dl   = card.dataset.href || '';
-  const text = makeShareText(titleText, dl, meta, /*includeSiteLink=*/true);
+  const dl = card.dataset.href || '';
 
-  if (navigator.share){
-    try{
-      // فقط متن؛ دیگه url جداگانه نده که دوبار نشه یا به خط قبلی نچسبه
+  if (navigator.share) {
+    // متن بدون لینک سایت + url جداگانه (دیگه دوتایی نمی‌شه)
+    const text = makeShareText(titleText, dl, meta, /*includeSiteLink=*/false);
+    try {
       await navigator.share({ title: titleText, text });
-    }catch{/* کاربر کنسل کرد */}
-  }else{
-    try{
+    } catch {}
+  } else {
+    // دستگاه share ندارد: متنِ کپی شامل لینک سایت باشد
+    const text = makeShareText(titleText, dl, meta, /*includeSiteLink=*/true);
+    try {
       await navigator.clipboard.writeText(text);
       alert('متن اشتراک‌گذاری کپی شد ✅');
-    }catch{
+    } catch {
       alert('کپی نشد؛ لطفاً دستی کپی کنید.');
     }
   }
