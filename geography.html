@@ -614,17 +614,31 @@ function initCards(){
     const r = faRate(meta.rate);
     return `${r}${meta.votes?` (از ${faDigits(meta.votes)} رأی)`:''}`;
   };
-  const makeShareText = (title, dl, meta)=>{
-    const buy = meta.buy || '—';
-    const rating = makeRatingText(meta);
-    return [
-      `${RTL}📘 نام کتاب:`, title, '',
-      `${RTL}📥 لینک دانلود PDF:`, dl || '—', '',
-      `${RTL}🛒 لینک خرید (دیجی‌کالا):`, buy, '',
-      `${RTL}⭐ امتیاز:`, rating, '',
-      `${RTL}🌐 برای کتاب‌های بیشتر:`, (window.SHARE_SITE || 'https://book11-one.vercel.app/')
-    ].join('\n');
-  };
+  const makeShareText = (title, dl, meta, includeSiteLink = false)=>{
+  const buy = meta.buy || '—';
+  const rating = makeRatingText(meta);
+  const lines = [
+    `${RTL}📘 نام کتاب:`,
+    title,
+    '',
+    `${RTL}📥 لینک دانلود PDF:`,
+    dl || '—',
+    '',
+    `${RTL}🛒 لینک خرید (دیجی‌کالا):`,
+    buy,
+    '',
+    `${RTL}⭐ امتیاز:`,
+    rating
+  ];
+  if (includeSiteLink) {
+    lines.push(
+      '',
+      `${RTL}🌐 برای کتاب‌های بیشتر:`,
+      SITE_URL
+    );
+  }
+  return lines.join('\n');
+};
 
   document.querySelectorAll('.book-card').forEach(card=>{
     const li=card.closest('li'); const id=li.dataset.id;
