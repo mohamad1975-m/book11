@@ -670,18 +670,27 @@ function initCards(){
       setTimeout(()=>{ starTip.classList.remove('show'); starTip.classList.add('hide') }, 6000);
     });
 
-    // اشتراک‌گذاری فرمت‌شده
-    card.querySelector('.icon-wrap.share').addEventListener('click',async e=>{
-      e.stopPropagation();
-      const dl = card.dataset.href || '';
-      const text = makeShareText(titleText, dl, meta);
-      if (navigator.share){
-        await navigator.share({ title: titleText, text, url: SITE_URL }); }catch{}
-      }else{
-        try{ await navigator.clipboard.writeText(text); alert('متن اشتراک‌گذاری کپی شد ✅'); }
-        catch{ alert('کپی نشد؛ لطفاً دستی کپی کنید.'); }
-      }
-    });
+    card.querySelector('.icon-wrap.share').addEventListener('click', async e=>{
+  e.stopPropagation();
+  const dl = card.dataset.href || '';
+
+  if (navigator.share) {
+    // متن بدون لینک سایت + url جداگانه (دیگه دوتایی نمی‌شه)
+    const text = makeShareText(titleText, dl, meta, /*includeSiteLink=*/false);
+    try {
+      await navigator.share({ title: titleText, text, url: SITE_URL });
+    } catch {}
+  } else {
+    // دستگاه share ندارد: متنِ کپی شامل لینک سایت باشد
+    const text = makeShareText(titleText, dl, meta, /*includeSiteLink=*/true);
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('متن اشتراک‌گذاری کپی شد ✅');
+    } catch {
+      alert('کپی نشد؛ لطفاً دستی کپی کنید.');
+    }
+  }
+});
 
     // خرید
     card.querySelector('.icon-wrap.buy').addEventListener('click',e=>{
