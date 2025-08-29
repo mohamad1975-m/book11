@@ -4,14 +4,18 @@ export default async function handler(req, res) {
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
     if (!url || !token) {
       return res.status(500).json({
-        error: "Upstash config missing. Set UPSTASH_REDIS_REST_URL & UPSTASH_REDIS_REST_TOKEN in Vercel."
+        error:
+          "Upstash config missing. Set UPSTASH_REDIS_REST_URL & UPSTASH_REDIS_REST_TOKEN in Vercel.",
       });
     }
 
-    const key = "global:counter:salawat"; // global shared key
+    // انتخاب کلید: پیش‌فرض laan (برای سازگاری با لعن‌شمار فعلی)
+    const raw = (req.query?.key || "laan").toString().toLowerCase();
+    const safe = raw.replace(/[^a-z0-9_-]/g, ""); // کمی سفت‌گیری برای امنیت
+    const redisKey = `global:counter:${safe || "laan"}`;
 
     if (req.method === "GET") {
-      const r = await fetch(`${url}/get/${key}`, {
+      const r = await fetch(`${url}/get/${encodeURIComponent(redisKey)}`, {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       });
@@ -26,10 +30,13 @@ export default async function handler(req, res) {
 
     if (req.method === "POST") {
       const inc = 1;
-      const r = await fetch(`${url}/incrby/${key}/${inc}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
-      });
+      const r = await fetch(
+        `${url}/incrby/${encodeURIComponent(redisKey)}/${inc}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        }
+      );
       if (!r.ok) {
         const t = await r.text();
         return res.status(500).json({ error: "Upstash incr error", details: t });
@@ -42,6 +49,8 @@ export default async function handler(req, res) {
 
     return res.status(405).json({ error: "Method not allowed" });
   } catch (err) {
-    return res.status(500).json({ error: "Server error global-counter", details: String(err) });
+    return res
+      .status(500)
+      .json({ error: "Server error global-counter", details: String(err) });
   }
 }
