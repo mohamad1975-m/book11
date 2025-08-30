@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>تاریخ</title>
+<title>فنون ادبی</title>
 <style>
   @font-face{
     font-family:'iranyekanX';
@@ -192,7 +192,7 @@
 </style>
 </head>
 <body>
-<header>تاریخ 📘</header>
+<header>فنون ادبی 📘</header>
 
 <div class="toolbar">
   <div class="search-box">
@@ -206,7 +206,7 @@
 
 <!-- جامع (پایه‌های 10، 11، 12) -->
 <section class="panel" data-panel="all-grades">
-  <h2>کتاب‌های علوم و فنون ادبی، جامع (پایه‌های 10، 11 و 12)</h2>
+  <h2>کتاب‌های علوم‌و‌فنون‌ادبی، جامع (پایه‌های 10و11و12)</h2>
   <ul class="books" id="listAll">
     <li data-id="hist11-test">
       <div class="book-card" data-href="https://mega.nz/file/ZzYURa6L#Iy8EJDX-j_NbAZfIZzzUynLH2SfsT_Tm39YY0aN33eo">
@@ -245,7 +245,7 @@
 
 <!-- پایه یازدهم -->
 <section class="panel" data-panel="11">
-  <h2>کتاب‌های علوم و فنون ادبی، پایه یازدهم</h2>
+  <h2>کتاب‌های علوم‌و‌فنون‌ادبی، پایه یازدهم</h2>
   <ul class="books" id="list11">
     <li data-id="fonoon11-majara20">
       <div class="book-card" data-href="https://s34.picofile.com/d/8486137850/011edfa3-23d3-4a01-8ed3-b79fe19b519c/fonoon11_majara20.pdf">
@@ -318,7 +318,7 @@
 
 <!-- پایه دهم -->
 <section class="panel" data-panel="10">
-  <h2>کتاب‌های علوم و فنون ادبی، پایه دهم</h2>
+  <h2>کتاب‌های علوم‌و‌فنون‌ادبی، پایه دهم</h2>
   <ul class="books" id="list10">
     <li data-id="fonoon10-majaraha">
       <div class="book-card" data-href="https://mega.nz/file/Ar5lQIRZ#e-amNOujuD-N3jKKOh0kRiml4blqoNoGIpWuaLIl2zk">
@@ -455,7 +455,7 @@ const faRate = v => (v==null? '؟' : (''+v).replace(/\./g,'٫').replace(/\d/g,d=
 
 /* ---- شمارنده بازدید صفحه ---- */
 async function loadVisits(){
-  const slug='tarikh';
+  const slug='fonoon';
   try{
     const r=await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`,{cache:'no-store'});
     const d=await r.json();
