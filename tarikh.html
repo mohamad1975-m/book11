@@ -403,7 +403,7 @@
       <li data-sort="default" class="active">پیش‌فرض</li>
       <li data-sort="rate">بیشترین امتیاز</li>
       <li data-sort="downloads">بیشترین دانلود</li>
-      <li data-sort="likes">بیشترین علاقه‌مندی</li>
+      <li data-sort="likes">بیشترین لایک</li>
       <li data-sort="size">کم‌حجم‌ترین</li>
     </ul>
     <div class="row"><button class="btn gray" id="btnSortClose">بستن</button></div>
@@ -552,7 +552,10 @@ const sortList=document.getElementById('sortList');
 const sortClose=document.getElementById('btnSortClose');
 let currentSort='default';
 
-function openSort(){sortModal.style.display='فعs';setTimeout(()=>sortModal.classList.add('show'),10)}
+function openSort(){
+  sortModal.style.display = 'flex'; // نمایش مودال با display flex
+  setTimeout(() => sortModal.classList.add('show'), 10); // اضافه کردن کلاس show برای نمایش مودال
+}
 function closeSort(){sortModal.classList.remove('show');setTimeout(()=>sortModal.style.display='none',160)}
 sortBtn.addEventListener('click',openSort);
 sortClose.addEventListener('click',closeSort);
