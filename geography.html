@@ -878,69 +878,49 @@ initCards();
   
 <!-- === Dual Counter Widget (Compact) === -->
 <!-- === Zekr Widget (Salawat + Laan) === -->
-<div id="gc-widget" style="
-  position:fixed; right:14px; bottom:14px; z-index:9999; direction:rtl; font-family:inherit;
-  transition: transform .18s ease, opacity .18s ease;
-">
-  <div style="
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 8px 20px rgba(0,0,0,.35);
-    backdrop-filter: blur(6px);
-    color:#fff; padding:8px 10px; border-radius:12px; min-width:210px;
-  ">
+<div id="gc-widget" style="position:fixed; right:14px; bottom:14px; z-index:9999; direction:rtl; font-family:inherit; transition: transform .18s ease, opacity .18s ease;">
+  <div style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 8px 20px rgba(0,0,0,.35); backdrop-filter: blur(6px); color:#fff; padding:8px 10px; border-radius:12px; min-width:210px;">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px">
-      <div style="font-weight:800; font-size:13.5px; text-shadow:0 2px 5px rgba(0,0,0,.45)">
-        ذکرهای همگانی
-      </div>
-      <button id="gc-close" aria-label="بستن" title="بستن" style="
-        width:24px; height:24px; border:none; border-radius:7px; cursor:pointer; color:#fff;
-        background:rgba(255,255,255,.18); box-shadow:0 3px 10px rgba(0,0,0,.3);
-        display:flex; align-items:center; justify-content:center; font-weight:900;
-        line-height:1;
-      ">×</button>
+      <div style="font-weight:800; font-size:13.5px; text-shadow:0 2px 5px rgba(0,0,0,.45)"> ذکرهای همگانی </div>
+      <button id="gc-close" aria-label="بستن" title="بستن" style="width:24px; height:24px; border:none; border-radius:7px; cursor:pointer; color:#fff; background:rgba(255,255,255,.18); box-shadow:0 3px 10px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center; font-weight:900; line-height:1;">×</button>
+      <!-- دکمه پروفایل -->
+      <button id="gc-profile" aria-label="پروفایل" title="پروفایل" style="width:24px; height:24px; border:none; border-radius:7px; cursor:pointer; color:#fff; background:rgba(255,255,255,.18); box-shadow:0 3px 10px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center; font-weight:900; line-height:1;">
+        👤
+      </button>
     </div>
 
     <div style="display:grid; grid-template-columns: auto 1fr auto; align-items:center; gap:6px 8px">
       <!-- Salawat row -->
       <div style="opacity:.92; font-size:13px">صلوات:</div>
       <b id="gc-salawat" style="font-size:13px; text-align:left">—</b>
-      <button id="gc-salawat-inc" style="
-        border:none; cursor:pointer; color:#fff; font-size:12px;
-        background: linear-gradient(135deg,#34d399,#10b981);
-        box-shadow: 0 5px 14px rgba(0,0,0,.32);
-        border-radius:8px; padding:6px 9px; font-family:inherit;
-      ">+ اضافه</button>
+      <button id="gc-salawat-inc" style="border:none; cursor:pointer; color:#fff; font-size:12px; background: linear-gradient(135deg,#34d399,#10b981); box-shadow: 0 5px 14px rgba(0,0,0,.32); border-radius:8px; padding:6px 9px; font-family:inherit;">+ اضافه</button>
 
       <!-- Laan row -->
       <div style="opacity:.92; font-size:13px">لعن:</div>
       <b id="gc-laan" style="font-size:13px; text-align:left">—</b>
-      <button id="gc-laan-inc" style="
-        border:none; cursor:pointer; color:#fff; font-size:12px;
-        background: linear-gradient(135deg,#f87171,#ef4444);
-        box-shadow: 0 5px 14px rgba(0,0,0,.32);
-        border-radius:8px; padding:6px 9px; font-family:inherit;
-      ">+ اضافه</button>
+      <button id="gc-laan-inc" style="border:none; cursor:pointer; color:#fff; font-size:12px; background: linear-gradient(135deg,#f87171,#ef4444); box-shadow: 0 5px 14px rgba(0,0,0,.32); border-radius:8px; padding:6px 9px; font-family:inherit;">+ اضافه</button>
     </div>
   </div>
 </div>
 
-<div id="gc-toast" style="
-  position:fixed; left:50%; transform:translateX(-50%) translateY(16px);
-  bottom:10px; z-index:10000; pointer-events:none;
-  opacity:0; transition: opacity .22s ease, transform .22s ease;
-">
-  <div id="gc-toast-text" style="
-    background: rgba(0,0,0,.6); color:#fff; padding:8px 12px; border-radius:9px;
-    border:1px solid rgba(255,255,255,.2); box-shadow:0 8px 18px rgba(0,0,0,.35);
-    font-size:12.5px; backdrop-filter: blur(4px); white-space:nowrap;
-  "></div>
+<!-- Toast for notifications -->
+<div id="gc-toast" style="position:fixed; left:50%; transform:translateX(-50%) translateY(16px); bottom:10px; z-index:10000; pointer-events:none; opacity:0; transition: opacity .22s ease, transform .22s ease;">
+  <div id="gc-toast-text" style="background: rgba(0,0,0,.6); color:#fff; padding:8px 12px; border-radius:9px; border:1px solid rgba(255,255,255,.2); box-shadow:0 8px 18px rgba(0,0,0,.35); font-size:12.5px; backdrop-filter: blur(4px); white-space:nowrap;"></div>
+</div>
+
+<!-- Modal for Profile View -->
+<div id="gc-profile-modal" style="display:none; position:fixed; left:50%; transform:translateX(-50%) translateY(-50%); top:50%; z-index:10001; padding:20px; background:rgba(255,255,255,.1); border-radius:12px; color:#fff; max-width:300px;">
+  <h3>تعداد ذکرها</h3>
+  <div>صلوات: <span id="profile-salawat">0</span></div>
+  <div>لعن: <span id="profile-laan">0</span></div>
+  <button id="gc-close-profile" style="margin-top:10px; padding:8px; background: #f87171; color:white; border:none; border-radius:8px; cursor:pointer;">بستن</button>
 </div>
 
 <script>
 (function(){
   // اعداد فارسی
   const fa = v => (typeof v==='number' ? v.toLocaleString('fa-IR') : String(v).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]));
+
   // عناصر
   const w   = document.getElementById('gc-widget');
   const valS= document.getElementById('gc-salawat');
@@ -948,6 +928,9 @@ initCards();
   const btnS= document.getElementById('gc-salawat-inc');
   const btnL= document.getElementById('gc-laan-inc');
   const btnX= document.getElementById('gc-close');
+  const profileBtn= document.getElementById('gc-profile');
+  const profileModal= document.getElementById('gc-profile-modal');
+  const closeProfileBtn= document.getElementById('gc-close-profile');
   const toast = document.getElementById('gc-toast');
   const toastText = document.getElementById('gc-toast-text');
 
@@ -957,6 +940,17 @@ initCards();
     b.addEventListener('pointerup',   ()=> b.style.transform='scale(1)');
     b.addEventListener('pointercancel',()=> b.style.transform='scale(1)');
     b.addEventListener('mouseleave',  ()=> b.style.transform='scale(1)');
+  });
+
+  // عملکرد دکمه پروفایل
+  profileBtn.addEventListener('click', function() {
+    document.getElementById('profile-salawat').textContent = fa(localStorage.getItem('salawatCount') || 0);
+    document.getElementById('profile-laan').textContent = fa(localStorage.getItem('laanCount') || 0);
+    profileModal.style.display = 'block';
+  });
+
+  closeProfileBtn.addEventListener('click', function() {
+    profileModal.style.display = 'none';
   });
 
   function showToast(msg){
@@ -977,7 +971,6 @@ initCards();
     showToast('ابزار ذکر بسته شد؛ برای برگشتن، صفحه را رفرش کنید.');
   }
 
-  // واکشی مقدارها
   async function refresh(){
     try{
       const [rS, rL] = await Promise.all([
@@ -1002,8 +995,14 @@ initCards();
       const r = await fetch(`/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
       const d = await r.json();
       if(!r.ok || typeof d.value!=='number') throw 0;
-      if(which==='salawat') valS.textContent = fa(d.value);
-      else                   valL.textContent = fa(d.value);
+      if(which==='salawat') {
+        valS.textContent = fa(d.value);
+        localStorage.setItem('salawatCount', d.value);
+      }
+      else {
+        valL.textContent = fa(d.value);
+        localStorage.setItem('laanCount', d.value);
+      }
     }catch{
       showToast('نتونستم افزایش بدم؛ دوباره تلاش کن.');
     }finally{
@@ -1019,6 +1018,7 @@ initCards();
 })();
 </script>
 <!-- === /Zekr Widget === -->
+
 
   
 
