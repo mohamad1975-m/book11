@@ -16,13 +16,15 @@
     padding: 0;
     color: #fff;
     background:
-        radial-gradient(circle at 20% 20%, #ff9a9e, transparent 40%),
-        radial-gradient(circle at 80% 25%, #fad0c4, transparent 42%),
-        radial-gradient(circle at 20% 80%, #fbc2eb, transparent 45%),
-        radial-gradient(circle at 80% 75%, #a18cd1, transparent 40%),
-        linear-gradient(180deg, #f6d365 0%, #fda085 100%);
-    background-attachment:fixed;min-height:100vh;position:relative;
-  }
+        radial-gradient(circle at 20% 20%, #00c6ff, transparent 40%), /* آبی روشن */
+        radial-gradient(circle at 80% 25%, #0072ff, transparent 42%), /* آبی پررنگ */
+        radial-gradient(circle at 20% 80%, #00ffc8, transparent 45%), /* سبزآبی */
+        radial-gradient(circle at 80% 75%, #005bea, transparent 40%), /* آبی تیره */
+        linear-gradient(180deg, #00f260 0%, #0575e6 100%); /* سبز روشن به آبی */
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+}
   body::before{content:"";position:fixed;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.25));pointer-events:none;z-index:0}
   header{
     text-align:center;font-weight:800;margin:26px 0 10px;font-size:38px;
