@@ -15,12 +15,16 @@
   box-shadow: 0 10px 26px rgba(0,0,0,.4);
   display:block;
 }
-#galStrip > div{
-  flex: 0 0 auto;
+#galStrip {
   display:flex;
-  align-items:center;
-  justify-content:center;
+  flex-direction:column;   /* عکس‌ها زیر هم */
+  gap:10px;                /* فاصله عمودی بین عکس‌ها */
+  overflow-y:auto;         /* اسکرول عمودی */
+  max-height:70vh;         /* ارتفاع محدود تا صفحه نسوزه */
+  scroll-behavior:smooth;
+  padding:6px;
 }
+
 
   @font-face{
     font-family:'iranyekanX';
@@ -208,6 +212,36 @@
   }
   .btn-danger{ background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.7); color:#fecaca }
   .btn-danger:hover{ filter:brightness(1.05) }
+
+  /* کارت‌هایی که فقط آیکن View دارند */
+.book-card.view-only{
+  grid-template-columns: 56px 1fr !important; /* ستون آیکن باریک */
+}
+
+/* ستون آیکن‌ها در حالت view-only */
+.book-card.view-only .left-acts{
+  grid-template-columns: 46px !important;     /* فقط یک ستون برای یک آیکن */
+  grid-template-rows: 38px !important;
+  gap: 0 !important;
+  min-width: auto !important;                 /* دیگه 134px نباشه */
+  justify-items: center;
+}
+
+/* خود آیکن */
+.book-card.view-only .left-acts .icon-wrap{
+  width: 38px; height: 38px;
+}
+
+/* هرچی به جز آیکن View هست پنهان کن */
+.book-card.view-only .left-acts > :not(.view){
+  display: none !important;
+}
+
+/* جای تولتیپ ستاره اگه موندی به کارش: نزدیک ستون باریک */
+.book-card.view-only .star-tip{
+  right: 56px !important;
+}
+
 </style>
 </head>
 <body>
@@ -357,8 +391,28 @@
         </div>
       </li>
       <!-- نمایش صفحات کتاب (گالری تصاویر) -->
-<li data-id="arabi10-gallery">
-  <div class="book-card" data-gallery="arabi10-lessons">
+      <li data-id="arabi10-gallery-1">
+        <div class="book-card view-only" data-gallery="arabi10-lessons">
+          <div class="left-acts">
+            <!-- فقط این آیکن گالری رو باز می‌کند -->
+            <div class="icon-wrap view" title="نمایش (گالری)">
+              <!-- آیکن چشم -->
+              <svg viewBox="0 0 24 24">
+                <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 9z"/>
+              </svg>
+            </div>
+            <div class="under-txt fav-label" data-favcount>۰</div>
+          </div>
+      
+          <span class="title">نکاتی که خودم نوشتم<span class="dcount" 
+          <div class="star-tip"></div>
+        </div>
+      </li>
+
+      
+            <!-- نمایش صفحات کتاب (گالری تصاویر) -->
+<li data-id="arabi10-gallery-2">
+  <div class="book-card view-only" data-gallery="arabi10-chiz">
     <div class="left-acts">
       <!-- فقط این آیکن گالری رو باز می‌کند -->
       <div class="icon-wrap view" title="نمایش (گالری)">
@@ -367,33 +421,10 @@
           <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 9z"/>
         </svg>
       </div>
-
-      <div class="icon-wrap star" title="امتیاز">
-        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
-      <div class="under-txt size-label" data-size>—</div>
-      <div class="under-txt rate-label" data-rate>—</div>
-
-      <div class="icon-wrap share" title="اشتراک‌گذاری">
-        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.13-4.12A2.99 2.99 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.91 9.77A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
-      </div>
-
-      <!-- خرید: غیرفعال (پیام Toast) -->
-      <div class="icon-wrap buy" title="خرید (غیرفعال)">
-        <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
-      </div>
-
-      <div class="under-txt share-label"></div>
-      <div class="icon-wrap comment" title="کامنت‌ها"><svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg></div>
-      <div class="under-txt cmt-label" data-cmtcount>۰</div>
-      <div class="icon-wrap fav" title="علاقه‌مندی">
-        <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
-        <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
-      </div>
       <div class="under-txt fav-label" data-favcount>۰</div>
     </div>
 
-    <span class="title">نکاتی که خودم نوشتم<span class="dcount" 
+    <span class="title">یه سری نکات ریزه میزه   <span class="dcount" 
     <div class="star-tip"></div>
   </div>
 </li>
@@ -454,11 +485,9 @@
   <div class="box" style="padding:12px">
     <h3 id="galTitle" style="margin-bottom:10px">گالری تصاویر</h3>
     <div id="galWrap" style="position:relative; overflow:hidden">
-      <button id="galPrev" class="btn gray" style="position:absolute; top:50%; right:8px; transform:translateY(-50%); z-index:2">قبلی</button>
       <div id="galStrip" style="display:flex; gap:6px; overflow-x:auto; scroll-behavior:smooth; padding:2px">
         <!-- تصاویر اینجا تزریق می‌شن -->
       </div>
-      <button id="galNext" class="btn gray" style="position:absolute; top:50%; left:8px; transform:translateY(-50%); z-index:2">بعدی</button>
     </div>
     <div class="row" style="margin-top:8px">
       <button id="galClose" class="btn gray">بستن</button>
@@ -540,7 +569,13 @@ const bookMeta = {
   downloads: 0
 }, // ←← این ویرگول لازم بود
 
-'arabi10-gallery': {
+'arabi10-gallery-1': {
+  size: null, rate: null, votes: 0,
+  buy: '', publisher: 'کتاب درسی',
+  tags: ['پایه دهم','نمایش صفحات','گالری'],
+  downloads: 0
+},
+'arabi10-gallery-2': {
   size: null, rate: null, votes: 0,
   buy: '', publisher: 'کتاب درسی',
   tags: ['پایه دهم','نمایش صفحات','گالری'],
@@ -920,7 +955,7 @@ initCards();
 </script>
 
 <script>
-  /* === گالری تصاویر دهم (صفحات کتاب) === */
+  // فقط یک بار تعریف بشه
   const galleries = {
     'arabi10-lessons': [
       'https://s33.picofile.com/file/8484585200/%D8%AF%D8%B1%D8%B3_%D8%A7%D9%88%D9%84.jpg',
@@ -937,24 +972,29 @@ initCards();
       'https://s33.picofile.com/file/8484585276/%D8%AF%D8%B1%D8%B3_%D9%BE%D9%86%D8%AC%D9%85_2.jpg',
       'https://s33.picofile.com/file/8484585284/%D8%AF%D8%B1%D8%B3_%D9%BE%D9%86%D8%AC%D9%85_3.jpg',
       'https://s33.picofile.com/file/8484585384/%D8%AF%D8%B3_%D9%87%D9%81%D8%AA%D9%85_3.jpg'
+    ],
+    'arabi10-chiz': [
+      'https://interfaces-cdn.zapier.com/53f675ac-127c-4a31-a135-b56627fe7248/Screenshot20250105161927.png',
+      'https://interfaces-cdn.zapier.com/54b30e41-b8e1-4f51-aa6d-bbc30e2143de/riazi9452.png',
+      'https://interfaces-cdn.zapier.com/9e06452e-1941-4f23-b204-58e8de84c10e/Screenshot20250105233025.png',
+      'https://interfaces-cdn.zapier.com/8db713cd-7f11-409a-a0ba-bbf07519b005/Screenshot20250105233429.png',
+      'https://interfaces-cdn.zapier.com/6f689b15-a249-4b0f-8223-22801272280f/Screenshot20250106000207.png'
     ]
   };
-  
+
   (function(){
     const gModal = document.getElementById('galleryModal');
     const gTitle = document.getElementById('galTitle');
     const gStrip = document.getElementById('galStrip');
-    const gPrev  = document.getElementById('galPrev');
-    const gNext  = document.getElementById('galNext');
     const gClose = document.getElementById('galClose');
-  
+
     function openGallery(key, titleText){
       const list = galleries[key] || [];
       if(!list.length) return;
-  
-      gTitle.textContent = 'گالری «' + (titleText || 'صفحات کتاب') + '» (برای مشاهده ی صفحه ها دست خود را به راست و چپ بکشید)';
+
+      gTitle.textContent = 'گالری «' + (titleText || 'صفحات کتاب') + '»';
       gStrip.innerHTML = '';
-  
+
       list.forEach(src=>{
         const cell = document.createElement('div');
         const img  = document.createElement('img');
@@ -966,42 +1006,36 @@ initCards();
         cell.appendChild(img);
         gStrip.appendChild(cell);
       });
-  
+
       gModal.style.display = 'flex';
       setTimeout(()=>gModal.classList.add('show'), 10);
       gStrip.scrollTo({left:0, behavior:'instant'});
     }
-  
+
+    // حتماً گلوبال کن تا initCards هم بتونه صداش کنه
+    window.openGallery = openGallery;
+
     function closeGallery(){
       gModal.classList.remove('show');
       setTimeout(()=>{ gModal.style.display='none'; }, 160);
     }
-  
-    function scrollByOne(dir){
-      const first = gStrip.querySelector('img');
-      const step  = first ? (first.getBoundingClientRect().width + 8) : gStrip.clientWidth * 0.9;
-      gStrip.scrollBy({ left: dir * step, behavior: 'smooth' });
-    }
-  
-    gPrev.addEventListener('click', ()=>scrollByOne(-1));
-    gNext.addEventListener('click', ()=>scrollByOne(1));
+
     gClose.addEventListener('click', closeGallery);
     gModal.addEventListener('click', e=>{ if(e.target===gModal) closeGallery(); });
-  
-    // فقط آیکن «view» گالری را باز کند
-    document.querySelectorAll('.book-card[data-gallery]').forEach(card=>{
-      const key = card.dataset.gallery;
-      const titleText = card.querySelector('.title')?.firstChild?.textContent?.trim() || '';
-      const viewBtn = card.querySelector('.icon-wrap.view');
-      if (viewBtn) {
-        viewBtn.addEventListener('click', e=>{
-          e.stopPropagation();
-          openGallery(key, titleText);
-        });
-      }
+
+    // لیسنرِ آیکنِ ویو
+    document.querySelectorAll('.book-card[data-gallery] .icon-wrap.view').forEach(viewBtn=>{
+      viewBtn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const card = viewBtn.closest('.book-card');
+        const key = card?.dataset?.gallery;
+        const titleText = card.querySelector('.title')?.firstChild?.textContent?.trim() || '';
+        openGallery(key, titleText);
+      });
     });
   })();
-  </script>
+</script>
+
   
   
 <script>
