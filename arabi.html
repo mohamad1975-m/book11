@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>عربی</title>
 <style>
+  
+  /* گالری: تصاویر واکنش‌گرا */
+#galStrip img{
+  max-height: 68vh;
+  width: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 10px 26px rgba(0,0,0,.4);
+  display:block;
+}
+#galStrip > div{
+  flex: 0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
   @font-face{
     font-family:'iranyekanX';
     src:url('IRANYekanX-Light.woff2') format('woff2');
@@ -339,6 +356,49 @@
           <div class="star-tip"></div>
         </div>
       </li>
+      <!-- نمایش صفحات کتاب (گالری تصاویر) -->
+<li data-id="arabi10-gallery">
+  <div class="book-card" data-gallery="arabi10-lessons">
+    <div class="left-acts">
+      <!-- فقط این آیکن گالری رو باز می‌کند -->
+      <div class="icon-wrap view" title="نمایش (گالری)">
+        <!-- آیکن چشم -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 9z"/>
+        </svg>
+      </div>
+
+      <div class="icon-wrap star" title="امتیاز">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="under-txt size-label" data-size>—</div>
+      <div class="under-txt rate-label" data-rate>—</div>
+
+      <div class="icon-wrap share" title="اشتراک‌گذاری">
+        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.13-4.12A2.99 2.99 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.91 9.77A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
+      </div>
+
+      <!-- خرید: غیرفعال (پیام Toast) -->
+      <div class="icon-wrap buy" title="خرید (غیرفعال)">
+        <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
+      </div>
+
+      <div class="under-txt share-label"></div>
+      <div class="icon-wrap comment" title="کامنت‌ها"><svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg></div>
+      <div class="under-txt cmt-label" data-cmtcount>۰</div>
+      <div class="icon-wrap fav" title="علاقه‌مندی">
+        <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
+        <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
+      </div>
+      <div class="under-txt fav-label" data-favcount>۰</div>
+    </div>
+
+    <span class="title">صفحات کتاب درسی – نمایش تصویر به ترتیب <span class="dcount" data-dlc>(۰ دانلود)</span></span>
+    <div class="star-tip"></div>
+  </div>
+</li>
+
+
     </ul>
   </section>
   
@@ -386,6 +446,23 @@
       <button class="btn" id="cmtSend">ارسال کامنت</button>
     </div>
     <div class="cmt-rule">ارسال نظر برای همه کاربران آزاد است.</div>
+  </div>
+</div>
+
+<!-- مودال گالری تصاویر -->
+<div class="modal" id="galleryModal" style="display:none">
+  <div class="box" style="padding:12px">
+    <h3 id="galTitle" style="margin-bottom:10px">گالری تصاویر</h3>
+    <div id="galWrap" style="position:relative; overflow:hidden">
+      <button id="galPrev" class="btn gray" style="position:absolute; top:50%; right:8px; transform:translateY(-50%); z-index:2">قبلی</button>
+      <div id="galStrip" style="display:flex; gap:6px; overflow-x:auto; scroll-behavior:smooth; padding:2px">
+        <!-- تصاویر اینجا تزریق می‌شن -->
+      </div>
+      <button id="galNext" class="btn gray" style="position:absolute; top:50%; left:8px; transform:translateY(-50%); z-index:2">بعدی</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button id="galClose" class="btn gray">بستن</button>
+    </div>
   </div>
 </div>
 
@@ -456,14 +533,20 @@ const bookMeta = {
     downloads: 0
   },
   'arabi10,11,12-loghme': {
-    size: '152 MB', rate: 4.6, votes: 10,
-    buy: 'https://www.digikala.com/product/dkp-6178064/کتاب-درسنامه-عربی-کنکور-انسانی-لقمه-طلایی-ویژه-کنکور-1401-اثر-مهران-ترکمان-نشر-مهر-و-ماه/',
-    publisher: 'مهر و ماه',
-    tags: ['تست','درسنامه','لقمه','مهر و ماه','جامع ( ویژه ی هر سه پایه )','تست کنکوری'],
-    downloads: 0
-  }
-};
+  size: '152 MB', rate: 4.6, votes: 10,
+  buy: 'https://www.digikala.com/product/dkp-6178064/کتاب-درسنامه-عربی-کنکور-انسانی-لقمه-طلایی-ویژه-کنکور-1401-اثر-مهران-ترکمان-نشر-مهر-و-ماه/',
+  publisher: 'مهر و ماه',
+  tags: ['تست','درسنامه','لقمه','مهر و ماه','جامع ( ویژه ی هر سه پایه )','تست کنکوری'],
+  downloads: 0
+}, // ←← این ویرگول لازم بود
 
+'arabi10-gallery': {
+  size: null, rate: null, votes: 0,
+  buy: '', publisher: 'کتاب درسی',
+  tags: ['پایه دهم','نمایش صفحات','گالری'],
+  downloads: 0
+},
+};
 
 
 /* ---- ابزارهای محلی/عمومی ---- */
@@ -593,6 +676,7 @@ function openPreview(card,id){
      <div>لینک دانلود: ${href?`<a href="${href}" target="_blank" rel="noopener" style="color:#aef">باز کردن</a>`:'نامشخص'}</div>
      <div>امتیاز دیجی‌کالا: <b>${meta.rate==null?'ناموجود':faRate(meta.rate)}</b> ${meta.votes?`(از ${faDigits(meta.votes)} رأی)`:''}</div>
      <div style="margin-top:6px">خرید: ${meta.buy?`<a href="${meta.buy}" target="_blank" rel="noopener" style="color:#aef">مشاهده در دیجی‌کالا</a>`:'—'}</div>
+    
      <div style="margin-top:8px">برچسب‌ها: ${tags || '—'}</div>`;
   pvModal.style.display='flex'; setTimeout(()=>pvModal.classList.add('show'),10);
 }
@@ -751,6 +835,7 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
     card.querySelector('.icon-wrap.buy').addEventListener('click',e=>{
       e.stopPropagation(); if(meta.buy) window.open(meta.buy,'_blank','noopener');
     });
+    
 
     // دانلود
     card.querySelector('.icon-wrap.dl').addEventListener('click',async e=>{
@@ -821,12 +906,104 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
     });
 
     // کلیک روی کارت -> پیش‌نمایش
-    card.addEventListener('click',()=> openPreview(card,id));
+    if (card.hasAttribute('data-gallery')) {
+  const key = card.dataset.gallery;
+  const titleText = card.querySelector('.title')?.firstChild?.textContent?.trim() || '';
+  card.addEventListener('click', (e)=>{ e.stopPropagation(); window.openGallery(key, titleText); });
+} else {
+  card.addEventListener('click',()=> openPreview(card,id));
+}
+
   });
 }
 initCards();
 </script>
 
+<script>
+  /* === گالری تصاویر دهم (صفحات کتاب) === */
+  const galleries = {
+    'arabi10-lessons': [
+      'https://s33.picofile.com/file/8484585200/%D8%AF%D8%B1%D8%B3_%D8%A7%D9%88%D9%84.jpg',
+      'https://s33.picofile.com/file/8484585218/%D8%AF%D8%B1%D8%B3_%D8%AF%D9%88%D9%85_1.jpg',
+      'https://s33.picofile.com/file/8484585226/%D8%AF%D8%B1%D8%B3_%D8%AF%D9%88%D9%85_2.jpg',
+      'https://s33.picofile.com/file/8484585234/%D8%AF%D8%B1%D8%B3_%D8%B3%D9%88%D9%85_1.jpg',
+      'https://s33.picofile.com/file/8484585242/%D8%AF%D8%B1%D8%B3_%D8%B3%D9%88%D9%85_2.jpg',
+      'https://s33.picofile.com/file/8484585292/%D8%AF%D8%B1%D8%B3_%D8%B4%D8%B4%D9%85_1.jpg',
+      'https://s33.picofile.com/file/8484585300/%D8%AF%D8%B1%D8%B3_%D8%B4%D8%B4%D9%85_2.jpg',
+      'https://s33.picofile.com/file/8484585326/%D8%AF%D8%B1%D8%B3_%D8%B4%D8%B4%D9%85_3.jpg',
+      'https://s33.picofile.com/file/8484585350/%D8%AF%D8%B1%D8%B3_%D9%87%D9%81%D8%AA%D9%85_1.jpg',
+      'https://s33.picofile.com/file/8484585368/%D8%AF%D8%B1%D8%B3_%D9%87%D9%81%D8%AA%D9%85_2.jpg',
+      'https://s33.picofile.com/file/8484585250/%D8%AF%D8%B1%D8%B3_%D9%BE%D9%86%D8%AC%D9%85_1.jpg',
+      'https://s33.picofile.com/file/8484585276/%D8%AF%D8%B1%D8%B3_%D9%BE%D9%86%D8%AC%D9%85_2.jpg',
+      'https://s33.picofile.com/file/8484585284/%D8%AF%D8%B1%D8%B3_%D9%BE%D9%86%D8%AC%D9%85_3.jpg',
+      'https://s33.picofile.com/file/8484585384/%D8%AF%D8%B3_%D9%87%D9%81%D8%AA%D9%85_3.jpg'
+    ]
+  };
+  
+  (function(){
+    const gModal = document.getElementById('galleryModal');
+    const gTitle = document.getElementById('galTitle');
+    const gStrip = document.getElementById('galStrip');
+    const gPrev  = document.getElementById('galPrev');
+    const gNext  = document.getElementById('galNext');
+    const gClose = document.getElementById('galClose');
+  
+    function openGallery(key, titleText){
+      const list = galleries[key] || [];
+      if(!list.length) return;
+  
+      gTitle.textContent = 'گالری «' + (titleText || 'صفحات کتاب') + '»';
+      gStrip.innerHTML = '';
+  
+      list.forEach(src=>{
+        const cell = document.createElement('div');
+        const img  = document.createElement('img');
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.src = src;
+        img.alt = 'page';
+        img.style.maxWidth = '100%';
+        cell.appendChild(img);
+        gStrip.appendChild(cell);
+      });
+  
+      gModal.style.display = 'flex';
+      setTimeout(()=>gModal.classList.add('show'), 10);
+      gStrip.scrollTo({left:0, behavior:'instant'});
+    }
+  
+    function closeGallery(){
+      gModal.classList.remove('show');
+      setTimeout(()=>{ gModal.style.display='none'; }, 160);
+    }
+  
+    function scrollByOne(dir){
+      const first = gStrip.querySelector('img');
+      const step  = first ? (first.getBoundingClientRect().width + 8) : gStrip.clientWidth * 0.9;
+      gStrip.scrollBy({ left: dir * step, behavior: 'smooth' });
+    }
+  
+    gPrev.addEventListener('click', ()=>scrollByOne(-1));
+    gNext.addEventListener('click', ()=>scrollByOne(1));
+    gClose.addEventListener('click', closeGallery);
+    gModal.addEventListener('click', e=>{ if(e.target===gModal) closeGallery(); });
+  
+    // فقط آیکن «view» گالری را باز کند
+    document.querySelectorAll('.book-card[data-gallery]').forEach(card=>{
+      const key = card.dataset.gallery;
+      const titleText = card.querySelector('.title')?.firstChild?.textContent?.trim() || '';
+      const viewBtn = card.querySelector('.icon-wrap.view');
+      if (viewBtn) {
+        viewBtn.addEventListener('click', e=>{
+          e.stopPropagation();
+          openGallery(key, titleText);
+        });
+      }
+    });
+  })();
+  </script>
+  
+  
 <script>
 /* === فیلتر برچسب‌ها (چیپ) — بدون «سایر»، حذف فیلتر بدون بستن مودال === */
 (function(){
