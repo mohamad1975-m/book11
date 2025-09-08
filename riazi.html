@@ -640,7 +640,7 @@ const faRate = v => (v==null? '؟' : (''+v).replace(/\./g,'٫').replace(/\d/g,d=
 
 /* ---- شمارنده بازدید صفحه ---- */
 async function loadVisits(){
-const slug='ravan';
+const slug='riazi';
 try{
 const r=await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`,{cache:'no-store'});
 const d=await r.json();
