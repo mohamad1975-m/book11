@@ -183,57 +183,6 @@
 })();
 </script>
 
-<!-- === Salawat Global Counter (Fixed Alignment) === -->
-<div id="gc-widget" style="
-  position:fixed; right:16px; bottom:16px; z-index:9999; direction:rtl; font-family:inherit;
-  transition: transform .18s ease, opacity .18s ease;
-">
-  <div style="
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 10px 25px rgba(0,0,0,.35);
-    backdrop-filter: blur(6px);
-    color:#fff; padding:10px 12px; border-radius:14px; min-width:230px;
-  ">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px">
-      <div style="font-weight:800; font-size:14.5px; text-shadow:0 2px 6px rgba(0,0,0,.45)">
-        صلوات‌شمار
-      </div>
-      <button id="gc-close" aria-label="بستن" title="بستن" style="
-        width:26px; height:26px; border:none; border-radius:8px; cursor:pointer; color:#fff;
-        background:rgba(255,255,255,.18); box-shadow:0 3px 10px rgba(0,0,0,.3);
-        display:flex; align-items:center; justify-content:center; font-weight:900;
-        transition: transform .14s ease, background .14s ease;
-      ">×</button>
-    </div>
-
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
-      <div style="opacity:.95; font-size:13.5px">
-        مجموع: <b id="gc-value">—</b>
-      </div>
-      <button id="gc-inc" style="
-        border:none; cursor:pointer; color:#fff;
-        background: linear-gradient(135deg,#34d399,#10b981);
-        box-shadow: 0 6px 16px rgba(0,0,0,.35);
-        border-radius:10px; padding:8px 12px; font-family:inherit;
-        transition: transform .12s ease;
-      ">+ اضافه</button>
-    </div>
-  </div>
-</div>
-
-<div id="gc-toast" style="
-  position:fixed; left:50%; transform:translateX(-50%) translateY(20px);
-  bottom:12px; z-index:10000; pointer-events:none;
-  opacity:0; transition: opacity .25s ease, transform .25s ease;
-">
-  <div style="
-    background: rgba(0,0,0,.6); color:#fff; padding:10px 14px; border-radius:10px;
-    border:1px solid rgba(255,255,255,.2); box-shadow:0 8px 20px rgba(0,0,0,.35);
-    font-size:13.5px; backdrop-filter: blur(4px); white-space:nowrap;
-  " id="gc-toast-text"></div>
-</div>
-</script>
 
 <!-- === Dual Counter Widget (Compact) === -->
 <!-- === Zekr Widget (Salawat + Laan) === -->
@@ -272,7 +221,7 @@ border-radius:8px; padding:6px 9px; font-family:inherit;
 ">+ اضافه</button>
 
 <!-- Laan row -->
-<div style="opacity:.92; font-size:13px">لعن:</div>
+<div style="opacity:.92; font-size:13px">لعن عمَر:</div>
 <b id="gc-laan" style="font-size:13px; text-align:left">—</b>
 <button id="gc-laan-inc" style="
 border:none; cursor:pointer; color:#fff; font-size:12px;
@@ -380,4 +329,5 @@ refresh();
 <!-- === /Zekr Widget === -->
 </body>
 </html>
+
 
