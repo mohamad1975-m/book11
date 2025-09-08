@@ -233,69 +233,151 @@
     font-size:13.5px; backdrop-filter: blur(4px); white-space:nowrap;
   " id="gc-toast-text"></div>
 </div>
+</script>
+
+<!-- === Dual Counter Widget (Compact) === -->
+<!-- === Zekr Widget (Salawat + Laan) === -->
+<div id="gc-widget" style="
+position:fixed; right:14px; bottom:14px; z-index:9999; direction:rtl; font-family:inherit;
+transition: transform .18s ease, opacity .18s ease;
+">
+<div style="
+background: rgba(255,255,255,0.12);
+border: 1px solid rgba(255,255,255,0.2);
+box-shadow: 0 8px 20px rgba(0,0,0,.35);
+backdrop-filter: blur(6px);
+color:#fff; padding:8px 10px; border-radius:12px; min-width:210px;
+">
+<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px">
+<div style="font-weight:800; font-size:13.5px; text-shadow:0 2px 5px rgba(0,0,0,.45)">
+ذکرهای همگانی
+</div>
+<button id="gc-close" aria-label="بستن" title="بستن" style="
+width:24px; height:24px; border:none; border-radius:7px; cursor:pointer; color:#fff;
+background:rgba(255,255,255,.18); box-shadow:0 3px 10px rgba(0,0,0,.3);
+display:flex; align-items:center; justify-content:center; font-weight:900;
+line-height:1;
+">×</button>
+</div>
+
+<div style="display:grid; grid-template-columns: auto 1fr auto; align-items:center; gap:6px 8px">
+<!-- Salawat row -->
+<div style="opacity:.92; font-size:13px">صلوات:</div>
+<b id="gc-salawat" style="font-size:13px; text-align:left">—</b>
+<button id="gc-salawat-inc" style="
+border:none; cursor:pointer; color:#fff; font-size:12px;
+background: linear-gradient(135deg,#34d399,#10b981);
+box-shadow: 0 5px 14px rgba(0,0,0,.32);
+border-radius:8px; padding:6px 9px; font-family:inherit;
+">+ اضافه</button>
+
+<!-- Laan row -->
+<div style="opacity:.92; font-size:13px">لعن:</div>
+<b id="gc-laan" style="font-size:13px; text-align:left">—</b>
+<button id="gc-laan-inc" style="
+border:none; cursor:pointer; color:#fff; font-size:12px;
+background: linear-gradient(135deg,#f87171,#ef4444);
+box-shadow: 0 5px 14px rgba(0,0,0,.32);
+border-radius:8px; padding:6px 9px; font-family:inherit;
+">+ اضافه</button>
+</div>
+</div>
+</div>
+
+<div id="gc-toast" style="
+position:fixed; left:50%; transform:translateX(-50%) translateY(16px);
+bottom:10px; z-index:10000; pointer-events:none;
+opacity:0; transition: opacity .22s ease, transform .22s ease;
+">
+<div id="gc-toast-text" style="
+background: rgba(0,0,0,.6); color:#fff; padding:8px 12px; border-radius:9px;
+border:1px solid rgba(255,255,255,.2); box-shadow:0 8px 18px rgba(0,0,0,.35);
+font-size:12.5px; backdrop-filter: blur(4px); white-space:nowrap;
+"></div>
+</div>
 
 <script>
 (function(){
-  const w  = document.getElementById('gc-widget');
-  const valEl = document.getElementById('gc-value');
-  const btnInc = document.getElementById('gc-inc');
-  const btnClose = document.getElementById('gc-close');
-  const toast = document.getElementById('gc-toast');
-  const toastText = document.getElementById('gc-toast-text');
+// اعداد فارسی
+const fa = v => (typeof v==='number' ? v.toLocaleString('fa-IR') : String(v).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]));
+// عناصر
+const w = document.getElementById('gc-widget');
+const valS= document.getElementById('gc-salawat');
+const valL= document.getElementById('gc-laan');
+const btnS= document.getElementById('gc-salawat-inc');
+const btnL= document.getElementById('gc-laan-inc');
+const btnX= document.getElementById('gc-close');
+const toast = document.getElementById('gc-toast');
+const toastText = document.getElementById('gc-toast-text');
 
-  btnInc.addEventListener('pointerdown', ()=> btnInc.style.transform='scale(0.96)');
-  btnInc.addEventListener('pointerup',   ()=> btnInc.style.transform='scale(1)');
+// افکت دکمه‌ها
+[btnS, btnL].forEach(b=>{
+b.addEventListener('pointerdown', ()=> b.style.transform='scale(0.97)');
+b.addEventListener('pointerup', ()=> b.style.transform='scale(1)');
+b.addEventListener('pointercancel',()=> b.style.transform='scale(1)');
+b.addEventListener('mouseleave', ()=> b.style.transform='scale(1)');
+});
 
-  async function refresh(){
-    try{
-      const r = await fetch('/api/global-counter',{cache:'no-store'});
-      const d = await r.json();
-      if(!r.ok || typeof d.value!=='number') throw 0;
-      valEl.textContent = d.value.toLocaleString('fa-IR');
-    }catch{
-      valEl.textContent = 'خطا';
-    }
-  }
+function showToast(msg){
+toastText.textContent = msg;
+toast.style.opacity = '1';
+toast.style.transform = 'translateX(-50%) translateY(0)';
+clearTimeout(showToast._t);
+showToast._t = setTimeout(()=>{
+toast.style.opacity = '0';
+toast.style.transform = 'translateX(-50%) translateY(16px)';
+}, 3200);
+}
 
-  async function inc(){
-    btnInc.disabled = true;
-    try{
-      const r = await fetch('/api/global-counter', { method:'POST' });
-      const d = await r.json();
-      if(!r.ok || typeof d.value!=='number') throw 0;
-      valEl.textContent = d.value.toLocaleString('fa-IR');
-    }catch{
-      showToast('نتونستم افزایش بدم؛ دوباره تلاش کن.');
-    }finally{
-      btnInc.disabled = false;
-    }
-  }
+function closeWidget(){
+w.style.opacity = '0';
+w.style.transform = 'translateY(8px) scale(0.985)';
+setTimeout(()=>{ w.style.display='none'; }, 160);
+showToast('ابزار ذکر بسته شد؛ برای برگشتن، صفحه را رفرش کنید.');
+}
 
-  function showToast(msg){
-    toastText.textContent = msg;
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateX(-50%) translateY(0)';
-    clearTimeout(showToast._t);
-    showToast._t = setTimeout(()=>{
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(-50%) translateY(20px)';
-    }, 5000);
-  }
+// واکشی مقدارها
+async function refresh(){
+try{
+const [rS, rL] = await Promise.all([
+fetch('/api/global-counter?type=salawat',{cache:'no-store'}),
+fetch('/api/global-counter?type=laan',{cache:'no-store'})
+]);
+const dS = await rS.json();
+const dL = await rL.json();
+if(!rS.ok || !rL.ok || typeof dS.value!=='number' || typeof dL.value!=='number') throw 0;
+valS.textContent = fa(dS.value);
+valL.textContent = fa(dL.value);
+}catch{
+valS.textContent = 'خطا';
+valL.textContent = 'خطا';
+}
+}
 
-  function closeWidget(){
-    w.style.opacity = '0';
-    w.style.transform = 'translateY(10px) scale(0.98)';
-    setTimeout(()=>{ w.style.display='none'; }, 180);
-    showToast('صلوات‌شمار بسته شد؛ برای برگشتن، صفحه را رفرش کنید.');
-  }
+async function inc(which){
+const btn = which==='salawat' ? btnS : btnL;
+btn.disabled = true;
+try{
+const r = await fetch(`/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
+const d = await r.json();
+if(!r.ok || typeof d.value!=='number') throw 0;
+if(which==='salawat') valS.textContent = fa(d.value);
+else valL.textContent = fa(d.value);
+}catch{
+showToast('نتونستم افزایش بدم؛ دوباره تلاش کن.');
+}finally{
+btn.disabled = false;
+}
+}
 
-  btnInc.addEventListener('click', inc);
-  btnClose.addEventListener('click', closeWidget);
+btnS.addEventListener('click', ()=> inc('salawat'));
+btnL.addEventListener('click', ()=> inc('laan'));
+btnX.addEventListener('click', closeWidget);
 
-  refresh();
+refresh();
 })();
 </script>
-<!-- === /Salawat Global Counter === -->
+<!-- === /Zekr Widget === -->
 </body>
 </html>
 
