@@ -107,7 +107,7 @@
   </style>
 </head>
 <body>
-  <header>📚 سسسسانتخاب درس</header>
+  <header>📚 انتخاب درس</header>
 
   <div class="grid">
     <div class="card"><a href="tarikh.html"><div class="icon">📜</div>تاریخ</a></div>
@@ -127,7 +127,10 @@
   <div id="counter">
     <span id="visit-count">در حال بارگذاری...</span>
   </div>
-
+  <script>
+    window.API_BASE = "https://hidden-forest-5a81.mohamadgpt19.workers.dev";
+  </script>
+  
   <script>
     async function loadVisits() {
       const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
@@ -248,9 +251,7 @@ font-size:12.5px; backdrop-filter: blur(4px); white-space:nowrap;
 "></div>
 </div>
 
-<script>
-  const API_BASE = "https://hidden-forest-5a81.mohamadgpt19.workers.dev";
-</script>
+
 
 <script>
 (function(){
@@ -336,7 +337,6 @@ refresh();
 <!-- === /Zekr Widget === -->
 </body>
 </html>
-
 
 
 
