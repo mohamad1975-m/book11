@@ -132,12 +132,12 @@
     async function loadVisits() {
       const slug = (location.pathname.replace(/[^\w]+/g, '_') || 'index');
       try {
-        const res = await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
+        const res = await fetch(API_BASE + `/api/visits?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
         const data = await res.json();
         if (!res.ok || typeof data.value !== 'number') throw new Error('bad response');
         document.getElementById('visit-count').textContent = `بازدید این صفحه: ${data.value}`;
 
-        await fetch(`/api/log?slug=${encodeURIComponent(slug)}`, {
+        await fetch(API_BASE + `/api/log?slug=${encodeURIComponent(slug)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ua: navigator.userAgent })
@@ -249,6 +249,10 @@ font-size:12.5px; backdrop-filter: blur(4px); white-space:nowrap;
 </div>
 
 <script>
+  const API_BASE = "https://hidden-forest-5a81.mohamadgpt19.workers.dev";
+</script>
+
+<script>
 (function(){
 // اعداد فارسی
 const fa = v => (typeof v==='number' ? v.toLocaleString('fa-IR') : String(v).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]));
@@ -292,8 +296,8 @@ showToast('ابزار ذکر بسته شد؛ برای برگشتن، صفحه ر
 async function refresh(){
 try{
 const [rS, rL] = await Promise.all([
-fetch('/api/global-counter?type=salawat',{cache:'no-store'}),
-fetch('/api/global-counter?type=laan',{cache:'no-store'})
+fetch(API_BASE + '/api/global-counter?type=salawat',{cache:'no-store'}),
+fetch(API_BASE + '/api/global-counter?type=laan',{cache:'no-store'})
 ]);
 const dS = await rS.json();
 const dL = await rL.json();
@@ -310,7 +314,7 @@ async function inc(which){
 const btn = which==='salawat' ? btnS : btnL;
 btn.disabled = true;
 try{
-const r = await fetch(`/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
+const r = await fetch(API_BASE + `/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
 const d = await r.json();
 if(!r.ok || typeof d.value!=='number') throw 0;
 if(which==='salawat') valS.textContent = fa(d.value);
