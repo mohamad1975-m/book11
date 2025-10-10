@@ -192,6 +192,10 @@
 </style>
 </head>
 <body>
+  <script>
+    window.API_BASE = "https://hidden-forest-5a81.mohamadgpt19.workers.dev";
+  </script>
+  
 <header>تاریخ 📘</header>
 
 <div class="toolbar">
@@ -203,6 +207,46 @@
   <button id="btnSort" class="sort-btn">مرتب‌سازی: پیش‌فرض</button>
   <button id="btnTags" class="sort-btn">برچسب</button>
 </div>
+
+<!-- یازدهم -->
+<section class="panel" data-panel="11">
+  <h2>کتاب های تاریخ جامع(پایه10و11و12)</h2>
+  <ul class="books" id="list11">
+
+    <li data-id="tarikh10,11,12-vagheanjamee">
+      <div class="book-card" data-href="https://mega.nz/file/4qYAwDQS#3DJfgHkp3OCef9TCkqemPEhkkP9cdfIa0_Jv9NC4dm4">
+        <div class="left-acts">
+          <div class="icon-wrap dl" title="دانلود">
+            <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/></svg>
+          </div>
+          <div class="icon-wrap star" title="امتیاز">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div class="under-txt size-label" data-size>306 MB</div>
+          <div class="under-txt rate-label" data-rate>4.7</div>
+          <div class="icon-wrap share" title="اشتراک‌گذاری">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.13-4.12A2.99 2.99 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.91 9.77A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
+          </div>
+          <div class="icon-wrap buy" title="خرید">
+            <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
+          </div>
+          <div class="under-txt share-label"></div>
+          <div class="icon-wrap comment" title="کامنت‌ها">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+          </div>
+          <div class="under-txt cmt-label" data-cmtcount>۰</div>
+          <div class="icon-wrap fav" title="علاقه‌مندی">
+            <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
+            <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
+          </div>
+          <div class="under-txt fav-label" data-favcount>۰</div>
+        </div>
+        <span class="title"> واقعا جامع مهروماه<span class="dcount" data-dlc>(۰ دانلود)</span></span>
+        <div class="star-tip"></div>
+      </div>
+    </li>
+  </ul>
+</section>
 
 <!-- یازدهم -->
 <section class="panel" data-panel="11">
@@ -380,9 +424,7 @@
   </section>
   
 
-<div style="text-align:center">
-  <a class="btn-back" href="index.html">بازگشت به منوی اصلی</a>
-</div>
+
 
 <div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
 
@@ -447,11 +489,11 @@ const faRate = v => (v==null? '؟' : (''+v).replace(/\./g,'٫').replace(/\d/g,d=
 async function loadVisits(){
   const slug='tarikh';
   try{
-    const r=await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`,{cache:'no-store'});
+    const r=await fetch(API_BASE + `/api/visits?slug=${encodeURIComponent(slug)}`,{cache:'no-store'});
     const d=await r.json();
     if(!r.ok||typeof d.value!=='number')throw 0;
     document.getElementById('visit-count').textContent=`بازدید این صفحه: ${faDigits(d.value)}`;
-    await fetch(`/api/log?slug=${encodeURIComponent(slug)}`,{
+    await fetch(API_BASE + `/api/log?slug=${encodeURIComponent(slug)}`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ua:navigator.userAgent})
     });
@@ -475,6 +517,13 @@ const bookMeta = {
     buy: 'https://www.digikala.com/product/dkp-13410378/کتاب-ماجراهای-من-و-درسام-تاریخ-یازدهم-اثر-فوژان-صادق-زاده-فرید-و-آمنه-سحرخیز-پور-شیرازی-انتشارات-خیلی-سبز/',
     publisher: 'خیلی‌سبز',
     tags: ['تشریحی', 'تست', 'درسنامه', 'پایه یازدهم', 'خیلی‌سبز', 'ماجراهای من و درسام'],
+    downloads: 25, // اضافه کردن تعداد دانلود در meta
+  },
+  'tarikh10,11,12-vagheanjamee': {
+    size: '306 MB', rate: 4.7, votes: 68,
+    buy: 'https://www.digikala.com/product/dkp-6717659/کتاب-تاریخ-جامع-رشته-انسانی-ویژه-کنکور-1401-اثر-بهروز-یحیی-نشر-مهر-و-ماه/',
+    publisher: 'مهر و ماه',
+    tags: ['تست کنکوری', 'تست', 'درسنامه', 'جامع', 'مهر و ماه', 'واقعا جامع كنكور'],
     downloads: 25, // اضافه کردن تعداد دانلود در meta
   },
   'tarikh11-shab': {
@@ -508,14 +557,14 @@ const deviceId=(localStorage.getItem('device_id') || (()=>{const v='dvc_'+Math.r
 /* ---- دانلودها ---- */
 async function getDownloads(book){
   try{
-    const r=await fetch(`/api/downloads?book=${encodeURIComponent(book)}`,{cache:'no-store'});
+    const r=await fetch(API_BASE + `/api/downloads?book=${encodeURIComponent(book)}`,{cache:'no-store'});
     const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
     return d.value;
   }catch{return lsGet('dl_'+book,0)}
 }
 async function addDownload(book){
   try{
-    const r=await fetch('/api/downloads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({book,inc:1})});
+    const r=await fetch(API_BASE + '/api/downloads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({book,inc:1})});
     const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
     return d.value;
   }catch{
@@ -655,7 +704,7 @@ cmtModal.addEventListener('click',e=>{ if(e.target===cmtModal) closeCmtModal() }
 
 async function loadComments(bookId){
   try{
-    const r=await fetch(`/api/book-comments?slug=${encodeURIComponent(bookId)}`,{cache:'no-store'});
+    const r=await fetch(API_BASE + `/api/book-comments?slug=${encodeURIComponent(bookId)}`,{cache:'no-store'});
     const d=await r.json();
     if(!r.ok||!Array.isArray(d.list)) throw 0;
     renderComments(d.list);
@@ -684,7 +733,7 @@ cmtSend.addEventListener('click',async()=>{
   const nick=(cmtName.value||'').trim();
   if(!txt) return;
   try{
-    const r=await fetch(`/api/book-comments?slug=${encodeURIComponent(currentBookForCmt)}`,{
+    const r=await fetch(API_BASE + `/api/book-comments?slug=${encodeURIComponent(currentBookForCmt)}`,{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({text:txt, nickname:nick})
     });
@@ -696,7 +745,7 @@ cmtSend.addEventListener('click',async()=>{
 
 /* ---- کارت‌ها + علاقه‌مندی‌ها + اشتراک‌گذاری با متن ثابت ---- */
 function initCards(){
-  const SITE_URL = (window.SITE_URL_OVERRIDE || 'https://learnbook.vercel.app/');
+  const SITE_URL = (window.SITE_URL_OVERRIDE || 'https://learnbooks.pages.dev/');
   const RTL = '\u200F';
 
   const makeRatingText = (meta)=>{
@@ -801,7 +850,7 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
       openCmtModal(id, '«'+titleText+'»', cmtCountEl);
     });
 
-    fetch(`/api/book-comments?slug=${encodeURIComponent(id)}`,{cache:'no-store'})
+    fetch(API_BASE + `/api/book-comments?slug=${encodeURIComponent(id)}`,{cache:'no-store'})
       .then(r=>r.json()).then(d=>{
         cmtCountEl.textContent = faDigits(Array.isArray(d.list)? d.list.length : 0);
       }).catch(()=>{ cmtCountEl.textContent='۰' });
@@ -816,13 +865,13 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
 
     async function favGet(book){
       try{
-        const r=await fetch(`/api/favorites?book=${encodeURIComponent(book)}&device=${encodeURIComponent(deviceId)}`,{cache:'no-store'});
+        const r=await fetch(API_BASE + `/api/favorites?book=${encodeURIComponent(book)}&device=${encodeURIComponent(deviceId)}`,{cache:'no-store'});
         const d=await r.json(); return { count: d?.count ?? 0, isFav: !!d?.isFav };
       }catch{ return {count: (isMyFav(book)?1:0), isFav: isMyFav(book)} }
     }
     async function favToggle(book, toAdd){
       try{
-        const r=await fetch('/api/favorites', { method:'POST', headers:{'Content-Type':'application/json'},
+        const r=await fetch(API_BASE + '/api/favorites', { method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ book, device: deviceId, op: toAdd?'add':'remove' }) });
         const d=await r.json();
         if(!r.ok) throw 0;
@@ -1067,8 +1116,8 @@ initCards();
   async function refresh(){
     try{
       const [rS, rL] = await Promise.all([
-        fetch('/api/global-counter?type=salawat',{cache:'no-store'}),
-        fetch('/api/global-counter?type=laan',{cache:'no-store'})
+      fetch(API_BASE + '/api/global-counter?type=salawat',{cache:'no-store'}),
+      fetch(API_BASE + '/api/global-counter?type=laan',{cache:'no-store'})
       ]);
       const dS = await rS.json();
       const dL = await rL.json();
@@ -1085,7 +1134,7 @@ initCards();
     const btn = which==='salawat' ? btnS : btnL;
     btn.disabled = true;
     try{
-      const r = await fetch(`/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
+      const r = await fetch(API_BASE + `/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
       const d = await r.json();
       if(!r.ok || typeof d.value!=='number') throw 0;
       if(which==='salawat') valS.textContent = fa(d.value);
