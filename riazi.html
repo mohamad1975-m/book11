@@ -243,6 +243,9 @@ right: 56px !important;
 
 </style>
 </head>
+<script>
+  window.API_BASE = "https://hidden-forest-5a81.mohamadgpt19.workers.dev";
+</script>
 <body>
 <header>ریاضی 📘</header>
 
@@ -642,11 +645,11 @@ const faRate = v => (v==null? '؟' : (''+v).replace(/\./g,'٫').replace(/\d/g,d=
 async function loadVisits(){
 const slug='riazi';
 try{
-const r=await fetch(`/api/visits?slug=${encodeURIComponent(slug)}`,{cache:'no-store'});
+  const r=await fetch(API_BASE + `/api/visits?slug=${encodeURIComponent(slug)}`,{cache:'no-store'});
 const d=await r.json();
 if(!r.ok||typeof d.value!=='number')throw 0;
 document.getElementById('visit-count').textContent=`بازدید این صفحه: ${faDigits(d.value)}`;
-await fetch(`/api/log?slug=${encodeURIComponent(slug)}`,{
+await fetch(API_BASE + `/api/log?slug=${encodeURIComponent(slug)}`,{
 method:'POST',headers:{'Content-Type':'application/json'},
 body:JSON.stringify({ua:navigator.userAgent})
 });
@@ -736,14 +739,14 @@ const deviceId=(localStorage.getItem('device_id') || (()=>{const v='dvc_'+Math.r
 /* ---- دانلودها ---- */
 async function getDownloads(book){
 try{
-const r=await fetch(`/api/downloads?book=${encodeURIComponent(book)}`,{cache:'no-store'});
+  const r=await fetch(API_BASE + `/api/downloads?book=${encodeURIComponent(book)}`,{cache:'no-store'});
 const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
 return d.value;
 }catch{return lsGet('dl_'+book,0)}
 }
 async function addDownload(book){
 try{
-const r=await fetch('/api/downloads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({book,inc:1})});
+  const r=await fetch(API_BASE + '/api/downloads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({book,inc:1})});
 const d=await r.json(); if(!r.ok||typeof d.value!=='number') throw 0;
 return d.value;
 }catch{
@@ -885,7 +888,7 @@ cmtModal.addEventListener('click',e=>{ if(e.target===cmtModal) closeCmtModal() }
 
 async function loadComments(bookId){
 try{
-const r=await fetch(`/api/book-comments?slug=${encodeURIComponent(bookId)}`,{cache:'no-store'});
+  const r=await fetch(API_BASE + `/api/book-comments?slug=${encodeURIComponent(bookId)}`,{cache:'no-store'});
 const d=await r.json();
 if(!r.ok||!Array.isArray(d.list)) throw 0;
 renderComments(d.list);
@@ -914,7 +917,7 @@ const txt=(cmtInput.value||'').trim();
 const nick=(cmtName.value||'').trim();
 if(!txt) return;
 try{
-const r=await fetch(`/api/book-comments?slug=${encodeURIComponent(currentBookForCmt)}`,{
+  const r=await fetch(API_BASE + `/api/book-comments?slug=${encodeURIComponent(currentBookForCmt)}`,{
 method:'POST', headers:{'Content-Type':'application/json'},
 body:JSON.stringify({text:txt, nickname:nick})
 });
@@ -926,7 +929,7 @@ else alert('ارسال نشد.');
 
 /* ---- کارت‌ها + علاقه‌مندی‌ها + اشتراک‌گذاری با متن ثابت ---- */
 function initCards(){
-  const SITE_URL = (window.SITE_URL_OVERRIDE || 'https://learnbook.vercel.app/');
+  const SITE_URL = (window.SITE_URL_OVERRIDE || 'https://learnbooks.pages.dev/');
   const RTL = '\u200F';
 
   const makeRatingText = (meta)=>{
@@ -1066,7 +1069,7 @@ function initCards(){
       });
 
       // لود اولیه تعداد کامنت
-      fetch(`/api/book-comments?slug=${encodeURIComponent(id)}`,{cache:'no-store'})
+      fetch(API_BASE + `/api/book-comments?slug=${encodeURIComponent(id)}`,{cache:'no-store'})
         .then(r=>r.json())
         .then(d=>{
           cmtCountEl.textContent = faDigits(Array.isArray(d.list)? d.list.length : 0);
@@ -1084,13 +1087,13 @@ function initCards(){
 
       async function favGet(book){
         try{
-          const r=await fetch(`/api/favorites?book=${encodeURIComponent(book)}&device=${encodeURIComponent(deviceId)}`,{cache:'no-store'});
+          const r=await fetch(API_BASE + `/api/favorites?book=${encodeURIComponent(book)}&device=${encodeURIComponent(deviceId)}`,{cache:'no-store'});
           const d=await r.json(); return { count: d?.count ?? 0, isFav: !!d?.isFav };
         }catch{ return {count: (isMyFav(book)?1:0), isFav: isMyFav(book)} }
       }
       async function favToggle(book, toAdd){
         try{
-          const r=await fetch('/api/favorites', { method:'POST', headers:{'Content-Type':'application/json'},
+          const r=await fetch(API_BASE + '/api/favorites', { method:'POST', headers:{'Content-Type':'application/json'},
             body: JSON.stringify({ book, device: deviceId, op: toAdd?'add':'remove' }) });
           const d=await r.json();
           if(!r.ok) throw 0;
@@ -1401,7 +1404,7 @@ border-radius:8px; padding:6px 9px; font-family:inherit;
 ">+ اضافه</button>
 
 <!-- Laan row -->
-<div style="opacity:.92; font-size:13px">لعن:</div>
+<div style="opacity:.92; font-size:13px">لعن عُمَر:</div>
 <b id="gc-laan" style="font-size:13px; text-align:left">—</b>
 <button id="gc-laan-inc" style="
 border:none; cursor:pointer; color:#fff; font-size:12px;
@@ -1469,8 +1472,8 @@ showToast('ابزار ذکر بسته شد؛ برای برگشتن، صفحه ر
 async function refresh(){
 try{
 const [rS, rL] = await Promise.all([
-fetch('/api/global-counter?type=salawat',{cache:'no-store'}),
-fetch('/api/global-counter?type=laan',{cache:'no-store'})
+fetch(API_BASE + '/api/global-counter?type=salawat',{cache:'no-store'}),
+fetch(API_BASE + '/api/global-counter?type=laan',{cache:'no-store'})
 ]);
 const dS = await rS.json();
 const dL = await rL.json();
@@ -1487,7 +1490,7 @@ async function inc(which){
 const btn = which==='salawat' ? btnS : btnL;
 btn.disabled = true;
 try{
-const r = await fetch(`/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
+  const r = await fetch(API_BASE + `/api/global-counter?type=${which}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inc: 1 }) });
 const d = await r.json();
 if(!r.ok || typeof d.value!=='number') throw 0;
 if(which==='salawat') valS.textContent = fa(d.value);
