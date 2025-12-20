@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل فوق پیشرفته مدیریت محتوا</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root {
+            --primary: #4361ee; --success: #2ec4b6; --danger: #e71d36; --warning: #ff9f43;
+            --dark: #1e293b; --light: #f8fafc;
+        }
+        * { box-sizing: border-box; font-family: 'Vazir', sans-serif; }
+        body { background-color: #eff3f6; color: var(--dark); margin: 0; padding: 20px; }
+        .admin-card { max-width: 900px; margin: 0 auto; background: white; border-radius: 24px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); position: relative; }
+        .settings-btn { position: absolute; top: 20px; left: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; filter: grayscale(1); }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .full-width { grid-column: span 2; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.85rem; color: #64748b; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; transition: 0.3s; }
+        .drop-zone { border: 2px dashed #cbd5e1; border-radius: 18px; padding: 25px; text-align: center; cursor: pointer; background: #f8fafc; margin-bottom: 20px; }
+        .theme-list { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .theme-dot { width: 38px; height: 38px; border-radius: 10px; cursor: pointer; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; }
+        .theme-dot.active { transform: scale(1.15); border-color: var(--primary); box-shadow: 0 0 15px rgba(67, 97, 238, 0.3); }
+        .preview-box { width: 100%; height: 60px; border-radius: 12px; margin-top: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.8rem; }
+        .btn { padding: 14px 22px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; width: 100%; }
+        .btn-outline { border: 2px solid #e2e8f0; background: white; color: var(--dark); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: white; max-width: 850px; margin: 0 auto; border-radius: 25px; padding: 30px; height: 90vh; display: flex; flex-direction: column; }
+        .card-editor-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; background: #f1f5f9; padding: 15px; border-radius: 15px; margin-bottom: 12px; }
+        textarea { resize: none; min-height: 80px; }
+        .filename-box { margin-top: 10px; background: #f1f5f9; padding: 10px; border-radius: 10px; border: 1px dashed #cbd5e1; }
+    </style>
+</head>
+<body>
+
+<div class="admin-card">
+    <button class="settings-btn" onclick="openModal('settingsModal')">⚙️</button>
+    <h1 style="text-align:center; color:var(--primary)">💎 پنل مدیریت فلش‌کارت</h1>
+    
+    <div class="form-grid">
+        <div><label>نوع درس:</label><select id="subType" onchange="checkOther(this.value); updateFileName();">
+            <option value="tarikh">تاریخ</option>
+            <option value="joghrafia">جغرافیا</option>
+            <option value="farsi">فارسی</option>
+            <option value="riazi">ریاضی</option>
+            <option value="zaban">زبان انگلیسی</option>
+            <option value="sayer">سایر...</option>
+        </select></div>
+        <div id="otherInput" style="display:none"><label>نام درس (انگلیسی):</label><input type="text" id="subOther" placeholder="مثلا: biology" oninput="updateFileName()"></div>
+        <div><label>پایه:</label><input type="text" id="grade" oninput="updateFileName()"></div>
+        <div><label>شماره درس:</label><input type="text" id="lessonNum" placeholder="مثلاً: 2" oninput="updateFileName()"></div>
+        <div class="full-width"><label>نام آموزگار (اختیاری):</label><input type="text" id="teacherName" placeholder="مثلاً: استاد محمدی"></div>
+        <div class="full-width"><label>عنوان اختصاصی:</label><input type="text" id="lessonTitle" placeholder="مثلاً: فلش کارت‌های فصل اول"></div>
+    </div>
+
+    <div class="drop-zone" onclick="document.getElementById('csvIn').click()">
+        📥 فایل CSV را بکشید یا کلیک کنید
+        <input type="file" id="csvIn" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">
+        <div id="successBadge" style="display:none; color:var(--success); margin-top:10px; font-weight:bold;">✅ فایل با موفقیت بارگذاری شد.</div>
+    </div>
+
+    <label>🎨 انتخاب تم (پیش‌نمایش زنده):</label>
+    <div class="theme-list" id="themeList"></div>
+    <div id="themePreview" class="preview-box">پیش‌نمایش تم انتخاب شده</div>
+    
+    <div style="margin: 15px 0;">
+        <button class="btn btn-outline" style="font-size:0.8rem;" onclick="openModal('themeModal')">➕ ساخت تم جدید</button>
+        <div class="filename-box">
+            <label style="font-size: 0.75rem;">📄 نام فایل خروجی (قابل ویرایش):</label>
+            <input type="text" id="outputFileName" style="padding: 5px 10px; font-size: 0.85rem; background: transparent; border: 1px solid #cbd5e1; direction: ltr;">
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px;">
+        <button class="btn btn-outline" onclick="openModal('cardModal')">📝 مدیریت کارت‌ها (<span id="cardCount">0</span>)</button>
+        <button class="btn btn-primary" onclick="generateOutput()">🚀 خروجی نسخه دانش‌آموز</button>
+    </div>
+</div>
+
+<div id="cardModal" class="modal">
+    <div class="modal-content">
+        <h2>🗂️ لیست کارت‌ها</h2>
+        <input type="text" placeholder="🔍 جستجو در محتوا..." oninput="renderCards(this.value)" style="margin-bottom:15px">
+        <div style="flex:1; overflow-y:auto;" id="cardContainer"></div>
+        <div style="display: flex; gap: 10px; margin-top:15px">
+            <button class="btn btn-outline" onclick="addNewEmptyCard()">➕ افزودن کارت</button>
+            <button class="btn btn-primary" onclick="closeModal('cardModal')">تایید</button>
+        </div>
+    </div>
+</div>
+
+<div id="themeModal" class="modal">
+    <div class="modal-content" style="max-width: 400px; height: auto;">
+        <h3>🎨 تم‌ساز گرادینت</h3>
+        <div style="display:flex; gap:10px; margin-bottom:15px">
+            <input type="color" id="c1" value="#4361ee" style="height:50px">
+            <input type="color" id="c2" value="#764ba2" style="height:50px">
+        </div>
+        <input type="text" id="tName" placeholder="نام تم (مثلا: رویایی)" style="margin-bottom:15px">
+        <div style="display:flex; gap:10px">
+            <button class="btn btn-primary" style="flex:2" onclick="saveNewTheme()">ذخیره تم</button>
+            <button class="btn btn-outline" style="flex:1" onclick="closeModal('themeModal')">لغو</button>
+        </div>
+    </div>
+</div>
+
+<div id="settingsModal" class="modal">
+    <div class="modal-content" style="max-width: 400px; height: auto;">
+        <h3>⚙️ تنظیمات</h3>
+        <label>پایه پیش‌فرض:</label>
+        <input type="text" id="defaultGrade">
+        <button class="btn btn-primary" style="margin-top:15px" onclick="saveSettings()">ذخیره</button>
+    </div>
+</div>
+
+<script>
+    let flashcards = [];
+    let customThemes = JSON.parse(localStorage.getItem('myThemes')) || [
+        {name: 'کلاسیک', val: 'linear-gradient(135deg, #4361ee 0%, #1e293b 100%)'},
+        {name: 'غروب', val: 'linear-gradient(135deg, #f83600 0%, #f9d423 100%)'},
+        {name: 'دریا', val: 'linear-gradient(135deg, #2af598 0%, #009efd 100%)'}
+    ];
+    let selectedThemeVal = customThemes[0].val;
+
+    window.onload = () => {
+        document.getElementById('grade').value = localStorage.getItem('defaultGrade') || '';
+        document.getElementById('defaultGrade').value = localStorage.getItem('defaultGrade') || '';
+        initThemes();
+        updateFileName();
+    };
+
+    function updateFileName() {
+        const type = document.getElementById('subType').value === 'sayer' ? (document.getElementById('subOther').value || 'sayer') : document.getElementById('subType').value;
+        const grade = document.getElementById('grade').value || '0';
+        const lesson = document.getElementById('lessonNum').value || '0';
+        document.getElementById('outputFileName').value = `flash-${type}-${grade}-${lesson}`;
+    }
+
+    function initThemes() {
+        const list = document.getElementById('themeList'); list.innerHTML = '';
+        customThemes.forEach((t, i) => {
+            const dot = document.createElement('div');
+            dot.className = `theme-dot ${t.val === selectedThemeVal ? 'active' : ''}`;
+            dot.style.background = t.val;
+            dot.onclick = () => { selectedThemeVal = t.val; updateThemeUI(); initThemes(); };
+            dot.oncontextmenu = (e) => { e.preventDefault(); if(confirm('حذف این تم؟')){customThemes.splice(i,1); localStorage.setItem('myThemes', JSON.stringify(customThemes)); initThemes();}};
+            list.appendChild(dot);
+        });
+        updateThemeUI();
+    }
+
+    function updateThemeUI() {
+        const p = document.getElementById('themePreview');
+        p.style.background = selectedThemeVal;
+    }
+
+    function saveNewTheme() {
+        const val = `linear-gradient(135deg, ${document.getElementById('c1').value}, ${document.getElementById('c2').value})`;
+        customThemes.push({name: document.getElementById('tName').value || 'جدید', val});
+        localStorage.setItem('myThemes', JSON.stringify(customThemes));
+        selectedThemeVal = val;
+        initThemes(); closeModal('themeModal');
+    }
+
+    function saveSettings() { localStorage.setItem('defaultGrade', document.getElementById('defaultGrade').value); closeModal('settingsModal'); updateFileName(); }
+
+    function handleFile(file) {
+        const r = new FileReader();
+        r.onload = (e) => {
+            const lines = e.target.result.split(/\r?\n/);
+            lines.forEach(l => {
+                const p = l.split(',');
+                if(p.length >= 2) flashcards.push({q: p[0].replace(/"/g,'').trim(), a: p.slice(1).join(',').replace(/"/g,'').trim()});
+            });
+            document.getElementById('successBadge').style.display = 'block';
+            updateCount();
+        };
+        r.readAsText(file, 'UTF-8');
+    }
+
+    function renderCards(filter = "") {
+        const container = document.getElementById('cardContainer');
+        container.innerHTML = '';
+        flashcards.forEach((c, i) => {
+            if (filter && !c.q.includes(filter) && !c.a.includes(filter)) return;
+            const div = document.createElement('div');
+            div.className = 'card-editor-row';
+            div.innerHTML = `<textarea placeholder="سوال..." onchange="flashcards[${i}].q=this.value">${c.q}</textarea>
+                             <textarea placeholder="جواب..." onchange="flashcards[${i}].a=this.value">${c.a}</textarea>
+                             <button class="btn" style="color:var(--danger)" onclick="flashcards.splice(${i},1); renderCards();">✖</button>`;
+            container.appendChild(div);
+        });
+        updateCount();
+    }
+
+    function addNewEmptyCard() { flashcards.push({q:'', a:''}); renderCards(); }
+    function updateCount() { document.getElementById('cardCount').innerText = flashcards.length; }
+    function checkOther(v) { document.getElementById('otherInput').style.display = v==='sayer'?'block':'none'; }
+    function openModal(id) { document.getElementById(id).style.display = 'block'; if(id==='cardModal') renderCards(); }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function generateOutput() {
+        const subSelect = document.getElementById('subType');
+        const subLabel = subSelect.options[subSelect.selectedIndex].text;
+        const subName = subSelect.value === 'sayer' ? document.getElementById('subOther').value : subLabel;
+        const grade = document.getElementById('grade').value;
+        const lesson = document.getElementById('lessonNum').value;
+        const teacher = document.getElementById('teacherName').value.trim();
+        const cardCount = flashcards.length;
+        const title = document.getElementById('lessonTitle').value || `${subName} - درس ${lesson}`;
+        const finalFileName = document.getElementById('outputFileName').value || 'flashcards';
+        
+        const teacherSection = teacher ? `<p style="opacity: 0.9; margin: 5px 0 0 0; font-size: 0.95rem;">${teacher}</p>` : '';
+
+        const template = `
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --theme: ${selectedThemeVal}; }
+        body { font-family: 'Vazir', sans-serif; background: #f0f2f5; padding: 15px; user-select: none; margin:0; }
+        .head { background: var(--theme); color: white; padding: 30px 15px; border-radius: 0 0 30px 30px; text-align: center; margin: -15px -15px 20px -15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .nav-container { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .btn.active { background: #1e293b; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { height: 250px; perspective: 1000px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .card-inner { transform: rotateY(180deg); }
+        .face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; border-radius: 25px; text-align: center; font-size: 1.1rem; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .front { background: white; border: 1px solid #eee; color: #333; }
+        .back { background: var(--theme); color: white; transform: rotateY(180deg); }
+        .leitner-box { display: none; max-width: 450px; margin: 20px auto; perspective: 1000px; }
+        .leitner-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .l-btn { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .l-easy { background: #2ec4b6; } .l-hard { background: #ff9f43; } .l-fail { background: #e71d36; }
+        .slide-out { animation: slideOut 0.5s forwards; }
+        @keyframes slideOut { 0% { transform: scale(1) translateX(0); opacity: 1; } 100% { transform: scale(0.8) translateX(-100px); opacity: 0; } }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1 style="margin:0">${title}</h1>
+        <p style="opacity: 0.9; margin: 10px 0 5px 0; font-size: 1.1rem;">📌 ${subName} | درس ${lesson} | پایه ${grade}</p>
+        <p style="opacity: 0.8; margin: 0; font-size: 0.9rem;">📑 تعداد کارت: ${cardCount} تا</p>
+        ${teacherSection}
+    </div>
+
+    <div class="nav-container">
+        <button class="btn active" id="btnGrid" onclick="changeMode('grid')">📱 لیست</button>
+        <button class="btn" id="btnLeitner" onclick="changeMode('leitner')">🧠 لایتنر</button>
+        <div id="searchWrapper">
+            <input type="text" id="srch" placeholder="🔍 جستجو..." oninput="renderGrid()" style="padding:10px; border-radius:10px; border:1px solid #ddd; width:120px">
+        </div>
+    </div>
+
+    <div id="gridView" class="grid"></div>
+
+    <div id="leitnerView" class="leitner-box">
+        <div id="leitnerCardContainer"></div>
+        <div class="leitner-actions">
+            <button class="l-btn l-fail" onclick="processLeitner('fail')">❌ بلد نبودم</button>
+            <button class="l-btn l-hard" onclick="processLeitner('hard')">⚠️ سخت بود</button>
+            <button class="l-btn l-easy" onclick="processLeitner('easy')">✅ ساده بود</button>
+        </div>
+        <p id="leitnerStat" style="text-align:center; margin-top:20px; font-weight:bold; color:#64748b"></p>
+    </div>
+
+    <script>
+        const cardsData = ${JSON.stringify(flashcards)};
+        let leitnerQueue = [...cardsData];
+
+        function createCardEl(data) {
+            const wrap = document.createElement('div');
+            wrap.className = 'card slide-in';
+            wrap.onclick = () => wrap.classList.toggle('flip');
+            wrap.innerHTML = \`
+                <div class="card-inner">
+                    <div class="face front">\${data.q}</div>
+                    <div class="face back">\${data.a}</div>
+                </div>
+            \`;
+            return wrap;
+        }
+
+        function renderGrid() {
+            const query = document.getElementById('srch').value;
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+            cardsData.filter(c => c.q.includes(query) || c.a.includes(query))
+                     .forEach(c => container.appendChild(createCardEl(c)));
+        }
+
+        function changeMode(m) {
+            document.getElementById('gridView').style.display = m === 'grid' ? 'grid' : 'none';
+            document.getElementById('leitnerView').style.display = m === 'leitner' ? 'block' : 'none';
+            document.getElementById('searchWrapper').style.display = m === 'grid' ? 'block' : 'none';
+            document.getElementById('btnGrid').classList.toggle('active', m === 'grid');
+            document.getElementById('btnLeitner').classList.toggle('active', m === 'leitner');
+            if(m === 'leitner') renderLeitner();
+        }
+
+        function renderLeitner() {
+            const container = document.getElementById('leitnerCardContainer');
+            container.innerHTML = '';
+            if(leitnerQueue.length > 0) {
+                container.appendChild(createCardEl(leitnerQueue[0]));
+                document.getElementById('leitnerStat').innerText = 'کارت‌های باقی‌مانده: ' + leitnerQueue.length;
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:40px;"><h2>🎉 فوق‌العاده بود!</h2><p>همه کارت‌ها رو مرور کردی.</p><button class="btn" style="background:var(--theme); color:white; margin:auto" onclick="leitnerQueue=[...cardsData]; renderLeitner();">شروع مجدد</button></div>';
+                document.getElementById('leitnerStat').innerText = '';
+            }
+        }
+
+        function processLeitner(result) {
+            if(leitnerQueue.length === 0) return;
+            const currentCard = document.querySelector('#leitnerCardContainer .card');
+            currentCard.classList.add('slide-out');
+            setTimeout(() => {
+                const item = leitnerQueue.shift();
+                if(result === 'fail') leitnerQueue.push(item);
+                else if (result === 'hard') {
+                    const mid = Math.floor(leitnerQueue.length / 2);
+                    leitnerQueue.splice(mid, 0, item);
+                }
+                renderLeitner();
+            }, 400);
+        }
+        renderGrid();
+    <\/script>
+</body>
+</html>`;
+        
+        const blob = new Blob([template], {type: 'text/html'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${finalFileName}.html`;
+        link.click();
+    }
+</script>
+</body>
+</html>
