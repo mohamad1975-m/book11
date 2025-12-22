@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>تاریخ</title>
+<html lang="fa" dir="rtl"><head></head><body><start_of_user_uploaded_file: fonoon_podcast_player.html="">
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فنون ادبی</title>
 <style>
   @font-face{
     font-family:'iranyekanX';
@@ -189,18 +189,169 @@
   }
   .btn-danger{ background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.7); color:#fecaca }
   .btn-danger:hover{ filter:brightness(1.05) }
+  /* --- استایل‌های جدید برای دکمه مشاهده و مودال دروس --- */
+.left-acts .view-btn {
+  grid-column: 1; grid-row: 1; /* جایگزین جایگاه دانلود */
+}
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.lesson-box {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lesson-box h4 {
+  margin: 0 0 5px;
+  font-size: 16px;
+  text-align: center;
+  color: #81e6d9;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 8px;
+}
+.lesson-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.btn-link {
+  display: block;
+  text-align: center;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+}
+.btn-link:hover {
+  background: linear-gradient(135deg,#34d399,#10b981);
+  border-color: transparent;
+  transform: translateX(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* --- استایل‌های پلیر صوتی --- */
+.audio-player-container {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 10px;
+    text-align: center;
+    direction: ltr; /* برای کنترل‌های صوتی */
+}
+.audio-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+.audio-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    transition: all 0.2s;
+}
+.audio-btn.main-play {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg,#34d399,#10b981);
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.audio-btn:hover {
+    transform: scale(1.05);
+    background-color: rgba(255,255,255,0.1);
+}
+.audio-btn.main-play:hover {
+    transform: scale(1.05);
+}
+.audio-progress {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #eee;
+}
+/* استایل نوار پیشرفت برای رنگ سبز قبل از دایره */
+.progress-bar {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    /* این بخش برای نمایش رنگ سبز قبل از دایره با جاوااسکریپت آپدیت می‌شود */
+}
+
+.progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #34d399;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+}
+
+/* متن ریز ثانیه کنار دکمه‌ها */
+.skip-label {
+    font-size: 9px;
+    display: block;
+    margin-top: -2px;
+}
+
+/* استایل تصویر مایند مپ در حالت تمام صفحه */
+.mindmap-img {
+    max-width: 100%;
+    transition: transform 0.3s ease;
+    cursor: zoom-in;
+}
+.fullscreen-img {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: contain;
+    background: black;
+    z-index: 10001;
+    cursor: zoom-out;
+}
+
 </style>
-</head>
-<body>
+
+
   <script>
     window.API_BASE = "https://hidden-forest-5a81.mohamadgpt19.workers.dev";
   </script>
   
-<header>تاریخ 📘</header>
+<header> تاریخ 📘</header>
 
 <div class="toolbar">
   <div class="search-box">
-    <input id="searchInput" class="search-input" type="text" placeholder="جست‌وجو بین کتاب‌ها"/>
+    <input id="searchInput" class="search-input" type="text" placeholder="جست‌وجو بین کتاب‌ها">
     <span class="search-icon">🔎</span>
     <span id="searchClear" class="search-clear">×</span>
   </div>
@@ -208,223 +359,52 @@
   <button id="btnTags" class="sort-btn">برچسب</button>
 </div>
 
-<!-- یازدهم -->
-<section class="panel" data-panel="11">
-  <h2>کتاب های تاریخ جامع(پایه10و11و12)</h2>
-  <ul class="books" id="list11">
+<!-- جامع (پایه‌های 10، 11، 12) -->
 
-    <li data-id="tarikh10,11,12-vagheanjamee">
-      <div class="book-card" data-href="https://mega.nz/file/4qYAwDQS#3DJfgHkp3OCef9TCkqemPEhkkP9cdfIa0_Jv9NC4dm4">
-        <div class="left-acts">
-          <div class="icon-wrap dl" title="دانلود">
-            <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/></svg>
+
+<!-- پایه یازدهم -->
+<section class="panel" data-panel="11">
+  <h2>کتاب‌های تاریخ، پایه یازدهم</h2>
+  <ul class="books" id="list11">
+    
+        <li data-id="lessons-package-11">
+      <div class="book-card" data-href="#" style="display: flex; align-items: center; padding: 8px 12px; gap: 12px; min-height: auto; grid-template-columns: auto 1fr;">
+        <div class="left-acts" style="min-width: 50px; width: auto; display: flex; justify-content: center; align-items: center; grid-template-columns: none; grid-template-rows: none;"><div class="icon-wrap view-btn" title="مشاهده محتوای دروس">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>
           </div>
-          <div class="icon-wrap star" title="امتیاز">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <div class="under-txt size-label" data-size>306 MB</div>
-          <div class="under-txt rate-label" data-rate>4.7</div>
-          <div class="icon-wrap share" title="اشتراک‌گذاری">
-            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.13-4.12A2.99 2.99 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.91 9.77A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
-          </div>
-          <div class="icon-wrap buy" title="خرید">
-            <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
-          </div>
-          <div class="under-txt share-label"></div>
-          <div class="icon-wrap comment" title="کامنت‌ها">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-          </div>
-          <div class="under-txt cmt-label" data-cmtcount>۰</div>
-          <div class="icon-wrap fav" title="علاقه‌مندی">
-            <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
-            <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
-          </div>
-          <div class="under-txt fav-label" data-favcount>۰</div>
-        </div>
-        <span class="title"> واقعا جامع مهروماه<span class="dcount" data-dlc>(۰ دانلود)</span></span>
-        <div class="star-tip"></div>
+                        <div class="icon-wrap dl" style="display:none"></div>
+                        <div class="icon-wrap star" style="display:none"></div>
+                        <div class="under-txt size-label" style="display:none"></div>
+                        <div class="under-txt rate-label" style="display:none"></div>
+                        <div class="icon-wrap share" style="display:none"></div>
+                        <div class="icon-wrap buy" style="display:none"></div>
+                        <div class="under-txt share-label" style="display:none"></div>
+                        <div class="icon-wrap comment" style="display:none"></div>
+                        <div class="under-txt cmt-label" style="display:none"></div>
+                        <div class="icon-wrap fav" style="display:none"></div>
+                        <div class="under-txt fav-label" style="display:none"></div>
+                    </div>
+
+        <span class="title" style="font-size: 15px; margin: 0px; flex: 1 1 0%;">پکیج محتوای آموزشی دروس <span class="dcount" data-dlc=""></span></span>
+        
       </div>
     </li>
+
+    
+    
+    <!-- اضافه کردن سایر کتاب‌ها -->
   </ul>
 </section>
 
-<!-- یازدهم -->
-<section class="panel" data-panel="11">
-    <h2>کتاب‌های تاریخ، پایه یازدهم</h2>
-    <ul class="books" id="list11">
-      <li data-id="tarikh11-majara20">
-        <div class="book-card" data-href="https://mega.nz/file/tmgwVKRA#LkrI54ta-_8RQcato_aABuFHHhThghOvjQzWXjfPQ4k">
-          <div class="left-acts">
-            <div class="icon-wrap dl" title="دانلود">
-              <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/></svg>
-            </div>
-            <div class="icon-wrap star" title="امتیاز">
-              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <div class="under-txt size-label" data-size>99 MB</div>
-            <div class="under-txt rate-label" data-rate>4.8</div>
-            <div class="icon-wrap share" title="اشتراک‌گذاری">
-              <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.13-4.12A2.99 2.99 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.91 9.77A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
-            </div>
-            <div class="icon-wrap buy" title="خرید">
-              <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
-            </div>
-            <div class="under-txt share-label"></div>
-            <div class="icon-wrap comment" title="کامنت‌ها">
-              <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-            </div>
-            <div class="under-txt cmt-label" data-cmtcount>۰</div>
-            <div class="icon-wrap fav" title="علاقه‌مندی">
-              <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
-              <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
-            </div>
-            <div class="under-txt fav-label" data-favcount>۰</div>
-          </div>
-          <span class="title">ماجرای بیست – خیلی‌سبز <span class="dcount" data-dlc>(۰ دانلود)</span></span>
-          <div class="star-tip"></div>
-        </div>
-      </li>
-      <li data-id="tarikh11-majaraha">
-        <div class="book-card" data-href="https://mega.nz/file/ViBikQ7C#a6qWI8LcF28a8FVpS8z1CZEt4yeVZAn2V1bkOzdCCFQ">
-          <div class="left-acts">
-            <div class="icon-wrap dl" title="دانلود">
-              <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/></svg>
-            </div>
-            <div class="icon-wrap star" title="امتیاز">
-              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <div class="under-txt size-label" data-size>107 MB</div>
-            <div class="under-txt rate-label" data-rate>3.7</div>
-            <div class="icon-wrap share" title="اشتراک‌گذاری">
-              <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.13-4.12A2.99 2.99 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.91 9.77A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
-            </div>
-            <div class="icon-wrap buy" title="خرید">
-              <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
-            </div>
-            <div class="under-txt share-label"></div>
-            <div class="icon-wrap comment" title="کامنت‌ها">
-              <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-            </div>
-            <div class="under-txt cmt-label" data-cmtcount>۰</div>
-            <div class="icon-wrap fav" title="علاقه‌مندی">
-              <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
-              <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
-            </div>
-            <div class="under-txt fav-label" data-favcount>۰</div>
-          </div>
-          <span class="title">ماجراهای من و درسام – خیلی‌سبز <span class="dcount" data-dlc>(۰ دانلود)</span></span>
-          <div class="star-tip"></div>
-        </div>
-      </li>
-      <li data-id="tarikh11-shab">
-        <div class="book-card" data-href="https://s34.picofile.com/file/8486137768/tarikh11_shab.pdf.html">
-          <div class="left-acts">
-            <div class="icon-wrap dl" title="دانلود">
-              <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/></svg>
-            </div>
-            <div class="icon-wrap star" title="امتیاز">
-              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <div class="under-txt size-label" data-size>70 MB</div>
-            <div class="under-txt rate-label" data-rate>4.5</div>
-            <div class="icon-wrap share" title="اشتراک‌گذاری">
-              <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.13-4.12A2.99 2.99 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.91 9.77A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
-            </div>
-            <div class="icon-wrap buy" title="خرید">
-              <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
-            </div>
-            <div class="under-txt share-label"></div>
-            <div class="icon-wrap comment" title="کامنت‌ها">
-              <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-            </div>
-            <div class="under-txt cmt-label" data-cmtcount>۰</div>
-            <div class="icon-wrap fav" title="علاقه‌مندی">
-              <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
-              <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
-            </div>
-            <div class="under-txt fav-label" data-favcount>۰</div>
-          </div>
-          <span class="title">شب امتحان – خیلی‌سبز <span class="dcount" data-dlc>(۰ دانلود)</span></span>
-          <div class="star-tip"></div>
-        </div>
-      </li>
-    </ul>
-  </section>
+
+<!-- پایه دهم -->
+
+
   
 
-<!-- دهم -->
-<section class="panel" data-panel="10">
-    <h2>کتاب‌های تاریخ، پایه دهم</h2>
-    <ul class="books" id="list10">
-      <li data-id="tarikh10-majaraha">
-        <div class="book-card" data-href="https://s32.picofile.com/d/8481591168/6eab880a-3553-42b1-9c1a-466c3f75a2bf/_.pdf">
-          <div class="left-acts">
-            <div class="icon-wrap dl" title="دانلود">
-              <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/></svg>
-            </div>
-            <div class="icon-wrap star" title="امتیاز">
-              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <div class="under-txt size-label" data-size>85 MB</div>
-            <div class="under-txt rate-label" data-rate>4.7</div>
-            <div class="icon-wrap share" title="اشتراک‌گذاری">
-              <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.21-4.2A3 3 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.96 9.7A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
-            </div>
-            <div class="icon-wrap buy" title="خرید">
-              <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
-            </div>
-            <div class="under-txt share-label"></div>
-            <div class="icon-wrap comment" title="کامنت‌ها">
-              <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-            </div>
-            <div class="under-txt cmt-label" data-cmtcount>۰</div>
-            <div class="icon-wrap fav" title="علاقه‌مندی">
-              <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
-              <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
-            </div>
-            <div class="under-txt fav-label" data-favcount>۰</div>
-          </div>
-          <span class="title">ماجراهای من و درسام – خیلی‌سبز <span class="dcount" data-dlc>(۰ دانلود)</span></span>
-          <div class="star-tip"></div>
-        </div>
-      </li>
-      <li data-id="tarikh10-shab">
-        <div class="book-card" data-href="https://s32.picofile.com/d/8480925768/a56a2b35-8c26-4590-aeba-a165f788c269/_.pdf">
-          <div class="left-acts">
-            <div class="icon-wrap dl" title="دانلود">
-              <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM11 4h2v8h3l-4 4-4-4h3V4z"/></svg>
-            </div>
-            <div class="icon-wrap star" title="امتیاز">
-              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.86L18.18 22 12 18.56 5.82 22 7 14.13 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <div class="under-txt size-label" data-size>65 MB</div>
-            <div class="under-txt rate-label" data-rate>4.5</div>
-            <div class="icon-wrap share" title="اشتراک‌گذاری">
-              <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.28 3.28 0 0 0 0-1.39l7.21-4.2A3 3 0 0 0 18 7a3 3 0 1 0-3-3c0 .23.03.45.08.66L7.96 9.7A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.73 0 1.4-.26 1.91-.69l7.21 4.2c-.05.2-.08.41-.08.63A3 3 0 1 0 18 16.08z"/></svg>
-            </div>
-            <div class="icon-wrap buy" title="خرید">
-              <svg viewBox="0 0 24 24"><path d="M7 4H5l-1 2H0v2h2l3.6 7.59c-.35.6-.6 1.28-.6 2.01A3.5 3.5 0 0 0 8.5 21 3.5 3.5 0 0 0 12 18.5h2A3.5 3.5 0 0 0 17.5 21 3.5 3.5 0 0 0 21 17.5c0-1.23-.66-2.29-1.64-2.86L21 7H7V4zm0 4h12l-1.5 6.5H9L7 8z"/></svg>
-            </div>
-            <div class="under-txt share-label"></div>
-            <div class="icon-wrap comment" title="کامنت‌ها">
-              <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-            </div>
-            <div class="under-txt cmt-label" data-cmtcount>۰</div>
-            <div class="icon-wrap fav" title="علاقه‌مندی">
-              <svg class="heart-outline" viewBox="0 0 24 24"><path d="M12.1 8.64l-.1.1-.11-.11C10.14 6.9 7.1 7 5.5 8.6a4.3 4.3 0 0 0 0 6.1L12 21l6.5-6.3a4.3 4.3 0 0 0 0-6.1c-1.6-1.6-4.6-1.7-6.4.04z" fill="none" stroke="white" stroke-width="1.6"/></svg>
-              <svg class="heart-filled" viewBox="0 0 24 24"><path d="M12.1 21.35l-1.1-1.01C5.14 15.28 2 12.36 2 8.99 2 6.42 4.42 4 7 4c1.54 0 3.04.73 4 1.87C11.96 4.73 13.46 4 15 4c2.58 0 5 2.42 5 4.99 0 3.37-3.14 6.29-8.9 11.35z"/></svg>
-            </div>
-            <div class="under-txt fav-label" data-favcount>۰</div>
-          </div>
-          <span class="title">شب امتحان – خیلی‌سبز <span class="dcount" data-dlc>(۰ دانلود)</span></span>
-          <div class="star-tip"></div>
-        </div>
-      </li>
-    </ul>
-  </section>
-  
-
-
+<div style="text-align:center">
+  <a class="btn-back" href="index.html">بازگشت به منوی اصلی</a>
+</div>
 
 <div id="counter"><span id="visit-count">در حال بارگذاری...</span></div>
 
@@ -457,7 +437,7 @@
   <div class="box">
     <h3 id="cmtTitle">کامنت‌ها</h3>
     <ul class="cmt-list" id="cmtList"></ul>
-    <input class="cmt-name" id="cmtName" maxlength="40" placeholder="نام مستعار (اختیاری)" />
+    <input class="cmt-name" id="cmtName" maxlength="40" placeholder="نام مستعار (اختیاری)">
     <textarea class="cmt-input" id="cmtInput" placeholder="کامنت جدید"></textarea>
     <div class="cmt-foot">
       <button class="btn gray" id="cmtClose">بستن</button>
@@ -505,47 +485,51 @@ loadVisits();
 
 /* ---- داده‌های ثابت هر کتاب ---- */
 const bookMeta = {
-  'tarikh11-majara20': {
-    size: '99 MB', rate: 4.8, votes: 4,
-    buy: 'https://www.digikala.com/product/dkp-16952241/کتاب-ماجراي-بيست-تاريخ-يازدهم-اثر-فوژان-صادق-زاده-انتشارات-خیلی-سبز/',
-    publisher: 'خیلی‌سبز',
-    tags: [ 'امتحان نهایی','تشریحی', 'درسنامه', 'پایه یازدهم', 'خیلی‌سبز', 'تست', 'ماجرای بیست'],
-    downloads: 15,  // اضافه کردن تعداد دانلود در meta
+  "fonoon10-majaraha": {
+    "size": "30 MB",
+    "rate": 4.5,
+    "votes": 22,
+    "buy": "https://www.digikala.com/product/dkp-4122281/کتاب-ماجراهای-من-و-درسام-علوم-و-فنون-دهم-اثر-جمعی-از-نویسندگان-انتشارات-خیلی-سبز/",
+    "publisher": "خیلی‌سبز",
+    "tags": [
+      "تست",
+      "درسنامه",
+      "تشریحی",
+      "پایه دهم",
+      "خیلی‌سبز",
+      "ماجراهای من و درسام"
+    ],
+    "downloads": 0
   },
-  'tarikh11-majaraha': {
-    size: '107 MB', rate: 3.7, votes: 6,
-    buy: 'https://fidibo.com/book/135155-%D9%85%D8%A7%D8%AC%D8%B1%D8%A7%D9%87%D8%A7%DB%8C-%D9%85%D9%86-%D8%AF%D8%B1%D8%B3%D8%A7%D9%85-%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE-2-%DB%8C%D8%A7%D8%B2%D8%AF%D9%87%D9%85',
-    publisher: 'خیلی‌سبز',
-    tags: ['تشریحی', 'تست', 'درسنامه', 'پایه یازدهم', 'خیلی‌سبز', 'ماجراهای من و درسام'],
-    downloads: 25, // اضافه کردن تعداد دانلود در meta
+  "fonoon10-shab": {
+    "size": "26 MB",
+    "rate": 4.5,
+    "votes": 69,
+    "buy": "https://www.digikala.com/product/dkp-4123728/کتاب-شب-امتحان-علوم-و-فنون-ادبی-دهم-انسانی-اثر-محمد-رزمی-و-فاطمه-اکران-انتشارات-خیلی-سبز/",
+    "publisher": "خیلی‌سبز",
+    "tags": [
+      "تست",
+      "درسنامه",
+      "پایه دهم",
+      "خیلی‌سبز",
+      "شب امتحان"
+    ],
+    "downloads": 0
   },
-  'tarikh10,11,12-vagheanjamee': {
-    size: '306 MB', rate: 4.7, votes: 68,
-    buy: 'https://fidibo.com/book/124275-%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE-%D9%88%D8%A7%D9%82%D8%B9%D8%A7-%D8%AC%D8%A7%D9%85%D8%B9',
-    publisher: 'مهر و ماه',
-    tags: ['تست کنکوری', 'تست', 'درسنامه', 'جامع', 'مهر و ماه', 'واقعا جامع كنكور'],
-    downloads: 25, // اضافه کردن تعداد دانلود در meta
-  },
-  'tarikh11-shab': {
-    size: '70 MB', rate: 4.5, votes: 41,
-    buy: 'https://fidibo.com/book/171389-%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE-2-%D8%B4%D8%A8-%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86',
-    publisher: 'خیلی‌سبز',
-    tags: ['تست', 'درسنامه', 'پایه یازدهم', 'خیلی‌سبز', 'شب امتحان'],
-    downloads: 45, // اضافه کردن تعداد دانلود در meta
-  },
-  'tarikh10-majaraha': {
-    size: '85 MB', rate: 4.7, votes: 16,
-    buy: 'https://www.digikala.com/product/dkp-4114382/کتاب-ماجراهای-من-و-درسام-تاریخ-دهم-اثر-جمعی-از-نویسندگان-انتشارات-خیلی-سبز/',
-    publisher: 'خیلی‌سبز',
-    tags: ['تشریحی', 'تست', 'درسنامه', 'پایه دهم', 'خیلی‌سبز', 'ماجراهای من و درسام'],
-    downloads: 35, // اضافه کردن تعداد دانلود در meta
-  },
-  'tarikh10-shab': {
-    size: '65 MB', rate: 4.5, votes: 76,
-    buy: 'https://www.digikala.com/product/dkp-4125232/کتاب-شب-امتحان-تاریخ-دهم-انسانی-اثر-سیده-مریم-طاهری-و-مهدی-کاردان-انتشارات-خیلی-سبز/',
-    publisher: 'خیلی‌سبز',
-    tags: ['تست', 'درسنامه', 'پایه دهم', 'خیلی‌سبز', 'شب امتحان'],
-    downloads: 50, // اضافه کردن تعداد دانلود در meta
+  "hist11-test": {
+    "size": "186 MB",
+    "rate": 4.6,
+    "votes": 428,
+    "buy": "https://www.digikala.com/product/dkp-3719434/کتاب-پرسش-های-چهار-گزینه-ای-علوم-و-فنون-ادبی-جامع-رشته-انسانی-اثر-جمعی-از-نویسندگان-انتشارات-خیلی-سبز/",
+    "publisher": "خیلی‌سبز",
+    "tags": [
+      "تست",
+      "درسنامه",
+      "جامع ( ویژه ی هر سه پایه )",
+      "خیلی‌سبز",
+      "تست کنکوری"
+    ],
+    "downloads": 0
   }
 };
 
@@ -795,26 +779,26 @@ function initCards(){
   return faDigits(Number(num)) + rest;
 }
 
-sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
-    rateEl.textContent=faRate(meta.rate);
+if(sizeEl) sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
+    if(rateEl) rateEl.textContent=faRate(meta.rate);
 
     // دانلودشمار (نمایشی + برای سورت)
     getDownloads(id).then(v=>{
       li.dataset.dl = String(v||0);
-      countEl.textContent=`(${faDigits(v||0)} دانلود)`;
+      if(countEl) countEl.textContent=`(${faDigits(v||0)} دانلود)`;
     });
 
     // Tooltip امتیاز
-    card.querySelector('.icon-wrap.star').addEventListener('click',e=>{
+    card.querySelector('.icon-wrap.star')?.addEventListener('click',e=>{
       e.stopPropagation();
       let msg=(meta.rate==null)?'برای این کتاب امتیازی در دیجی‌کالا ثبت نشده است':`${faRate(meta.rate)} از ۵ ${meta.votes?`(بر اساس ${faDigits(meta.votes)} رأی)`:''}`;
-      starTip.textContent=msg;
-      starTip.classList.remove('hide'); starTip.classList.add('show');
+      if(starTip) starTip.textContent=msg;
+      starTip?.classList.remove('hide'); starTip?.classList.add('show');
       setTimeout(()=>{ starTip.classList.remove('show'); starTip.classList.add('hide') }, 6000);
     });
 
     // اشتراک‌گذاری: فقط متن؛ url جداگانه نمی‌فرستیم تا ته پیام نچسبد
-    card.querySelector('.icon-wrap.share').addEventListener('click', async e=>{
+    card.querySelector('.icon-wrap.share')?.addEventListener('click', async e=>{
       e.stopPropagation();
       const dl = card.dataset.href || '';
       const text = makeShareText(titleText, dl, meta);
@@ -831,12 +815,12 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
     });
 
     // خرید
-    card.querySelector('.icon-wrap.buy').addEventListener('click',e=>{
+    card.querySelector('.icon-wrap.buy')?.addEventListener('click',e=>{
       e.stopPropagation(); if(meta.buy) window.open(meta.buy,'_blank','noopener');
     });
 
     // دانلود
-    card.querySelector('.icon-wrap.dl').addEventListener('click',async e=>{
+    card.querySelector('.icon-wrap.dl')?.addEventListener('click',async e=>{
       e.stopPropagation();
       const nv=await addDownload(id);
       li.dataset.dl = String(nv||0);
@@ -845,14 +829,14 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
     });
 
     // کامنت‌ها
-    card.querySelector('.icon-wrap.comment').addEventListener('click',e=>{
+    card.querySelector('.icon-wrap.comment')?.addEventListener('click',e=>{
       e.stopPropagation();
       openCmtModal(id, '«'+titleText+'»', cmtCountEl);
     });
 
     fetch(API_BASE + `/api/book-comments?slug=${encodeURIComponent(id)}`,{cache:'no-store'})
       .then(r=>r.json()).then(d=>{
-        cmtCountEl.textContent = faDigits(Array.isArray(d.list)? d.list.length : 0);
+        if(cmtCountEl) cmtCountEl.textContent = faDigits(Array.isArray(d.list)? d.list.length : 0);
       }).catch(()=>{ cmtCountEl.textContent='۰' });
 
     /* === علاقه‌مندی‌ها (سینک با سرور + localStorage) === */
@@ -884,10 +868,10 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
 
     // لود اولیه لایک
     favGet(id).then(({count,isFav})=>{
-      favLbl.textContent=faDigits(count||0);
+      if(favLbl) favLbl.textContent=faDigits(count||0);
       li.dataset.fav = String(count||0);        // برای مرتب‌سازی
       if(isFav) addMyFav(id); else removeMyFav(id);
-      favBtn.classList.toggle('active', isFav);
+      favBtn?.classList.toggle('active', isFav);
     }).catch(()=>{ li.dataset.fav='0'; });
 
     // کلیک قلب
@@ -896,10 +880,10 @@ sizeEl.textContent = meta.size ? faDigitsInSize(meta.size) : '—';
       const willAdd=!favBtn.classList.contains('active');
       try{
         const {count,isFav}=await favToggle(id, willAdd);
-        favLbl.textContent=faDigits(count||0);
+        if(favLbl) favLbl.textContent=faDigits(count||0);
         li.dataset.fav = String(count||0);      // آپدیت برای سورت
         if(isFav) addMyFav(id); else removeMyFav(id);
-        favBtn.classList.toggle('active', isFav);
+        favBtn?.classList.toggle('active', isFav);
       }catch{}
     });
 
@@ -1048,7 +1032,7 @@ initCards();
       ">+ اضافه</button>
 
       <!-- Laan row -->
-      <div style="opacity:.92; font-size:13px">لعن:</div>
+      <div style="opacity:.92; font-size:13px">لعنِ عمَر:</div>
       <b id="gc-laan" style="font-size:13px; text-align:left">—</b>
       <button id="gc-laan-inc" style="
         border:none; cursor:pointer; color:#fff; font-size:12px;
@@ -1170,7 +1154,416 @@ initCards();
   " id="gc-toast-text"></div>
 </div>
 
+<!-- مودال محتوای دروس (اصلاح شده) -->
+<div class="modal" id="lessonsModal">
+  <div class="box" style="width: min(850px, 95%);">
+    <h3 style="text-align:center;border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:10px;">دسترسی به محتوای دروس</h3>
+    
+    <div class="lessons-grid">
+      <!-- درس 1 -->
+      <div class="lesson-box">
+        <h4>درس ۱</h4>
+        <div class="lesson-btns">
+          <a href="#" class="btn-link" onclick="showMindMap('مایند مپ', 'https://s34.picofile.com/file/8488752826/%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE_11_%D8%AF%D8%B1%D8%B3_1.jpg')">🧠 مایند مپ</a>
+          <!-- لینک پادکست به تابع جدید متصل شد -->
+          
+          <a href="https://learnbook.vercel.app/flash/flash-tarikh-11-1.html" target="_blank" class="btn-link">🃏 فلش کارت</a>
+          
+          
+        </div>
+      </div>
+      
+      <!-- درس 2 -->
+      <div class="lesson-box">
+        <h4>درس ۲</h4>
+        <div class="lesson-btns">
+          
+          <!-- لینک پادکست به تابع جدید متصل شد -->
+          
+          <a href="https://learnbook.vercel.app/flash/flash-tarikh-11-2.html" target="_blank" class="btn-link">🃏 فلش کارت</a>
+          
+          
+        </div>
+      </div>
 
-</body>
-</html>
-.
+      <!-- درس 3 -->
+      <div class="lesson-box">
+        <h4>درس ۳</h4>
+        <div class="lesson-btns">
+          
+          <!-- لینک پادکست به تابع جدید متصل شد -->
+          
+          <a href="https://learnbook.vercel.app/flash/flash-tarikh-11-3.html" target="_blank" class="btn-link">🃏 فلش کارت</a>
+          
+          
+        </div>
+      </div>
+    <div class="lesson-box"><h4>درس 4</h4><div class="lesson-btns"><a class="btn-link" href="#" onclick="showPodcast('پادکست', 'https://archive.org/download/6_20251222_202512/%D9%BE%D8%A7%D8%AF%DA%A9%D8%B3%D8%AA_%D8%AF%D8%B1%D8%B3_4.m4a')">🎙️ پادکست</a><a class="btn-link" href="https://learnbook.vercel.app/flash/flash-tarikh-11-4.html" target="_blank">🃏 فلش کارت</a><a class="btn-link" href="https://s34.picofile.com/d/8488752776/376ef671-1294-4ab4-a581-04bfa0ebd6d3/%D8%AF%D8%B1%D8%B3_4.pdf" target="_blank">🔗 پی دی اف پاور درس</a></div></div><div class="lesson-box"><h4>درس 5</h4><div class="lesson-btns"><a class="btn-link" href="#" onclick="showPodcast('پادکست', 'https://archive.org/download/6_20251222_202512/%D9%BE%D8%A7%D8%AF%DA%A9%D8%B3%D8%AA%20%D8%AF%D8%B1%D8%B3%205.m4a')">🎙️ پادکست</a><a class="btn-link" href="https://learnbook.vercel.app/flash/flash-tarikh-11-5.html" target="_blank">🃏 فلش کارت</a><a class="btn-link" href="#" onclick="playVideo('&lt;style&gt;.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}&lt;/style&gt;&lt;div class=&quot;h_iframe-aparat_embed_frame&quot;&gt;&lt;span style=&quot;display: block;padding-top: 57%&quot;&gt;&lt;/span&gt;&lt;iframe src=&quot;https://www.aparat.com/video/video/embed/videohash/cwd7ce0/vt/frame?titleShow=true&quot;  allowFullScreen=&quot;true&quot; webkitallowfullscreen=&quot;true&quot; mozallowfullscreen=&quot;true&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;', 'ویدیو خلاصه شب امتحان')">🌙 ویدیو خلاصه شب امتحان</a><a class="btn-link" href="https://s34.picofile.com/d/8488745876/600b7ba5-22f8-4785-b022-e0c494d9ae24/%D8%AF%D8%B1%D8%B3_5.pdf" target="_blank">🔗 پی دی اف پاور درس</a></div></div><div class="lesson-box"><h4>درس 6</h4><div class="lesson-btns"><a class="btn-link" href="#" onclick="showPodcast('پادکست', 'https://archive.org/download/6_20251222_202512/%D9%BE%D8%A7%D8%AF%DA%A9%D8%B3%D8%AA%20%D8%AF%D8%B1%D8%B3%206.m4a')">🎙️ پادکست</a><a class="btn-link" href="https://learnbook.vercel.app/flash/flash-tarikh-11-6.html" target="_blank">🃏 فلش کارت</a><a class="btn-link" href="#" onclick="playVideo('&lt;style&gt;.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}&lt;/style&gt;&lt;div class=&quot;h_iframe-aparat_embed_frame&quot;&gt;&lt;span style=&quot;display: block;padding-top: 57%&quot;&gt;&lt;/span&gt;&lt;iframe src=&quot;https://www.aparat.com/video/video/embed/videohash/odpph4y/vt/frame?titleShow=true&quot;  allowFullScreen=&quot;true&quot; webkitallowfullscreen=&quot;true&quot; mozallowfullscreen=&quot;true&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;', 'ویدیو خلاصه شب امتحان')">🌙 ویدیو خلاصه شب امتحان</a><a class="btn-link" href="https://s34.picofile.com/d/8488745850/1b5c534e-4e04-4c82-be08-e4749e28d4af/%D8%AF%D8%B1%D8%B3_6.pdf" target="_blank">🔗 پی دی اف پاور درس</a></div></div><div class="lesson-box"><h4>درس 7</h4><div class="lesson-btns"><a class="btn-link" href="#" onclick="showPodcast('پادکست', 'https://archive.org/download/padkast7/%D9%BE%D8%A7%D8%AF%DA%A9%D8%B3%D8%AA_%D8%AF%D8%B1%D8%B3_7.m4a')">🎙️ پادکست</a><a class="btn-link" href="https://learnbook.vercel.app/flash/flash-tarikh-11-7.html" target="_blank">🃏 فلش کارت</a><a class="btn-link" href="#" onclick="playVideo('&lt;style&gt;.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}&lt;/style&gt;&lt;div class=&quot;h_iframe-aparat_embed_frame&quot;&gt;&lt;span style=&quot;display: block;padding-top: 57%&quot;&gt;&lt;/span&gt;&lt;iframe src=&quot;https://www.aparat.com/video/video/embed/videohash/zkpd889/vt/frame?titleShow=true&quot;  allowFullScreen=&quot;true&quot; webkitallowfullscreen=&quot;true&quot; mozallowfullscreen=&quot;true&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;', 'ویدیو خلاصه شب امتحان')">🌙 ویدیو خلاصه شب امتحان</a><a class="btn-link" href="https://s34.picofile.com/d/8488745826/c2ea03e6-9392-4dd6-ae1e-6fbef8a852f9/%D8%AF%D8%B1%D8%B3_7.pdf" target="_blank">🔗 پی دی اف پاور درس</a></div></div></div>
+
+    <div class="row">
+      <button id="lessonsClose" class="btn gray">بستن</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+// اسکریپت مربوط به باز و بسته کردن مودال دروس
+(function(){
+  const lessonsModal = document.getElementById('lessonsModal');
+  const lessonsClose = document.getElementById('lessonsClose');
+  const viewBtns = document.querySelectorAll('.view-btn');
+
+  // تابع باز کردن
+  function openLessonsModal(){
+    lessonsModal.style.display = 'flex';
+    setTimeout(() => lessonsModal.classList.add('show'), 10);
+  }
+
+  // تابع بستن
+  function closeLessonsModal(){
+    lessonsModal.classList.remove('show');
+    setTimeout(() => lessonsModal.style.display = 'none', 160);
+  }
+
+  // اتصال کلیک به دکمه‌های چشم
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); // جلوگیری از باز شدن پیش‌نمایش کارت
+      e.preventDefault();
+      openLessonsModal();
+    });
+  });
+
+  // دکمه بستن و کلیک بیرون باکس
+  if(lessonsClose) lessonsClose.addEventListener('click', closeLessonsModal);
+  if(lessonsModal) lessonsModal.addEventListener('click', (e) => {
+    if(e.target === lessonsModal) closeLessonsModal();
+  });
+})();
+</script>
+<script>
+// متغیر برای مدیریت بازگشت به منوی دروس
+let cameFromLessons = false;
+
+// متن کامل داستان‌ها
+const stories = {
+  "1": "رفیق بیا تا با هم داستان **روم** را بشنویم؛ شبه جزیره‌ای زیبا به شکل چکمه، میان **دریای مدیترانه** در عهد باستان، جایی که تمدنی قدرتمند به نام **روم** شکل گرفت. این سرزمین، با **سواحل طولانی** و **دشت‌های حاصلخیز**، جای مناسبی برای کشتی‌رانی و زندگی بود. کوه‌های بلند **آلپ** در شمال مثل یک سد طبیعی، راه را بسته بودند، اما گذرگاه‌های فراوانی داشت که اقوام مختلف از آن عبور می‌کردند.\n\nداستان از حدود **۱۵۰۰ سال پیش از میلاد** شروع شد، وقتی گروهی از اقوام **هند و اروپایی** به این سرزمین پا گذاشتند و مزرعه‌ها و روستاهایی ساختند. بعدتر، اقوامی از **یونان** آمدند و تاثیر زیادی روی شکل‌گیری تمدن روم گذاشتند.\n\nشهر **رم**، در مرکز این شبه جزیره، از کنار هم قرار گرفتن چند روستا بر کرانه رود **تیبر** به وجود آمد. سال **۵۰۹ پیش از میلاد**، مردمان رم به شاه خود نه گفتند و حکومت **جمهوری** را تشکیل دادند. در این دوران، رم با شکست دادن دشمنان خود، بر کل شبه جزیره ایتالیا تسلط پیدا کرد. حکومتشان ترکیبی از فرهنگ‌های قدیمی و نظام شهری بود؛ **مجلس سنا** که اشراف در آن بودند و **مجمع نمایندگان مردم**، با هم اداره کشور را به‌دست داشتند.\n\nدو نفر به نام **کنسول** هر سال انتخاب می‌شدند تا کارهای اجرایی را انجام دهند؛ وقتی یکی به جنگ می‌رفت، دیگری در شهر مسئول امور داخلی بود. هر کسی می‌خواست مقام دولتی بگیرد، باید در **ده نبرد** شرکت کرده باشد؛ یعنی جنگ هم امتحانی برای شجاعت و لیاقت بود.\n\nاما روم فقط به ایتالیا قانع نبود و به دنبال گسترش بود. بین سال‌های **۲۶۴ تا ۱۴۶ پیش از میلاد**، جنگ‌های بزرگی با **کارتاژ** (کشوری در شمال آفریقا) و **مقدونی‌ها** (در یونان و مقدونیه) درگرفت. بعد از پیروزی‌های طولانی، روم توانست بر دریای مدیترانه و اطرافش حکومت کند و به قدرتی بزرگ تبدیل شود. آن‌ها حتی به شرق مدیترانه و سرزمین‌های غرب آسیا لشکر کشیدند، ولی تنها **اشکانیان** بودند که جلوی پیشروی بیشترشان را گرفتند.\n\nاما این توسعه‌طلبی پیامدهایی داشت: جنگ‌های زیاد باعث قوی شدن نظامیان و در نهایت جنگ‌های داخلی شد. همچنین قانون‌ها و نهادهای روم برای اداره این همه سرزمین کافی نبود و مشکلات زیادی به وجود آمد.\n\nدر نهایت، یکی از سرداران به نام **اکتاویان** توانست بر رقبا غلبه کند و در سال **۲۷ پیش از میلاد** تغییرات بزرگی در حکومت ایجاد کرد. قدرت اجرایی به یک نفر سپرده شد که **آگوستوس** یا همان **امپراتور** نام گرفت. مجلس سنا باقی ماند ولی قدرت بیشتری به امپراتورها داده شد و بعضی مثل پادشاهان مستبد حکومت کردند.\n\nامپراتوری روم به سمت شرق گسترش یافت و با **اشکانیان** و **ساسانیان** جنگ‌های بزرگی داشت که بعدها درباره‌شان بیشتر می‌خوانید. امپراتور **کنستانتین** در سال **۳۳۰ میلادی** شهر **بیزانتیوم** (قسطنطنیه یا استانبول امروز) را پایتخت کرد و این باعث تقسیم امپراتوری به دو بخش شرقی و غربی شد. بخش غربی در سال **۴۷۵ میلادی** به دست اقوام بیابان‌گرد نابود شد، اما بخش شرقی تا سال **۱۴۵۳** که توسط امپراتوری عثمانی فتح شد، باقی ماند.\n\nزندگی در روم پر از فرهنگ و هنر بود. رومی‌ها از یونانیان چیزهای زیادی یاد گرفتند؛ خدایان متعدد داشتند و جشن‌ها و بازی‌های مختلفی برگزار می‌کردند. حتی بعضی باورهای ایرانی مثل پرستش **مهر (میترا)** در میانشان رایج شد و بر فرهنگشان تاثیر گذاشت.\n\nخانواده‌ها در روم از کودکی به فرزندانشان مسئولیت شهروندی، کار سخت، شجاعت و وفاداری به شهر را آموزش می‌دادند. زنان رومی نسبت به زنان یونانی آزادی بیشتری داشتند و نقش فعالتری در زندگی اجتماعی داشتند.\n\n**برده‌داری** در امپراتوری روم بسیار رایج بود و اختلاف ثروت زیاد شده بود.\"",
+  "2": "روزی روزگاری، سارا و امیر، دو دوست ماجراجو، تصمیم گرفتند به سفر به دنیای تاریخ ادامه دهند. این بار آن‌ها می‌خواستند درباره زمان و گاه شماری اطلاعات بیشتری کسب کنند. سارا گفت: \"امیر، تاریخ بدون زمان هیچ معنایی ندارد! بیایید ببینیم چگونه انسان‌ها زمان را اندازه‌گیری کرده‌اند.\" امیر با هیجان پاسخ داد: \"بله! بیایید به دنیای باستان سفر کنیم و ببینیم چگونه گاه شماری ابداع شده است.\" دوستان ما به دورانی سفر کردند که انسان‌ها برای اندازه‌گیری زمان تلاش می‌کردند. سارا توضیح داد: \"گاه شماری یعنی نظامی که انسان‌ها برای اندازه‌گیری دقیق زمان ابداع کردند. این کار ارتباط نزدیکی با ریاضیات و نجوم دارد.\" امیر با شگفتی گفت: \"و انسان‌ها ابزارهایی مانند ساعت‌های آفتابی و آبی و حتی اُسطرلاب را برای رصد خورشید و ستاره‌ها اختراع کردند!\" در ادامه سفر، آن‌ها با تاریخچه گاه شماری در جهان آشنا شدند. سارا گفت: \"مردمان بین‌النهرین و مصریان باستان در تدوین گاه شماری پیشگام بودند. آن‌ها سال را به ماه‌های مختلف تقسیم می‌کردند.\" امیر افزود: \"و وقتی رومیان به گاه شماری نیاز داشتند، امپراتور ژولیوس سزار آن را اصلاح کرد و مبدأ آن تولد حضرت مسیح شد.\" سپس، آن‌ها به دوران ایران باستان سفر کردند. سارا گفت: \"در دوران هخامنشیان، گاه شماری خورشیدی و قمری بابلی رواج داشت و در زمان ساسانیان، گاه شماری اوستایی که به دینی زرتشتیان مربوط می‌شد، متداول بود.\" امیر با علاقه گفت: \"و در دوران اسلامی، گاه شماری هجری قمری رواج پیدا کرد!\" بعد از آن، سارا و امیر متوجه شدند که زمان تنها یکی از جنبه‌های تاریخ است. سارا گفت: \"مکان هم نقش مهمی در تاریخ دارد. تمام رویدادها در بستر مکان و محیط رخ می‌دهند.\" امیر با تأکید گفت: \"عوامل جغرافیایی مانند آب و هوا و موقعیت سرزمینی تأثیر زیادی بر زندگی مردم دارند.\" دوستان ما به سفر خود ادامه دادند و با هرودت، مورخ مشهور یونانی آشنا شدند. سارا گفت: \"هرودت برای نوشتن تاریخ خود به جاهای مختلف سفر کرد و شرایط طبیعی و اقلیمی آن‌ها را بررسی کرد.\" امیر افزود: \"ابن خلدون هم به تأثیر جغرافیا بر تاریخ توجه کرده و درباره آن نوشته است.\"",
+  "3": "روزی روزگاری، سارا و امیر، دو دوست ماجراجو، تصمیم گرفتند که به سفر خود در دنیای تاریخ ادامه دهند. این بار آن‌ها می‌خواستند درباره باستان شناسی و نقش آن در شناخت فرهنگ و زندگی انسان‌ها در گذشته آشنا شوند. سارا با هیجان گفت: \"امیر، عموی من باستان شناس است و می‌تواند به ما کمک کند تا بیشتر درباره باستان شناسی یاد بگیریم!\" امیر با علاقه گفت: \"عالیه! بیایید به خانه عموی سارا برویم و از او بپرسیم که باستان شناسی چیست.\" وقتی به خانه عموی سارا رسیدند، او با لبخند به استقبالشان آمد. عموی آن‌ها گفت: \"خوش آمدید! باستان شناسی علمی است که آثار باستانی و تاریخی را بررسی می‌کند تا فرهنگ و شیوه زندگی انسان‌ها و جوامع گذشته را بشناسد.\" سارا پرسید: \"آثار باستانی چه چیزهایی هستند؟\" عموی سارا پاسخ داد: \"آثار باستانی شامل اشیا، ابزارها، بناها و مکان‌هایی است که ساخته دست بشر هستند. این آثار به ما اطلاعات زیادی درباره زندگی مردم در گذشته می‌دهند.\" امیر با اشتیاق ادامه داد: \"و مکان‌های باستانی کجا هستند؟\" عموی سارا توضیح داد: \"مکان‌های باستانی می‌توانند سکونت‌گاه‌های روستایی یا شهری باشند، مانند شهر سوخته در ایران یا شهر پمپئی در ایتالیا. همچنین غارها، گورستان‌ها و آرامگاه‌ها نیز از مکان‌های باستانی مهم هستند.\" دوستان ما با شگفتی به صحبت‌های عموی سارا گوش می‌دادند. او گفت: \"باستان شناسان برای کشف آثار باستانی مراحل مختلفی را طی می‌کنند. اول، آن‌ها مکان‌ها را شناسایی و کشف می‌کنند. سپس حفاری می‌کنند تا آثار باستانی را از دل خاک بیرون بیاورند.\" سارا با تعجب پرسید: \"چطور باستان شناسان مکان‌ها را پیدا می‌کنند؟\" عموی سارا توضیح داد: \"آن‌ها از کتاب‌ها، سفرنامه‌ها و همچنین ابزارهای پیشرفته مانند پهپادها و تصاویر ماهواره‌ای استفاده می‌کنند.\""
+};
+
+// تابع جدید: تغییر اندازه قلم داستان و ذخیره در حافظه
+window.changeStoryFontSize = function(delta) {
+    const el = document.getElementById('storyContent');
+    if (!el) return;
+    
+    // دریافت سایز فعلی
+    let currentSize = parseFloat(window.getComputedStyle(el).fontSize);
+    let newSize = currentSize + delta;
+    
+    // محدود کردن سایز (حداقل ۱۰ و حداکثر ۵۰)
+    if (newSize < 10) newSize = 10;
+    if (newSize > 50) newSize = 50;
+    
+    el.style.fontSize = newSize + 'px';
+    // ذخیره در حافظه مرورگر
+    localStorage.setItem('story_font_size', newSize);
+};
+
+// توابع مدیریت مودال دروس
+function openLessonsModal(){
+  const m = document.getElementById('lessonsModal');
+  m.style.display = 'flex';
+  setTimeout(() => m.classList.add('show'), 10);
+}
+
+function closeLessonsModal(){
+  const m = document.getElementById('lessonsModal');
+  m.classList.remove('show');
+  setTimeout(() => m.style.display = 'none', 160);
+}
+
+// تابع پخش ویدیو
+function playVideo(hash, title) {
+  cameFromLessons = true;
+  closeLessonsModal(); // بستن منوی دروس
+  
+  const pvModal = document.getElementById('previewModal');
+  const pvTitle = document.getElementById('pvTitle');
+  const pvBody = document.getElementById('pvBody');
+  
+  pvTitle.textContent = title;
+  pvBody.innerHTML = `<style>.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}</style><div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe src="https://www.aparat.com/video/video/embed/videohash/${hash}/vt/frame?titleShow=true" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>`;
+  
+  pvModal.style.display = 'flex';
+  setTimeout(() => pvModal.classList.add('show'), 10);
+}
+
+// تابع نمایش داستان - بروزرسانی شده با قابلیت بولد و تغییر سایز
+function showStory(lessonNum) {
+  cameFromLessons = true;
+  closeLessonsModal(); // بستن منوی دروس
+  
+  const pvModal = document.getElementById('previewModal');
+  const pvTitle = document.getElementById('pvTitle');
+  const pvBody = document.getElementById('pvBody');
+  
+  pvTitle.textContent = 'داستان درس ' + lessonNum;
+  
+  // 1. پردازش متن: تبدیل **متن** به <b>متن</b> و حفظ خطوط
+  let rawText = stories[lessonNum];
+  let formattedText = rawText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+  
+  // 2. دریافت سایز فونت ذخیره شده (پیش‌فرض ۱۶)
+  let savedSize = localStorage.getItem('story_font_size');
+  if (!savedSize) savedSize = '16';
+  
+  // 3. ساخت HTML: تولبار دکمه‌ها + باکس متن
+  // نکته: white-space: pre-line باعث می‌شود اینترهای توی متن اعمال شوند
+  const toolbarHTML = `
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px; align-items:center;">
+        <span style="font-size:13px; color:#ddd;">اندازه متن:</span>
+        <button onclick="changeStoryFontSize(2)" style="cursor:pointer; padding:5px 10px; border-radius:6px; border:none; background:#4a5568; color:#fff;">+</button>
+        <button onclick="changeStoryFontSize(-2)" style="cursor:pointer; padding:5px 10px; border-radius:6px; border:none; background:#4a5568; color:#fff;">-</button>
+    </div>
+  `;
+  
+  const contentHTML = `
+    <div id="storyContent" style="
+        background:white; 
+        color:#333; 
+        padding:20px; 
+        border-radius:12px; 
+        line-height:2; 
+        text-align:justify; 
+        max-height:400px; 
+        overflow-y:auto; 
+        direction:rtl; 
+        font-size:${savedSize}px; 
+        white-space: pre-line;
+    ">
+        ${formattedText}
+    </div>
+  `;
+  
+  pvBody.innerHTML = toolbarHTML + contentHTML;
+  
+  pvModal.style.display = 'flex';
+  setTimeout(() => pvModal.classList.add('show'), 10);
+}
+
+// متغیر سراسری برای نگهداری آبجکت صوت
+let currentAudio = null;
+
+// تابع جدید: نمایش پلیر پادکست
+// تابع نمایش پلیر پادکست با قابلیت ذخیره زمان و وضعیت لودینگ
+function showPodcast(title, audioUrl) {
+    cameFromLessons = true;
+    closeLessonsModal();
+    
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+
+    const pvModal = document.getElementById('previewModal');
+    const pvTitle = document.getElementById('pvTitle');
+    const pvBody = document.getElementById('pvBody');
+
+    pvTitle.textContent = title;
+    pvBody.innerHTML = `
+        <div class="audio-player-container">
+            <div style="font-size:40px; margin-bottom:10px;">🎙️</div>
+            <div id="podcastStatus" style="font-size:14px; color:#34d399; margin-bottom:15px;">در حال لود شدن فایل صوتی...</div>
+            
+            <div class="audio-progress">
+                <span id="currentTime">0:00</span>
+                <input type="range" id="seekSlider" class="progress-bar" value="0" max="100">
+                <span id="duration">0:00</span>
+            </div>
+
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="skipAudio(-10)">
+                    <span>↺</span><span class="skip-label">10s</span>
+                </button>
+                <button class="audio-btn main-play" id="playPauseBtn" onclick="togglePlayPodcast()">⏸</button>
+ <!-- دکمه توقف اصلاح شده: دایره با مربع داخلی -->
+                <button class="audio-btn" onclick="stopAudio()" title="توقف">
+                    <div style="width:14px; height:14px; background:white; border-radius:2px;"></div>
+                </button>
+                <button class="audio-btn" onclick="skipAudio(10)">
+                    <span>↻</span><span class="skip-label">10s</span>
+                </button>
+            </div>
+            
+            <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                <a href="${audioUrl}" download target="_blank" class="btn" style="text-decoration:none; display:inline-block; font-size:13px;">📥 دانلود پادکست</a>
+            </div>
+        </div>
+    `;
+
+    currentAudio = new Audio(audioUrl);
+    const playBtn = document.getElementById('playPauseBtn');
+    const slider = document.getElementById('seekSlider');
+    const statusTxt = document.getElementById('podcastStatus');
+    const storageKey = 'audio_pos_' + btoa(audioUrl).substring(0,16); // کلید یکتا برای هر پادکست
+
+    // لود کردن زمان قبلی
+    const savedTime = localStorage.getItem(storageKey);
+    if(savedTime) { currentAudio.currentTime = parseFloat(savedTime); }
+
+    currentAudio.addEventListener('playing', () => { 
+        statusTxt.textContent = "در حال پخش..."; 
+        playBtn.textContent = "⏸";
+    });
+    
+    currentAudio.addEventListener('waiting', () => { 
+        statusTxt.textContent = "در حال لود شدن فایل صوتی..."; 
+    });
+
+    currentAudio.addEventListener('timeupdate', () => {
+        slider.value = Math.floor(currentAudio.currentTime);
+        document.getElementById('currentTime').textContent = formatTime(currentAudio.currentTime);
+        // سبز کردن خط قبل از دایره
+        const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+        slider.style.background = `linear-gradient(to right, #34d399 ${percent}%, rgba(255,255,255,0.2) ${percent}%)`;
+        // ذخیره زمان فعلی
+        localStorage.setItem(storageKey, currentAudio.currentTime);
+    });
+
+    currentAudio.addEventListener('loadedmetadata', () => {
+        slider.max = Math.floor(currentAudio.duration);
+        document.getElementById('duration').textContent = formatTime(currentAudio.duration);
+    });
+
+    slider.addEventListener('input', () => { currentAudio.currentTime = slider.value; });
+
+    // پخش خودکار
+    currentAudio.play().catch(e => {
+        statusTxt.textContent = "برای پخش کلیک کنید";
+        playBtn.textContent = "▶";
+    });
+
+    pvModal.style.display = 'flex';
+    setTimeout(() => pvModal.classList.add('show'), 10);
+}
+
+// تابع توقف پخش (دایره و مربع)
+window.stopAudio = function() {
+    if (!currentAudio) return;
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    document.getElementById('playPauseBtn').textContent = "▶";
+    document.getElementById('podcastStatus').textContent = "متوقف شد";
+};
+
+// تابع نمایش مایند مپ (عکس) با زوم و تمام صفحه
+function showMindMap(title, imgUrl) {
+    cameFromLessons = true;
+    closeLessonsModal();
+    const pvModal = document.getElementById('previewModal');
+    const pvTitle = document.getElementById('pvTitle');
+    const pvBody = document.getElementById('pvBody');
+
+    pvTitle.textContent = title;
+    pvBody.innerHTML = `
+        <div style="text-align:center;">
+            <div style="margin-bottom:15px; display:flex; justify-content:center; gap:10px;">
+                <button class="btn" onclick="toggleFullScreenImg()" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);">🖥️ تمام‌صفحه واقعی</button>
+                <a href="${imgUrl}" download class="btn" style="background:linear-gradient(135deg,#60a5fa,#3b82f6); text-decoration:none;">📥 دانلود عکس</a>
+            </div>
+            <div id="imgContainer" style="overflow:hidden; border-radius:10px; background:#000; cursor:pointer;" onclick="toggleFullScreenImg()">
+                <img src="${imgUrl}" id="mindMapImg" class="mindmap-img" style="display:block; width:100%;" alt="MindMap">
+            </div>
+            <p style="font-size:12px; margin-top:10px; opacity:0.7;">برای مشاهده تمام‌صفحه روی عکس کلیک کنید.</p>
+        </div>
+    `;
+
+    pvModal.style.display = 'flex';
+    setTimeout(() => pvModal.classList.add('show'), 10);
+}
+
+window.toggleFullScreenImg = function() {
+    const img = document.getElementById('mindMapImg');
+    if (!document.fullscreenElement) {
+        // درخواست تمام‌صفحه کردن المان عکس
+        if (img.requestFullscreen) {
+            img.requestFullscreen();
+        } else if (img.webkitRequestFullscreen) { /* Safari */
+            img.webkitRequestFullscreen();
+        } else if (img.msRequestFullscreen) { /* IE11 */
+            img.msRequestFullscreen();
+        }
+    } else {
+        // خروج از حالت تمام‌صفحه
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+};
+
+// دکمه پلی/پوز
+window.togglePlayPodcast = function() {
+    const btn = document.getElementById('playPauseBtn');
+    if (!currentAudio) return;
+    
+    if (currentAudio.paused) {
+        currentAudio.play();
+        btn.textContent = "⏸";
+    } else {
+        currentAudio.pause();
+        btn.textContent = "▶";
+    }
+};
+
+// پرش زمانی
+window.skipAudio = function(seconds) {
+    if (!currentAudio) return;
+    currentAudio.currentTime += seconds;
+};
+
+// فرمت زمان (ثانیه به دقیقه:ثانیه)
+function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+// اصلاح دکمه بستن پیش‌نمایش برای بازگشت به منوی دروس
+document.getElementById('pvClose').onclick = function() {
+  const pvModal = document.getElementById('previewModal');
+  
+  // توقف پخش صدا هنگام بستن
+  if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+  }
+
+  pvModal.classList.remove('show');
+  setTimeout(() => {
+    pvModal.style.display = 'none';
+    pvBody.innerHTML = ''; // خالی کردن محتوا
+    if(cameFromLessons) {
+      openLessonsModal();
+      cameFromLessons = false;
+    }
+  }, 180);
+};
+
+// اتصال دکمه‌های "مشاهده" روی کارت پکیج آموزشی
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLessonsModal();
+  });
+});
+
+// بستن مودال دروس با دکمه خودش
+document.getElementById('lessonsClose').onclick = closeLessonsModal;
+</script>
+
+
+
+
+<end_of_user_uploaded_file: fonoon_podcast_player.html="">
+</end_of_user_uploaded_file:></start_of_user_uploaded_file:></body></html>
