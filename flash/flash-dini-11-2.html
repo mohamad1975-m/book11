@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فلش کارت های درس دوم</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --theme: linear-gradient(135deg, #949712, #6c7033); }
+        body { font-family: 'Vazir', sans-serif; background: #f0f2f5; padding: 15px; user-select: none; margin:0; }
+        .head { background: var(--theme); color: white; padding: 30px 15px; border-radius: 0 0 30px 30px; text-align: center; margin: -15px -15px 20px -15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .nav-container { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .btn.active { background: #1e293b; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { height: 250px; perspective: 1000px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .card-inner { transform: rotateY(180deg); }
+        .face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; border-radius: 25px; text-align: center; font-size: 1.1rem; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .front { background: white; border: 1px solid #eee; color: #333; }
+        .back { background: var(--theme); color: white; transform: rotateY(180deg); }
+        .leitner-box { display: none; max-width: 450px; margin: 20px auto; perspective: 1000px; }
+        .leitner-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .l-btn { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .l-easy { background: #2ec4b6; } .l-hard { background: #ff9f43; } .l-fail { background: #e71d36; }
+        .slide-out { animation: slideOut 0.5s forwards; }
+        @keyframes slideOut { 0% { transform: scale(1) translateX(0); opacity: 1; } 100% { transform: scale(0.8) translateX(-100px); opacity: 0; } }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1 style="margin:0">فلش کارت های درس دوم</h1>
+        <p style="opacity: 0.9; margin: 10px 0 5px 0; font-size: 1.1rem;">📌 دینی | درس 2 | پایه 11</p>
+        <p style="opacity: 0.8; margin: 0; font-size: 0.9rem;">📑 تعداد کارت: 23 تا</p>
+        <p style="opacity: 0.9; margin: 5px 0 0 0; font-size: 0.95rem;">لعن عمر فراموش نشه!</p>
+    </div>
+    <div class="nav-container">
+        <button class="btn active" id="btnGrid" onclick="changeMode('grid')">📱 لیست</button>
+        <button class="btn" id="btnLeitner" onclick="changeMode('leitner')">🧠 لایتنر</button>
+        <div id="searchWrapper">
+            <input type="text" id="srch" placeholder="🔍 جستجو..." oninput="renderGrid()" style="padding:10px; border-radius:10px; border:1px solid #ddd; width:120px">
+        </div>
+    </div>
+    <div id="gridView" class="grid"></div>
+    <div id="leitnerView" class="leitner-box">
+        <div id="leitnerCardContainer"></div>
+        <div class="leitner-actions">
+            <button class="l-btn l-fail" onclick="processLeitner('fail')">❌ بلد نبودم</button>
+            <button class="l-btn l-hard" onclick="processLeitner('hard')">⚠️ سخت بود</button>
+            <button class="l-btn l-easy" onclick="processLeitner('easy')">✅ ساده بود</button>
+        </div>
+        <p id="leitnerStat" style="text-align:center; margin-top:20px; font-weight:bold; color:#64748b"></p>
+    </div>
+    <script>
+        const cardsData = [{"q":"بر اساس متن، واژه «دین» به چه معناست؟","a":"دین به معنای «راه» و «روش» است."},{"q":"طبق آیات قرآن کریم، خداوند چند دین برای انسان‌ها فرستاده و برگزیده است؟","a":"خداوند یک دین برای انسان‌ها فرستاده و برگزیده است."},{"q":"منظور از «فطرت» انسان چیست؟","a":"فطرت، نوع آفرینش خاص و ویژگی‌هایی است که خداوند در اصل آفرینش انسان قرار داده است."},{"q":"چه عاملی منشأ فرستادن یک دین واحد برای تمام انسان‌ها از سوی خداوند است؟","a":"فطرت مشترک میان همه انسان‌ها منشأ دین واحد است."},{"q":"یکی از ویژگی‌های فطری مشترک انسان‌ها که مربوط به عقل و اراده است را نام ببرید.","a":"همه انسان‌ها از سرمایه تفکر و قدرت اختیار برخوردارند."},{"q":"تمایل فطری انسان‌ها نسبت به فضیلت‌ها و رذائل اخلاقی چیست؟","a":"انسان‌ها فضیلت‌های اخلاقی مانند عدالت را دوست دارند و از رذائل اخلاقی مانند ظلم بیزارند."},{"q":"برنامه کلی که خداوند بر اساس فطرت مشترک به انسان‌ها ارزانی داشته چه نام دارد و به چه معناست؟","a":"این برنامه «اسلام» نام دارد که به معنای تسلیم بودن در برابر خداوند است."},{"q":"یکی از اصول ایمانی که برنامه اسلام از انسان می‌خواهد به آن دست یابد، مربوط به خدا چیست؟","a":"ایمان به خدای یگانه و دوری از شرک."},{"q":"برنامه اسلام از انسان می‌خواهد به چه چیزی درباره سرنوشت نهایی خود ایمان داشته باشد؟","a":"ایمان به سرای آخرت و پاداش و حسابرسی عادلانه."},{"q":"در دین اسلام، از انسان خواسته می‌شود تا با انجام واجبات و ترک محرمات، چه کاری انجام دهد؟","a":"خداوند را عبادت و بندگی کند."},{"q":"علاوه بر عبادت، دین اسلام انسان را به کسب چه فضائلی دعوت می‌کند؟","a":"کسب فضایل اخلاقی مانند عفت، راستگویی و امانت‌داری."},{"q":"چرا محتوای اصلی دعوت همه پیامبران الهی یکسان بوده است؟","a":"زیرا همه آنها مردم را به امور واحدی مانند توحید، معاد، عبادت و فضایل اخلاقی فراخوانده‌اند."},{"q":"تعالیم انبیا در چه زمینه‌ای می‌توانست متناسب با زمان و سطح آگاهی مردم تفاوت داشته باشد؟","a":"در برخی احکام فرعی، مانند شکل و تعداد نماز."},{"q":"اولین دلیل برای فرستادن پیامبران متعدد چه بود؟","a":"استمرار و پیوستگی در دعوت الهی برای ماندگاری پیام."},{"q":"نتیجه تداوم و استمرار تبلیغ دین توسط پیامبران چه بود؟","a":"سبب شد تا تعالیم الهی جزء سبک زندگی و فرهنگ مردم شود."},{"q":"دومین دلیل برای فرستادن پیامبران متعدد چه بود؟","a":"رشد تدریجی سطح فکر، اندیشه، دانش و فرهنگ مردم در طول زمان."},{"q":"حدیث پیامبر اکرم (ص) در مورد نحوه سخن گفتن انبیا با مردم را کامل کنید: «إِنّا مَعاشِرَ الْأَنْبِياءِ أُمِرْنا أَنْ نُكَلِّمَ النّاسَ _____ ».","a":"عَلى قَدْرِ عُقُولِهِمْ"},{"q":"ترجمه حدیث «إِنّا مَعاشِرَ الْأَنْبِياءِ أُمِرْنا أَنْ نُكَلِّمَ النّاسَ عَلى قَدْرِ عُقُولِهِمْ» چیست؟","a":"ما پیامبران مأمور شده‌ایم که با مردم به اندازه عقلشان سخن بگوییم."},{"q":"سومین دلیل برای بعثت پیامبران جدید چه بود؟","a":"تحریف یا فراموش شدن تعلیمات پیامبر پیشین به دلیل ابتدایی بودن فرهنگ و عدم توسعه کتابت."},{"q":"هر پیامبر جدیدی که مبعوث می‌شد، چه موضعی نسبت به پیامبران گذشته داشت؟","a":"نه تنها پیامبران گذشته را انکار نمی‌کرد، بلکه آنها را تصدیق و خود را ادامه دهنده راه آنان معرفی می‌کرد."},{"q":"با وجود اینکه آمدن پیامبر اسلام (ص) در تورات و انجیل وعده داده شده بود، واکنش برخی بزرگان یهودی و مسیحی چه بود؟","a":"رسالت پیامبر را انکار کردند و حتی به مبارزه علیه ایشان برخاستند."},{"q":"قرآن کریم منشأ اصلی اختلافات و چند دینی شدن در ادیان الهی را چه می‌داند؟","a":"انکار پیامبر جدید توسط برخی رهبران دینی به خاطر حفظ منافع دنیوی (ثروت و قدرت)."},{"q":"امروزه به غیر از ادیان تحریف شده الهی، چه نوع ادیان دیگری وجود دارند؟","a":"ادیانی که کاملاً به دست انسان‌ها ساخته شده‌اند و جنبه الهی ندارند."}];
+        let leitnerQueue = [...cardsData];
+        function createCardEl(data) {
+            const wrap = document.createElement('div');
+            wrap.className = 'card slide-in';
+            wrap.onclick = () => wrap.classList.toggle('flip');
+            wrap.innerHTML = '<div class="card-inner"><div class="face front">' + data.q + '</div><div class="face back">' + data.a + '</div></div>';
+            return wrap;
+        }
+        function renderGrid() {
+            const query = document.getElementById('srch').value;
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+            cardsData.filter(c => c.q.includes(query) || c.a.includes(query))
+                     .forEach(c => container.appendChild(createCardEl(c)));
+        }
+        function changeMode(m) {
+            document.getElementById('gridView').style.display = m === 'grid' ? 'grid' : 'none';
+            document.getElementById('leitnerView').style.display = m === 'leitner' ? 'block' : 'none';
+            document.getElementById('searchWrapper').style.display = m === 'grid' ? 'block' : 'none';
+            document.getElementById('btnGrid').classList.toggle('active', m === 'grid');
+            document.getElementById('btnLeitner').classList.toggle('active', m === 'leitner');
+            if(m === 'leitner') renderLeitner();
+        }
+        function renderLeitner() {
+            const container = document.getElementById('leitnerCardContainer');
+            container.innerHTML = '';
+            if(leitnerQueue.length > 0) {
+                container.appendChild(createCardEl(leitnerQueue[0]));
+                document.getElementById('leitnerStat').innerText = 'کارت‌های باقی‌مانده: ' + leitnerQueue.length;
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:40px;"><h2>🎉 فوق‌العاده بود!</h2><button class="btn" style="background:var(--theme); color:white; margin:auto" onclick="leitnerQueue=[...cardsData]; renderLeitner();">شروع مجدد</button></div>';
+                document.getElementById('leitnerStat').innerText = '';
+            }
+        }
+        function processLeitner(result) {
+            if(leitnerQueue.length === 0) return;
+            const currentCard = document.querySelector('#leitnerCardContainer .card');
+            currentCard.classList.add('slide-out');
+            setTimeout(() => {
+                const item = leitnerQueue.shift();
+                if(result === 'fail') leitnerQueue.push(item);
+                else if (result === 'hard') {
+                    const mid = Math.floor(leitnerQueue.length / 2);
+                    leitnerQueue.splice(mid, 0, item);
+                }
+                renderLeitner();
+            }, 400);
+        }
+        renderGrid();
+    </script>
+</body>
+</html>
