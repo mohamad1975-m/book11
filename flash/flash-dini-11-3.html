@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فلش کارت های درس سوم</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --theme: linear-gradient(135deg, #a13689, #a1534a); }
+        body { font-family: 'Vazir', sans-serif; background: #f0f2f5; padding: 15px; user-select: none; margin:0; }
+        .head { background: var(--theme); color: white; padding: 30px 15px; border-radius: 0 0 30px 30px; text-align: center; margin: -15px -15px 20px -15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .nav-container { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .btn.active { background: #1e293b; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { height: 250px; perspective: 1000px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .card-inner { transform: rotateY(180deg); }
+        .face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; border-radius: 25px; text-align: center; font-size: 1.1rem; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .front { background: white; border: 1px solid #eee; color: #333; }
+        .back { background: var(--theme); color: white; transform: rotateY(180deg); }
+        .leitner-box { display: none; max-width: 450px; margin: 20px auto; perspective: 1000px; }
+        .leitner-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .l-btn { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .l-easy { background: #2ec4b6; } .l-hard { background: #ff9f43; } .l-fail { background: #e71d36; }
+        .slide-out { animation: slideOut 0.5s forwards; }
+        @keyframes slideOut { 0% { transform: scale(1) translateX(0); opacity: 1; } 100% { transform: scale(0.8) translateX(-100px); opacity: 0; } }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1 style="margin:0">فلش کارت های درس سوم</h1>
+        <p style="opacity: 0.9; margin: 10px 0 5px 0; font-size: 1.1rem;">📌 دینی | درس 3 | پایه 11</p>
+        <p style="opacity: 0.8; margin: 0; font-size: 0.9rem;">📑 تعداد کارت: 29 تا</p>
+        <p style="opacity: 0.9; margin: 5px 0 0 0; font-size: 0.95rem;">لعن عمر فراموش نشه!</p>
+    </div>
+    <div class="nav-container">
+        <button class="btn active" id="btnGrid" onclick="changeMode('grid')">📱 لیست</button>
+        <button class="btn" id="btnLeitner" onclick="changeMode('leitner')">🧠 لایتنر</button>
+        <div id="searchWrapper">
+            <input type="text" id="srch" placeholder="🔍 جستجو..." oninput="renderGrid()" style="padding:10px; border-radius:10px; border:1px solid #ddd; width:120px">
+        </div>
+    </div>
+    <div id="gridView" class="grid"></div>
+    <div id="leitnerView" class="leitner-box">
+        <div id="leitnerCardContainer"></div>
+        <div class="leitner-actions">
+            <button class="l-btn l-fail" onclick="processLeitner('fail')">❌ بلد نبودم</button>
+            <button class="l-btn l-hard" onclick="processLeitner('hard')">⚠️ سخت بود</button>
+            <button class="l-btn l-easy" onclick="processLeitner('easy')">✅ ساده بود</button>
+        </div>
+        <p id="leitnerStat" style="text-align:center; margin-top:20px; font-weight:bold; color:#64748b"></p>
+    </div>
+    <script>
+        const cardsData = [{"q":"خداوند در قرآن کریم، پیامبر اکرم را با چه عنوانی معرفی می‌کند که به معنای پایان بخش پیامبران است؟","a":"خاتم النبیین"},{"q":"چرا پیامبر اکرم در اجتماعات مختلف، خود را به عنوان آخرین پیامبر الهی معرفی می‌کرد؟","a":"تا پس از ایشان، کسی ادعای پیامبری نکند یا اگر ادعا کرد، مردم فریب او را نخورند."},{"q":"تعیین زمان ختم نبوت با کیست و چرا؟","a":"با خداست؛ زیرا فقط او می‌داند که عوامل ختم نبوت فراهم شده است یا نه."},{"q":"یکی از عوامل بی‌نیازی از آمدن پیامبر جدید که تشخیص زمان فراهم شدن آن در توانایی انسان نیست، چیست؟","a":"حفظ کتاب آسمانی از تحریف و وجود آن در میان مردم."},{"q":"اولین عامل ختم نبوت که در متن ذکر شده چیست؟","a":"آمادگی جامعه بشری برای دریافت برنامه کامل زندگی."},{"q":"چه چیزی نشان‌دهنده آمادگی فکری و فرهنگی جوامع در عصر نزول قرآن برای دریافت کامل‌ترین برنامه زندگی بود؟","a":"آغاز نهضت علمی و فرهنگی بزرگ با ورود اسلام به سرزمین‌هایی مانند ایران، عراق، مصر و شام."},{"q":"دومین عامل ختم نبوت چیست؟","a":"حفظ قرآن کریم از تحریف."},{"q":"به چه دلیل کتاب قرآن کریم نیازی به «تصحیح» ندارد و جاودانه باقی خواهد ماند؟","a":"زیرا با تلاش مسلمانان و عنایت الهی، دچار تحریف نشد و کلمه‌ای بر آن افزوده یا از آن کم نگردید."},{"q":"سومین عامل ختم نبوت که در متن به آن اشاره شده، کدام است؟","a":"وجود امام معصوم پس از پیامبر اکرم."},{"q":"با وجود امام معصوم، کدام یک از مسئولیت‌های پیامبر ادامه پیدا نکرد؟","a":"دریافت وحی."},{"q":"چهارمین عامل ختم نبوت چیست؟","a":"پویایی و روزآمد بودن دین اسلام."},{"q":"انسان در زندگی فردی و اجتماعی خود دارای دو دسته نیاز است: _____ و _____.","a":"نیازهای ثابت و نیازهای متغیر"},{"q":"چند نمونه از نیازهای ثابت بشر را نام ببرید.","a":"نیاز به امنیت، عدالت، داد و ستد، ازدواج و تشکیل خانواده، تعلیم و تربیت و حکومت."},{"q":"نیازهای متغیر چگونه و از درون چه نیازهایی پدید می‌آیند؟","a":"از درون نیازهای ثابت؛ یعنی انسان‌ها با گذشت زمان برای پاسخگویی به نیازهای ثابت خود از روش‌های متغیر استفاده می‌کنند."},{"q":"برای نیاز ثابت «داد و ستد»، چه شیوه‌های متغیری در طول زمان به وجود آمده است؟","a":"معاوضه کالا با کالا، استفاده از سکه، پول اعتباری (اسکناس) و قراردادهای بانکی امروزی."},{"q":"یکی از ویژگی‌هایی که به دین اسلام خاصیت انطباق و تحرک داده است چیست؟","a":"وجود دسته‌ای از قوانین و قواعد تنظیم کننده که بر همه احکام و مقررات اسلامی تسلط دارند."},{"q":"قاعده «لا ضَرَرَ و لا ضِرارَ فی الاسلام» به چه معناست؟","a":"اسلام با ضرر دیدن و ضرر رساندن مخالف است."},{"q":"چگونه قاعده «لا ضرر» بر حکم روزه ماه رمضان تأثیر می‌گذارد؟","a":"اگر روزه برای شخصی ضرر داشته باشد، بر او حرام می‌شود."},{"q":"وقتی خداوند پیامبر جدیدی می‌فرستد، وظیفه پیروان پیامبر قبل چیست؟","a":"باید به پیامبر جدید ایمان بیاورند و از او پیروی کنند."},{"q":"چرا با آمدن پیامبر جدید، ادامه پیروی از دستورات پیامبر قبلی مورد قبول خداوند نیست؟","a":"زیرا آمدن پیامبر جدید نشانگر این است که بخشی از تعلیمات پیامبر قبلی دیگر پاسخگوی نیازهای مردم نیست."},{"q":"امروزه چرا به جز قرآن کریم، نمی‌توان با اطمینان خاطر از کتاب آسمانی دیگری پیروی کرد؟","a":"زیرا نمی‌توان گفت محتوای آنها به طور کامل از جانب خداست و انسان‌ها آن را کم و زیاد نکرده‌اند."},{"q":"آیه «وَ مَن یَبتَغِ غَیرَ الاِسلامِ دینًا فَلَن یُقبَلَ مِنهُ» به کدام حقیقت اشاره دارد؟","a":"هر کس دینی جز اسلام اختیار کند، هرگز از او پذیرفته نخواهد شد."},{"q":"در تشبیه پیامبران، کدام دیدگاه صحیح است: فروشندگان کالاهای مختلف یا معلمان یک مدرسه؟","a":"معلمان یک مدرسه که پایه‌های مختلف تحصیلی را به ترتیب تدریس می‌کنند."},{"q":"طبق تشبیه پیامبران به معلمان یک مدرسه، رابطه آنها با یکدیگر چگونه است؟","a":"آنان همه یک برنامه و هدف مشخص را دنبال می‌کنند، مطالب یکدیگر را تکمیل کرده و همدیگر را تأیید کرده‌اند."},{"q":"ایمان آوردن به آخرین پیامبر الهی، در واقع به منزله ایمان آوردن به چه کسانی است؟","a":"به تمام پیامبران سابق."},{"q":"در آیه «لا نُفَرِّقُ بَینَ اَحَدٍ مِنهُم»، خداوند به مسلمانان چه دستوری درباره پیامبران می‌دهد؟","a":"اینکه میان هیچ یک از پیامبران الهی فرق نگذارند."},{"q":"حکم کسانی از پیروان پیامبران گذشته که از آمدن پیامبر جدید آگاه نمی‌شوند چیست؟","a":"نزد خداوند عذر دارند و اگر مطابق دین خود عمل کرده باشند، پاداش می‌گیرند."},{"q":"اگر کسانی برای یافتن حقانیت دین جدید تحقیق کنند اما به نتیجه نرسند، آیا مورد مؤاخذه قرار می‌گیرند؟","a":"خیر، عذرشان نزد خداوند پذیرفته است و مورد مؤاخذه قرار نمی‌گیرند."},{"q":"خداوند میان کدام دو گروه از افرادی که حقیقت را نپذیرفته‌اند، فرق می‌گذارد؟","a":"میان کسانی که حقیقت را درک کرده‌اند اما به خاطر امیال دنیوی از آن پیروی نمی‌کنند و کسانی که با همه تلاش، حقیقت را نیافته‌اند."}];
+        let leitnerQueue = [...cardsData];
+        function createCardEl(data) {
+            const wrap = document.createElement('div');
+            wrap.className = 'card slide-in';
+            wrap.onclick = () => wrap.classList.toggle('flip');
+            wrap.innerHTML = '<div class="card-inner"><div class="face front">' + data.q + '</div><div class="face back">' + data.a + '</div></div>';
+            return wrap;
+        }
+        function renderGrid() {
+            const query = document.getElementById('srch').value;
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+            cardsData.filter(c => c.q.includes(query) || c.a.includes(query))
+                     .forEach(c => container.appendChild(createCardEl(c)));
+        }
+        function changeMode(m) {
+            document.getElementById('gridView').style.display = m === 'grid' ? 'grid' : 'none';
+            document.getElementById('leitnerView').style.display = m === 'leitner' ? 'block' : 'none';
+            document.getElementById('searchWrapper').style.display = m === 'grid' ? 'block' : 'none';
+            document.getElementById('btnGrid').classList.toggle('active', m === 'grid');
+            document.getElementById('btnLeitner').classList.toggle('active', m === 'leitner');
+            if(m === 'leitner') renderLeitner();
+        }
+        function renderLeitner() {
+            const container = document.getElementById('leitnerCardContainer');
+            container.innerHTML = '';
+            if(leitnerQueue.length > 0) {
+                container.appendChild(createCardEl(leitnerQueue[0]));
+                document.getElementById('leitnerStat').innerText = 'کارت‌های باقی‌مانده: ' + leitnerQueue.length;
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:40px;"><h2>🎉 فوق‌العاده بود!</h2><button class="btn" style="background:var(--theme); color:white; margin:auto" onclick="leitnerQueue=[...cardsData]; renderLeitner();">شروع مجدد</button></div>';
+                document.getElementById('leitnerStat').innerText = '';
+            }
+        }
+        function processLeitner(result) {
+            if(leitnerQueue.length === 0) return;
+            const currentCard = document.querySelector('#leitnerCardContainer .card');
+            currentCard.classList.add('slide-out');
+            setTimeout(() => {
+                const item = leitnerQueue.shift();
+                if(result === 'fail') leitnerQueue.push(item);
+                else if (result === 'hard') {
+                    const mid = Math.floor(leitnerQueue.length / 2);
+                    leitnerQueue.splice(mid, 0, item);
+                }
+                renderLeitner();
+            }, 400);
+        }
+        renderGrid();
+    </script>
+</body>
+</html>

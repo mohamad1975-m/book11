@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فلش کارت های درس پنجم</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --theme: linear-gradient(135deg, #2dae8e, #4aa15b); }
+        body { font-family: 'Vazir', sans-serif; background: #f0f2f5; padding: 15px; user-select: none; margin:0; }
+        .head { background: var(--theme); color: white; padding: 30px 15px; border-radius: 0 0 30px 30px; text-align: center; margin: -15px -15px 20px -15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .nav-container { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .btn.active { background: #1e293b; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { height: 250px; perspective: 1000px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .card-inner { transform: rotateY(180deg); }
+        .face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; border-radius: 25px; text-align: center; font-size: 1.1rem; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .front { background: white; border: 1px solid #eee; color: #333; }
+        .back { background: var(--theme); color: white; transform: rotateY(180deg); }
+        .leitner-box { display: none; max-width: 450px; margin: 20px auto; perspective: 1000px; }
+        .leitner-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .l-btn { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .l-easy { background: #2ec4b6; } .l-hard { background: #ff9f43; } .l-fail { background: #e71d36; }
+        .slide-out { animation: slideOut 0.5s forwards; }
+        @keyframes slideOut { 0% { transform: scale(1) translateX(0); opacity: 1; } 100% { transform: scale(0.8) translateX(-100px); opacity: 0; } }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1 style="margin:0">فلش کارت های درس پنجم</h1>
+        <p style="opacity: 0.9; margin: 10px 0 5px 0; font-size: 1.1rem;">📌 دینی | درس 5 | پایه 11</p>
+        <p style="opacity: 0.8; margin: 0; font-size: 0.9rem;">📑 تعداد کارت: 40 تا</p>
+        <p style="opacity: 0.9; margin: 5px 0 0 0; font-size: 0.95rem;">لعن عمر فراموش نشه!</p>
+    </div>
+    <div class="nav-container">
+        <button class="btn active" id="btnGrid" onclick="changeMode('grid')">📱 لیست</button>
+        <button class="btn" id="btnLeitner" onclick="changeMode('leitner')">🧠 لایتنر</button>
+        <div id="searchWrapper">
+            <input type="text" id="srch" placeholder="🔍 جستجو..." oninput="renderGrid()" style="padding:10px; border-radius:10px; border:1px solid #ddd; width:120px">
+        </div>
+    </div>
+    <div id="gridView" class="grid"></div>
+    <div id="leitnerView" class="leitner-box">
+        <div id="leitnerCardContainer"></div>
+        <div class="leitner-actions">
+            <button class="l-btn l-fail" onclick="processLeitner('fail')">❌ بلد نبودم</button>
+            <button class="l-btn l-hard" onclick="processLeitner('hard')">⚠️ سخت بود</button>
+            <button class="l-btn l-easy" onclick="processLeitner('easy')">✅ ساده بود</button>
+        </div>
+        <p id="leitnerStat" style="text-align:center; margin-top:20px; font-weight:bold; color:#64748b"></p>
+    </div>
+    <script>
+        const cardsData = [{"q":"پیامبر اکرم (ص) به مدت چند سال مردم را به کامل‌ترین برنامه هدایت فراخواند؟","a":"به مدت بیست و سه سال."},{"q":"بر اساس تعلیمات قرآن و سیره، رسول خدا (ص) چه تعداد مسئولیت مهم بر عهده داشت؟","a":"ایشان سه مسئولیت مهم را عهده‌دار بودند."},{"q":"اولین مسئولیت مهم پیامبر (ص) به عنوان فرستاده خداوند چه بود؟","a":"دریافت و ابلاغ وحی."},{"q":"پیامبر اکرم (ص) آیات قرآن کریم را چگونه به مردم می‌رساند؟","a":"به طور کامل از فرشته وحی دریافت می‌کرد و بدون ذره‌ای کم یا زیاد به مردم می‌رساند."},{"q":"به نویسندگان قرآن در زمان پیامبر (ص) چه عنوانی داده می‌شد؟","a":"کاتبان وحی."},{"q":"به کسانی که قرآن را در زمان پیامبر (ص) به خاطر می‌سپردند و حفظ می‌کردند چه می‌گفتند؟","a":"حافظان وحی."},{"q":"اولین و برترین کاتب و حافظ قرآن کریم چه کسی بود؟","a":"حضرت علی (ع)."},{"q":"دومین مسئولیت مهم پیامبر اکرم (ص) چه بود؟","a":"تعلیم و تبیین تعالیم قرآن (مرجعیت دینی)."},{"q":"چرا پیامبر (ص) علاوه بر ابلاغ وحی، وظیفه تعلیم و تبیین آن را نیز بر عهده داشت؟","a":"تا مردم به معارف بلند قرآن دست یابند و جزئیات احکام و شیوه عمل به آن را بیاموزند."},{"q":"اولین و معتبرترین مرجع علمی برای فهم عمیق آیات الهی چیست؟","a":"گفتار و رفتار پیامبر (ص)."},{"q":"سومین مسئولیت مهم پیامبر اکرم (ص) چه بود؟","a":"اجرای قوانین الهی با تشکیل حکومت اسلامی (ولایت ظاهری)."},{"q":"مفهوم «ولایت» در مسئولیت سوم پیامبر (ص) چیست؟","a":"سرپرستی و رهبری جامعه."},{"q":"پیامبر (ص) پس از هجرت به مدینه با کمک چه گروه‌هایی حکومت اسلامی را پایه‌ریزی کرد؟","a":"به کمک مردم مدینه (انصار) و کسانی که از مکه آمده بودند (مهاجران)."},{"q":"پیامبر (ص) کدام مکان را محل حکومت و رهبری خود در مدینه قرار داد؟","a":"مسجد مدینه."},{"q":"بر اساس حدیث امام باقر (ع)، اسلام بر چند پایه استوار شده است؟","a":"بر پنج پایه: نماز، زکات، روزه، حج و ولایت."},{"q":"در حدیث امام باقر (ع)، کدام یک از پایه‌های اسلام به عنوان مهم‌ترین پایه شمرده شده است؟","a":"ولایت."},{"q":"اولین دلیل برای ضرورت تشکیل حکومت اسلامی چیست؟","a":"ضرورت اجرای احکام اجتماعی اسلام."},{"q":"چرا اسلام نیازمند حکومت است تا احکام اجتماعی‌اش اجرا شود؟","a":"زیرا احکامی مانند خمس، زکات، امر به معروف، جهاد و مبارزه با ظلم بدون تشکیلات حکومتی قابل اجرا نیستند."},{"q":"دومین دلیل برای ضرورت تشکیل حکومت اسلامی چیست؟","a":"ضرورت پذیرش ولایت الهی و نفی حاکمیت طاغوت."},{"q":"«طاغوت» به چه کسانی گفته می‌شود؟","a":"کسانی که فرمان و قانونشان برگرفته از دستورات الهی نیست و به مردم فرمان می‌دهند."},{"q":"پذیرش حکومت طاغوت بر مسلمانان چه حکمی دارد؟","a":"حرام است."},{"q":"سومین دلیل برای ضرورت تشکیل حکومت اسلامی چیست؟","a":"ضرورت حفظ استقلال جامعه اسلامی."},{"q":"حکم قرآنی که مؤمنان را از پذیرش سلطه بیگانگان باز می‌دارد، چه نام دارد؟","a":"قاعدهٔ نفی سبیل."},{"q":"تشکیل حکومت اسلامی چگونه به حفظ استقلال جامعه اسلامی کمک می‌کند؟","a":"مانع سلطه بیگانگان می‌شود و روابط خارجی را به گونه‌ای تنظیم می‌کند که استقلال حفظ شود."},{"q":"از نظر امام خمینی، چرا هر نظام سیاسی غیراسلامی، نظامی شرک‌آمیز است؟","a":"چون حاکمش «طاغوت» است."},{"q":"علاوه بر ولایت ظاهری (حکومت)، پیامبر اکرم (ص) عهده‌دار کدام ولایت دیگر نیز بود؟","a":"ولایت معنوی."},{"q":"مفهوم «ولایت معنوی» پیامبر (ص) چیست؟","a":"سرپرستی و رهبری معنوی انسان‌ها که مرتبه‌ای بالاتر از ولایت ظاهری است."},{"q":"منشأ قدرت «ولایت معنوی» رسول خدا (ص) چه بود؟","a":"رسیدن به مرتبه‌ای از کمال در مسیر قرب الهی که می‌توانست عالم غیب را مشاهده کند."},{"q":"هدایت در «ولایت معنوی» چگونه صورت می‌گیرد؟","a":"از طریق امداد غیبی و الهامات، نه از طریق آموزش معمولی و عمومی."},{"q":"میزان بهره‌مندی انسان‌ها از هدایت معنوی پیامبر (ص) به چه چیزی بستگی دارد؟","a":"به درجه ایمان و عمل آنان."},{"q":"نمونه کامل هدایت معنوی رسول خدا (ص) در رفتار ایشان با کدام شخصیت دیده می‌شود؟","a":"حضرت علی (ع)."},{"q":"مفهوم «عصمت» پیامبر اکرم (ص) چیست؟","a":"اینکه پیامبر تحت تأثیر هواهای نفسانی قرار نگیرد و مرتکب گناه و خطا نگردد."},{"q":"چرا بدون وجود عصمت، مسئولیت پیامبری به نتیجه نخواهد رسید؟","a":"زیرا مردم به پیامبری که احتمال گناه و خطا در او بدهند، اعتماد نمی‌کنند و از او پیروی نخواهند کرد."},{"q":"اگر پیامبری در دریافت و رساندن وحی معصوم نباشد، چه اتفاقی می‌افتد؟","a":"دین الهی به درستی به مردم نمی‌رسد و امکان هدایت از مردم سلب می‌شود."},{"q":"اگر پیامبری در تعلیم و تبیین دین معصوم نباشد، نتیجه آن چیست؟","a":"امکان انحراف در تعالیم الهی پیدا می‌شود و اعتماد مردم به دین از دست می‌رود."},{"q":"اگر پیامبری در اجرای احکام الهی معصوم نباشد، چه خطری وجود دارد؟","a":"مردم از او سرمشق می‌گیرند و با انجام کارهای مخالف دستور خدا، به گمراهی دچار می‌شوند."},{"q":"چه کسی توانایی یک فرد برای مقاومت در برابر گناه و خطا را تشخیص می‌دهد؟","a":"فقط خداوند که از آشکار و نهان افراد اطلاع دارد."},{"q":"آیه «اَللّٰهُ اَعلَمُ حَیثُ یَجعَلُ رِسالَتَهُ» به کدام ویژگی پیامبران اشاره دارد؟","a":"اینکه خداوند بهتر می‌داند چه کسی شایستگی مقام رسالت (و عصمت) را دارد."},{"q":"آیا عصمت پیامبران یک مانع بیرونی است یا با اختیار خودشان به سمت گناه نمی‌روند؟","a":"آنان با اختیار خود به سمت گناه و خطا نمی‌روند."},{"q":"چرا پیامبران با وجود داشتن اختیار، مرتکب گناه نمی‌شوند؟","a":"زیرا حقیقت گناه را مشاهده می‌کنند و محبت به خدا را با هیچ چیز عوض نمی‌کنند."}];
+        let leitnerQueue = [...cardsData];
+        function createCardEl(data) {
+            const wrap = document.createElement('div');
+            wrap.className = 'card slide-in';
+            wrap.onclick = () => wrap.classList.toggle('flip');
+            wrap.innerHTML = '<div class="card-inner"><div class="face front">' + data.q + '</div><div class="face back">' + data.a + '</div></div>';
+            return wrap;
+        }
+        function renderGrid() {
+            const query = document.getElementById('srch').value;
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+            cardsData.filter(c => c.q.includes(query) || c.a.includes(query))
+                     .forEach(c => container.appendChild(createCardEl(c)));
+        }
+        function changeMode(m) {
+            document.getElementById('gridView').style.display = m === 'grid' ? 'grid' : 'none';
+            document.getElementById('leitnerView').style.display = m === 'leitner' ? 'block' : 'none';
+            document.getElementById('searchWrapper').style.display = m === 'grid' ? 'block' : 'none';
+            document.getElementById('btnGrid').classList.toggle('active', m === 'grid');
+            document.getElementById('btnLeitner').classList.toggle('active', m === 'leitner');
+            if(m === 'leitner') renderLeitner();
+        }
+        function renderLeitner() {
+            const container = document.getElementById('leitnerCardContainer');
+            container.innerHTML = '';
+            if(leitnerQueue.length > 0) {
+                container.appendChild(createCardEl(leitnerQueue[0]));
+                document.getElementById('leitnerStat').innerText = 'کارت‌های باقی‌مانده: ' + leitnerQueue.length;
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:40px;"><h2>🎉 فوق‌العاده بود!</h2><button class="btn" style="background:var(--theme); color:white; margin:auto" onclick="leitnerQueue=[...cardsData]; renderLeitner();">شروع مجدد</button></div>';
+                document.getElementById('leitnerStat').innerText = '';
+            }
+        }
+        function processLeitner(result) {
+            if(leitnerQueue.length === 0) return;
+            const currentCard = document.querySelector('#leitnerCardContainer .card');
+            currentCard.classList.add('slide-out');
+            setTimeout(() => {
+                const item = leitnerQueue.shift();
+                if(result === 'fail') leitnerQueue.push(item);
+                else if (result === 'hard') {
+                    const mid = Math.floor(leitnerQueue.length / 2);
+                    leitnerQueue.splice(mid, 0, item);
+                }
+                renderLeitner();
+            }, 400);
+        }
+        renderGrid();
+    </script>
+</body>
+</html>
