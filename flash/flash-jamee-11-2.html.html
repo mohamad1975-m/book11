@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فلش کارت های درس دوم</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --theme: linear-gradient(135deg, #1f72b2, #79d9ec); }
+        body { font-family: 'Vazir', sans-serif; background: #f0f2f5; padding: 15px; user-select: none; margin:0; }
+        .head { background: var(--theme); color: white; padding: 30px 15px; border-radius: 0 0 30px 30px; text-align: center; margin: -15px -15px 20px -15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .nav-container { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .btn.active { background: #1e293b; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { height: 250px; perspective: 1000px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .card-inner { transform: rotateY(180deg); }
+        .face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; border-radius: 25px; text-align: center; font-size: 1.1rem; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .front { background: white; border: 1px solid #eee; color: #333; }
+        .back { background: var(--theme); color: white; transform: rotateY(180deg); }
+        .leitner-box { display: none; max-width: 450px; margin: 20px auto; perspective: 1000px; }
+        .leitner-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .l-btn { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .l-easy { background: #2ec4b6; } .l-hard { background: #ff9f43; } .l-fail { background: #e71d36; }
+        .slide-out { animation: slideOut 0.5s forwards; }
+        @keyframes slideOut { 0% { transform: scale(1) translateX(0); opacity: 1; } 100% { transform: scale(0.8) translateX(-100px); opacity: 0; } }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1 style="margin:0">فلش کارت های درس دوم</h1>
+        <p style="opacity: 0.9; margin: 10px 0 5px 0; font-size: 1.1rem;">📌 جامعه شناسی | درس 2 | پایه 11</p>
+        <p style="opacity: 0.8; margin: 0; font-size: 0.9rem;">📑 تعداد کارت: 31 تا</p>
+        <p style="opacity: 0.9; margin: 5px 0 0 0; font-size: 0.95rem;">BUL!</p>
+    </div>
+    <div class="nav-container">
+        <button class="btn active" id="btnGrid" onclick="changeMode('grid')">📱 لیست</button>
+        <button class="btn" id="btnLeitner" onclick="changeMode('leitner')">🧠 لایتنر</button>
+        <div id="searchWrapper">
+            <input type="text" id="srch" placeholder="🔍 جستجو..." oninput="renderGrid()" style="padding:10px; border-radius:10px; border:1px solid #ddd; width:120px">
+        </div>
+    </div>
+    <div id="gridView" class="grid"></div>
+    <div id="leitnerView" class="leitner-box">
+        <div id="leitnerCardContainer"></div>
+        <div class="leitner-actions">
+            <button class="l-btn l-fail" onclick="processLeitner('fail')">❌ بلد نبودم</button>
+            <button class="l-btn l-hard" onclick="processLeitner('hard')">⚠️ سخت بود</button>
+            <button class="l-btn l-easy" onclick="processLeitner('easy')">✅ ساده بود</button>
+        </div>
+        <p id="leitnerStat" style="text-align:center; margin-top:20px; font-weight:bold; color:#64748b"></p>
+    </div>
+    <script>
+        const cardsData = [{"q":"فرهنگ جهانی چیست؟","a":"فرهنگی است که از مرزهای جغرافیایی و قومی عبور می کند و در جهان گسترش می یابد."},{"q":"چرا برخی از فرهنگ ها که عقاید و ارزش هایشان مربوط به قوم و منطقه خاصی است، جهانی نمی شوند؟","a":"چون از محدوده قومی و منطقه ای خود فراتر نمی روند، مگر اینکه نگاهی سلطه جویانه داشته باشند."},{"q":"دو نوع فرهنگی که پس از عبور از مرزهای جغرافیایی خود به سوی جهانی شدن گام برداشته اند کدامند؟","a":"۱. فرهنگی با نگاه سلطه جویانه ۲. فرهنگی که سعادت همه انسان‌ها را دنبال می‌کند."},{"q":"فرهنگ سلطه جویانه پس از عبور از مرزهای خود، جهان را چگونه تقسیم می کند؟","a":"جهان را به دو منطقه مرکزی و منطقه پیرامونی تقسیم می کند."},{"q":"در یک فرهنگ سلطه‌جویانه، منطقه مرکزی چه رابطه‌ای با منطقه پیرامونی دارد؟","a":"منطقه مرکزی، منطقه پیرامونی را به خدمت می‌گیرد."},{"q":"دو نمونه از فرهنگ‌هایی که با نگاه سلطه‌جویانه به دنبال جهانی شدن هستند، کدامند؟","a":"فرهنگ صهیونیسم و فرهنگ سرمایه‌داری."},{"q":"آرمان‌ها و ارزش‌های صهیونیسم بر چه چیزی متمرکز است؟","a":"بر نژاد خاصی تمرکز دارد و با رویکرد دنیوی، دیگران را در خدمت آن نژاد به کار می‌گیرد."},{"q":"فرهنگ سرمایه‌داری بر چه چیزی تمرکز دارد و با دیگر کشورها چگونه رفتار می‌کند؟","a":"کانون ثروت و قدرت را مورد توجه قرار می‌دهد و کشورهای دیگر را در پیرامون آن به خدمت می‌گیرد."},{"q":"فرهنگ سلطه یا استکبار به چه فرهنگی گفته می‌شود؟","a":"فرهنگی که تسلط یک قوم، جامعه یا گروهی خاص را بر دیگران به دنبال می‌آورد و دیگران را به ضعف می‌کشاند."},{"q":"ویژگی اصلی گونه دوم فرهنگ‌های جهانی (فرهنگ مطلوب) چیست؟","a":"عقاید و ارزش‌های آن در خدمت گروه و قوم خاصی نیست، بلکه سعادت همه انسان‌ها را دنبال می‌کند."},{"q":"عقاید و ارزش‌های یک فرهنگ جهانی مطلوب باید بر چه اساسی باشد؟","a":"باید بر اساس عقاید و ارزش‌های مشترک انسانی باشد که به آنها ارزش‌های عام و جهان‌شمول می‌گویند."},{"q":"از نظر فارابی، «مدینة فاسقه» چه نوع جامعه‌ای است؟","a":"جامعه‌ای که عقاید و ارزش‌های آن حق است، اما هنجارها و رفتارهای آن موافق و همسو با حق نیست."},{"q":"فرهنگی که به حقیقتی قائل نباشد، از چه چیزی محروم می‌شود؟","a":"از داشتن معیار و میزانی برای سنجش عقاید و ارزش‌های مختلف محروم می‌شود و نمی‌تواند از حقانیت ارزش‌های خود دفاع کند."},{"q":"چرا فرهنگ جهانی باید از معنویت برخوردار باشد؟","a":"زیرا انسان علاوه بر نیازهای مادی، نیازهایی ابدی و معنوی دارد و فرهنگ صرفاً مادی، بشر را به بحران‌های روحی گرفتار می‌سازد."},{"q":"بر اساس متن، راهکار جلوگیری از قطبی شدن جهان و بهره‌کشی ظالمانه چیست؟","a":"چاره این امر، ارزش جهان‌شمول عدالت است."},{"q":"بر اساس حدیث پیامبر اکرم (ص)، پایداری آسمان‌ها و زمین به چیست؟","a":"«آسمان ها و زمین با عدالت پابرجا می مانند.»"},{"q":"فرهنگ جهانی باید چه نوع آزادی را برای انسان تأمین کند؟","a":"آزادی انسان از قید و بندهایی که مانع رسیدن او به کمال و حقوق انسانی‌اش می‌شوند."},{"q":"آزادی همواره با کدام دو پرسش همراه است؟","a":"آزادی از چه؟ و آزادی برای چه؟"},{"q":"معنای آزادی بر اساس چه ارزش‌هایی مشخص می‌گردد؟","a":"بر اساس ارزش‌های جهان‌شمول دیگر مانند حقیقت، معنویت و عدالت."},{"q":"فرهنگ‌های جبرگرا و غیرمسئول چه تأثیری بر انسان‌ها دارند؟","a":"قدرت مقاومت را از آدمیان می‌گیرند، آنها را به موجوداتی منفعل تبدیل می‌کنند و زمینه نفوذ سلطه‌گران را فراهم می‌آورند."},{"q":"چرا فرهنگ جهانی باید روحیه تعهد و مسئولیت را در انسان‌ها ایجاد کند؟","a":"تا زمینه گسترش و تحقق عقاید و ارزش‌های جهان‌شمول را فراهم آورد."},{"q":"فرهنگ جهانی باید دارای چند سطح از عقلانیت باشد؟","a":"باید دارای دو سطح از عقلانیت باشد."},{"q":"سطح اول عقلانیت در فرهنگ جهانی به چه پرسش‌هایی باید پاسخ دهد؟","a":"باید به پرسش‌های بنیادین بشر درباره انسان و جهان پاسخ دهد."},{"q":"سطح دوم عقلانیت در فرهنگ جهانی به چه پرسش‌هایی باید پاسخ دهد؟","a":"باید به پرسش‌ها و نیازهای متغیر بشر در شرایط تاریخی مختلف پاسخ مناسب بدهد."},{"q":"یک نمونه از پرسش همیشگی بشر و یک نمونه از مسئله امروز او که دیروز مطرح نبود، چیست؟","a":"پرسش همیشگی: معنای زندگی و مرگ. مسئله امروز: بحران زیست‌محیطی."},{"q":"بر اساس جدول، کدام دو فرهنگ دارای تداوم تاریخی بالا و گستره جغرافیایی وسیع هستند؟","a":"فرهنگ اسلام و فرهنگ مسیحیت."},{"q":"کلمه «تومان» از چه زبانی و به چه معنایی است؟","a":"واژه‌ای مغولی به معنای ده هزار است."},{"q":"کلمه «ریال» از چه زبانی و به چه معنایی وارد فارسی شد؟","a":"از کلمه اسپانیایی و پرتغالی real به معنای شاهی و سلطنتی وارد فارسی شد."},{"q":"فرهنگی که _____ آن مطابق نیازهای فطری باشد همان فرهنگ حق است.","a":"عقاید، ارزش‌ها، هنجارها و رفتارهای"},{"q":"در فرهنگ‌های _____، انسان نمی‌تواند براساس اراده و عمل خود آینده‌اش را بسازد و به سرنوشتی محتوم محکوم است.","a":"جبرگرا"},{"q":"پیدایش عرفان‌های دروغین، پاسخی _____ به نیازهای معنوی انسان است.","a":"کاذب"}];
+        let leitnerQueue = [...cardsData];
+        function createCardEl(data) {
+            const wrap = document.createElement('div');
+            wrap.className = 'card slide-in';
+            wrap.onclick = () => wrap.classList.toggle('flip');
+            wrap.innerHTML = '<div class="card-inner"><div class="face front">' + data.q + '</div><div class="face back">' + data.a + '</div></div>';
+            return wrap;
+        }
+        function renderGrid() {
+            const query = document.getElementById('srch').value;
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+            cardsData.filter(c => c.q.includes(query) || c.a.includes(query))
+                     .forEach(c => container.appendChild(createCardEl(c)));
+        }
+        function changeMode(m) {
+            document.getElementById('gridView').style.display = m === 'grid' ? 'grid' : 'none';
+            document.getElementById('leitnerView').style.display = m === 'leitner' ? 'block' : 'none';
+            document.getElementById('searchWrapper').style.display = m === 'grid' ? 'block' : 'none';
+            document.getElementById('btnGrid').classList.toggle('active', m === 'grid');
+            document.getElementById('btnLeitner').classList.toggle('active', m === 'leitner');
+            if(m === 'leitner') renderLeitner();
+        }
+        function renderLeitner() {
+            const container = document.getElementById('leitnerCardContainer');
+            container.innerHTML = '';
+            if(leitnerQueue.length > 0) {
+                container.appendChild(createCardEl(leitnerQueue[0]));
+                document.getElementById('leitnerStat').innerText = 'کارت‌های باقی‌مانده: ' + leitnerQueue.length;
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:40px;"><h2>🎉 فوق‌العاده بود!</h2><button class="btn" style="background:var(--theme); color:white; margin:auto" onclick="leitnerQueue=[...cardsData]; renderLeitner();">شروع مجدد</button></div>';
+                document.getElementById('leitnerStat').innerText = '';
+            }
+        }
+        function processLeitner(result) {
+            if(leitnerQueue.length === 0) return;
+            const currentCard = document.querySelector('#leitnerCardContainer .card');
+            currentCard.classList.add('slide-out');
+            setTimeout(() => {
+                const item = leitnerQueue.shift();
+                if(result === 'fail') leitnerQueue.push(item);
+                else if (result === 'hard') {
+                    const mid = Math.floor(leitnerQueue.length / 2);
+                    leitnerQueue.splice(mid, 0, item);
+                }
+                renderLeitner();
+            }, 400);
+        }
+        renderGrid();
+    </script>
+</body>
+</html>
