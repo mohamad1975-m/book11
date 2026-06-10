@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>هوشنگ - برنامه‌ریزی درسی</title>
+    <title>هوشنگ، برنامه ریزی برای امتحان نهایی</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
@@ -38,9 +38,9 @@
 
     <div class="max-w-6xl mx-auto px-4 pt-8">
         
-        <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 glass-card p-6 rounded-3xl shadow-xl shadow-slate-100 animate-fade-in">
+        <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 glass-card p-6 rounded-3xl shadow-xl shadow-slate-100">
             <div>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent">هوشنگ - برنامه‌ریزی درسی</h1>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent">هوشنگ، برنامه ریزی برای امتحان نهایی، نسخه 2</h1>
                 <p id="today-greeting" class="text-slate-500 text-sm mt-1">لعن عمر فراموش نشه!</p>
             </div>
             <div class="flex items-center gap-3 bg-white shadow-sm border border-slate-100 px-5 py-3 rounded-2xl self-start md:self-auto">
@@ -67,7 +67,7 @@
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-sm font-bold text-slate-600 flex items-center gap-2">
                         <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        پیشرفت کل دوره (۲۴ روزه)
+                        پیشرفت کل دوره
                     </span>
                     <span id="total-progress-percent" class="text-lg font-black text-emerald-600">0%</span>
                 </div>
@@ -79,13 +79,7 @@
 
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            <div class="lg:col-span-1 glass-card p-5 rounded-3xl shadow-xl max-h-[680px] flex flex-col">
-                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">تقویم ۲۴ روزه دوره</h3>
-                <div id="days-menu-container" class="space-y-2 overflow-y-auto custom-scrollbar pr-1 flex-1">
-                    </div>
-            </div>
-
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 order-1 lg:order-1 space-y-6">
                 <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-50 min-h-[500px]">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-5 mb-6 gap-4">
                         <div>
@@ -102,45 +96,48 @@
                 </div>
             </div>
 
+            <div class="lg:col-span-1 order-2 lg:order-2 glass-card p-5 rounded-3xl shadow-xl max-h-[680px] flex flex-col">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">تقویم روزهای دوره</h3>
+                <div id="days-menu-container" class="space-y-2 overflow-y-auto custom-scrollbar pr-1 flex-1">
+                    </div>
+            </div>
+
         </main>
     </div>
 
     <script>
-        // Full Schedule JSON Data
+        // Updated Schedule JSON Data
         const scheduleData = [
-            { id: 1, dateStr: "۱۸ خرداد", label: "روز ۱", tasks: ["جغرافیا، درس ۱، پارت ۱ از ۱", "جامعه‌شناسی، درس ۱، پارت ۱ از ۱", "روانشناسی، درس ۱، پارت ۱ از ۲", "عربی، درس ۱، قواعد", "فنون ادبی، درس ۱", "دینی، درس ۱"] },
-            { id: 2, dateStr: "۱۹ خرداد", label: "روز ۲", tasks: ["روانشناسی، درس ۱، پارت ۲ از ۲", "تاریخ، درس ۱", "فلسفه، درس ۱", "عربی، درس ۱، ترجمه", "ریاضی، درس ۱", "جامعه‌شناسی، درس ۲"] },
-            { id: 3, dateStr: "۲۰ خرداد", label: "روز ۳", tasks: ["زبان، درس ۱، پارت ۱ از ۴", "جغرافیا، درس ۲", "دینی، درس ۲", "فنون ادبی، درس ۲", "تاریخ، درس ۲", "فلسفه، درس ۲"] },
-            { id: 4, dateStr: "۲۱ خرداد", label: "روز ۴", tasks: ["زبان، درس ۱، پارت ۲ از ۴", "روانشناسی، درس ۲، پارت ۱ از ۲", "جامعه‌شناسی، درس ۳", "عربی، درس ۲، قواعد", "ریاضی، درس ۲", "دینی، درس ۳"] },
-            { id: 5, dateStr: "۲۲ خرداد", label: "روز ۵", tasks: ["زبان، درس ۱، پارت ۳ از ۴", "جغرافیا، درس ۳", "تاریخ، درس ۳", "فنون ادبی، درس ۳", "فلسفه، درس ۳", "جامعه‌شناسی، درس ۴"] },
-            { id: 6, dateStr: "۲۳ خرداد", label: "روز ۶", tasks: ["زبان، درس ۱، پارت ۴ از ۴", "روانشناسی، درس ۲، پارت ۲ از ۲", "عربی، درس ۲، ترجمه", "دینی، درس ۴", "ریاضی، درس ۳", "تاریخ، درس ۴"] },
-            { id: 7, dateStr: "۲۴ خرداد", label: "روز ۷", tasks: ["جغرافیا، درس ۴", "جامعه‌شناسی، درس ۵", "فنون ادبی، درس ۴", "فلسفه، درس ۴", "عربی، درس ۳، قواعد", "دینی، درس ۵"] },
-            { id: 8, dateStr: "۲۵ خرداد", label: "روز ۸", tasks: ["روانشناسی، درس ۳، پارت ۱ از ۲", "تاریخ، درس ۵", "زبان، درس ۲، پارت ۱ از ۴", "ریاضی، درس ۴", "جامعه‌شناسی، درس ۶", "فنون ادبی، درس ۵"] },
-            { id: 9, dateStr: "۲۶ خرداد", label: "روز ۹", tasks: ["روانشناسی، درس ۳، پارت ۲ از ۲", "جغرافیا، درس ۵", "عربی، درس ۳، ترجمه", "فلسفه، درس ۵", "دینی، درس ۶", "تاریخ، درس ۶"] },
-            { id: 10, dateStr: "۲۷ خرداد", label: "روز ۱۰", tasks: ["زبان، درس ۲، پارت ۲ از ۴", "جامعه‌شناسی، درس ۷", "فنون ادبی، درس ۶", "عربی، درس ۴، قواعد", "ریاضی، درس ۵", "تاریخ، درس ۷"] },
-            { id: 11, dateStr: "۲۸ خرداد", label: "روز ۱۱", tasks: ["زبان، درس ۲، پارت ۳ از ۴", "روانشناسی، درس ۴، پارت ۱ از ۲", "دینی، درس ۷", "فلسفه، درس ۶", "جامعه‌شناسی، درس ۸", "جغرافیا، درس ۶، پارت ۱ از ۲"] },
-            { id: 12, dateStr: "۲۹ خرداد", label: "روز ۱۲", tasks: ["زبان، درس ۲، پارت ۴ از ۴", "روانشناسی، درس ۴، پارت ۲ از ۲", "عربی، درس ۴، ترجمه", "تاریخ، درس ۸", "فنون ادبی، درس ۷", "جغرافیا، درس ۶، پارت ۲ از ۲"] },
-            { id: 13, dateStr: "۳۰ خرداد", label: "روز ۱۳", tasks: ["جامعه‌شناسی، درس ۹", "دینی، درس ۸", "فلسفه، درس ۷", "عربی، درس ۵، قواعد", "ریاضی، درس ۶", "تاریخ، درس ۹"] },
-            { id: 14, dateStr: "۳۱ خرداد", label: "روز ۱۴", tasks: ["زبان، درس ۳، پارت ۱ از ۴", "روانشناسی، درس ۵، پارت ۱ از ۲", "جغرافیا، درس ۷، پارت ۱ از ۲", "فنون ادبی، درس ۸", "جامعه‌شناسی، درس ۱۰", "دینی، درس ۹"] },
-            { id: 15, dateStr: "۱ تیر", label: "روز ۱۵", tasks: ["زبان، درس ۳، پارت ۲ از ۴", "روانشناسی، درس ۵، پارت ۲ از ۲", "جغرافیا، درس ۷، پارت ۲ از ۲", "تاریخ، درس ۱۰", "فلسفه، درس ۸", "عربی، درس ۵، ترجمه"] },
-            { id: 16, dateStr: "۲ تیر", label: "روز ۱۶", tasks: ["زبان، درس ۳، پارت ۳ از ۴", "جامعه‌شناسی، درس ۱۱", "فنون ادبی، درس ۹", "ریاضی، درس ۷", "دینی، درس ۱۰", "تاریخ، درس ۱۱"] },
-            { id: 17, dateStr: "۳ تیر", label: "روز ۱۷", tasks: ["زبان، درس ۳، پارت ۴ از ۴", "روانشناسی، درس ۶، پارت ۱ از ۲", "جغرافیا، درس ۸، پارت ۱ از ۲", "عربی، درس ۶، قواعد", "فلسفه، درس ۹", "جامعه‌شناسی، درس ۱۲"] },
-            { id: 18, dateStr: "۴ تیر", label: "روز ۱۸", tasks: ["روانشناسی، درس ۶، پارت ۲ از ۲", "جغرافیا، درس ۸، پارت ۲ از ۲", "تاریخ، درس ۱۲", "فنون ادبی، درس ۱۰", "دینی، درس ۱۱", "عربی، درس ۶، ترجمه"] },
-            { id: 19, dateStr: "۵ تیر", label: "روز ۱۹", tasks: ["جامعه‌شناسی، درس ۱۳", "جغرافیا، درس ۹، پارت ۱ از ۲", "فلسفه، درس ۱۰", "ریاضی، درس ۸", "تاریخ، درس ۱۳", "دینی، درس ۱۲"] },
-            { id: 20, dateStr: "۶ تیر", label: "روز ۲۰", tasks: ["روانشناسی، درس ۷، پارت ۱ از ۲", "جغرافیا، درس ۹، پارت ۲ از ۲", "عربی، درس ۷، قواعد", "فنون ادبی، درس ۱۱", "جامعه‌شناسی، درس ۱۴", "تاریخ، درس ۱۴"] },
-            { id: 21, dateStr: "۷ تیر", label: "روز ۲۱", tasks: ["روانشناسی، درس ۷، پارت ۲ از ۲", "جغرافیا، درس ۱۰، پارت ۱ از ۲", "دینی، درس ۱۳", "فلسفه، درس ۱۱", "عربی، درس ۷، ترجمه", "جامعه‌شناسی، درس ۱۵"] },
-            { id: 22, dateStr: "۸ تیر", label: "روز ۲۲", tasks: ["روانشناسی، درس ۸، پارت ۱ از ۲", "جغرافیا، درس ۱۰، پارت ۲ از ۲", "تاریخ، درس ۱۵", "فنون ادبی، درس ۱۲", "دینی، درس ۱۴", "عربی، درس ۸، قواعد"] },
-            { id: 23, dateStr: "۹ تیر", label: "روز ۲۳", tasks: ["روانشناسی، درس ۸، پارت ۲ از ۲", "جغرافیا، درس ۱۱، پارت ۱ از ۲", "جامعه‌شناسی، درس ۱۶", "تاریخ، درس ۱۶", "دینی، درس ۱۵", "عربی، درس ۸، ترجمه"] },
-            { id: 24, dateStr: "۱۰ تیر", label: "روز ۲۴", tasks: ["جغرافیا، درس ۱۱، پارت ۲ از ۲", "دینی، درس ۱۶", "جمع‌بندی عربی", "جمع‌بندی ریاضی", "جمع‌بندی زبان", "جمع‌بندی تاریخ‌های ۹ تا ۱۶"] }
+            { id: 1, dateStr: "۲۱ خرداد", label: "پنجشنبه", tasks: ["فارسی، ستایش", "جامعه‌شناسی، درس ۱", "دینی، درس ۱", "عربی، درس ۱، قواعد"] },
+            { id: 2, dateStr: "۲۲ خرداد", label: "جمعه", tasks: ["فارسی، درس ۱", "تاریخ، درس ۱", "زبان، درس ۱، پارت ۱ از ۴", "جامعه‌شناسی، درس ۲"] },
+            { id: 3, dateStr: "۲۳ خرداد", label: "شنبه", tasks: ["فارسی، درس ۲", "دینی، درس ۲", "عربی، درس ۱، ترجمه", "تاریخ، درس ۲", "جامعه‌شناسی، درس ۳"] },
+            { id: 4, dateStr: "۲۴ خرداد", label: "یکشنبه", tasks: ["فارسی، درس ۳", "زبان، درس ۱، پارت ۲ از ۴", "دینی، درس ۳", "تاریخ، درس ۳"] },
+            { id: 5, dateStr: "۲۵ خرداد", label: "دوشنبه", tasks: ["فارسی، درس ۵", "جامعه‌شناسی، درس ۴", "عربی، درس ۲، قواعد", "دینی، درس ۴", "تاریخ، درس ۴"] },
+            { id: 6, dateStr: "۲۶ خرداد", label: "سه‌شنبه", tasks: ["فارسی، درس ۶", "زبان، درس ۱، پارت ۳ از ۴", "جامعه‌شناسی، درس ۵", "تاریخ، درس ۵"] },
+            { id: 7, dateStr: "۲۷ خرداد", label: "چهارشنبه", tasks: ["فارسی، درس ۷", "دینی، درس ۵", "عربی، درس ۲، ترجمه", "جامعه‌شناسی، درس ۶", "تاریخ، درس ۶"] },
+            { id: 8, dateStr: "۲۸ خرداد", label: "پنجشنبه", tasks: ["فارسی، درس ۸", "زبان، درس ۱، پارت ۴ از ۴", "دینی، درس ۶", "تاریخ، درس ۷"] },
+            { id: 9, dateStr: "۲۹ خرداد", label: "جمعه", tasks: ["فارسی، درس ۹", "جامعه‌شناسی، درس ۷", "عربی، درس ۳، قواعد", "دینی، درس ۷", "تاریخ، درس ۸"] },
+            { id: 10, dateStr: "۳۰ خرداد", label: "شنبه", tasks: ["فارسی، درس ۱۰", "زبان، درس ۲، پارت ۱ از ۴", "جامعه‌شناسی، درس ۸", "دینی، درس ۸"] },
+            { id: 11, dateStr: "۳۱ خرداد", label: "یکشنبه", tasks: ["فارسی، درس ۱۱", "تاریخ، درس ۹", "عربی، درس ۳، ترجمه", "جامعه‌شناسی، درس ۹", "دینی، درس ۹"] },
+            { id: 12, dateStr: "۱ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۱۲", "زبان، درس ۲، پارت ۲ از ۴", "تاریخ، درس ۱۰", "دینی، درس ۱۰"] },
+            { id: 13, dateStr: "۲ تیر", label: "سه‌شنبه", tasks: ["فارسی، درس ۱۴", "جامعه‌شناسی، درس ۱۰", "عربی، درس ۴، قواعد", "تاریخ، درس ۱۱", "دینی، درس ۱۱"] },
+            { id: 14, dateStr: "۳ تیر", label: "چهارشنبه", tasks: ["فارسی، درس ۱۵", "زبان، درس ۲، پارت ۳ از ۴", "جامعه‌شناسی، درس ۱۱", "تاریخ، درس ۱۲"] },
+            { id: 15, dateStr: "۴ تیر", label: "پنجشنبه", tasks: ["فارسی، درس ۱۶", "عربی، درس ۴، ترجمه", "دینی، درس ۱۲", "جامعه‌شناسی، درس ۱۲", "تاریخ، درس ۱۳"] },
+            { id: 16, dateStr: "۵ تیر", label: "جمعه", tasks: ["فارسی، درس ۱۷", "زبان، EXP: ۲، پارت ۴ از ۴", "دینی، درس ۱۳", "تاریخ، درس ۱۴"] },
+            { id: 17, dateStr: "۶ تیر", label: "شنبه", tasks: ["فارسی، درس ۱۸", "جامعه‌شناسی، درس ۱۳", "عربی، درس ۵، قواعد", "دینی، درس ۱۴", "تاریخ، درس ۱۵"] },
+            { id: 18, dateStr: "۷ تیر", label: "یکشنبه", tasks: ["فارسی، نیایش", "زبان، درس ۳، پارت ۱ از ۴", "جامعه‌شناسی، درس ۱۴", "دینی، درس ۱۵"] },
+            { id: 19, dateStr: "۸ تیر", label: "دوشنبه", tasks: ["عربی، درس ۵، ترجمه", "تاریخ، درس ۱۶", "جامعه‌شناسی، درس ۱۵", "دینی، درس ۱۶", "زبان، درس ۳، پارت ۲ از ۴"] },
+            { id: 20, dateStr: "۹ تیر", label: "سه‌شنبه", tasks: ["عربی، درس ۶، قواعد", "جامعه‌شناسی، درس ۱۶", "دینی، درس ۱۷", "زبان، درس ۳، پارت ۳ از ۴"] },
+            { id: 21, dateStr: "۱۰ تیر", label: "چهارشنبه", tasks: ["عربی، درس ۶، ترجمه", "عربی، درس ۷، قواعد", "دینی، درس ۱۸", "زبان، درس ۳، پارت ۴ از ۴", "عربی، درس ۷، ترجمه"] }
         ];
 
         // State Core Object
-        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress')) || {};
+        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v2')) || {};
         let activeDayId = 1;
 
         // Persist Data helper
         function saveToStorage() {
-            localStorage.setItem('study_dashboard_progress', JSON.stringify(userProgress));
+            localStorage.setItem('study_dashboard_progress_v2', JSON.stringify(userProgress));
             updateOverallProgressBars();
         }
 
@@ -167,7 +164,7 @@
 
                 if (matchedDay) {
                     activeDayId = matchedDay.id;
-                    document.getElementById('today-greeting').innerText = `برنامه امروز شما (${matchedDay.dateStr}) به طور خودکار فعال شد. با قدرت جلو برو!`;
+                    document.getElementById('today-greeting').innerText = `برنامه امروز شما (${matchedDay.label} ${matchedDay.dateStr}) به طور خودکار فعال شد. با قدرت جلو برو!`;
                 }
             } catch (e) {
                 console.log("Jalali Date detection fallback triggered", e);
@@ -204,6 +201,7 @@
                     activeDayId = day.id;
                     renderDaysMenu();
                     renderFocusedDay();
+                    updateOverallProgressBars();
                 };
 
                 btn.innerHTML = `
@@ -287,13 +285,6 @@
             userProgress[taskKey].completed = checked;
             saveToStorage();
             renderFocusedDay();
-            
-            // Fast visual update without full sidebar refresh for smoothness
-            const currentDayObj = scheduleData.find(d => d.id === activeDayId);
-            let completedCount = 0;
-            currentDayObj.tasks.forEach((_, tIdx) => {
-                if (userProgress[`day_${activeDayId}_task_${tIdx}`]?.completed) completedCount++;
-            });
             renderDaysMenu();
         };
 
