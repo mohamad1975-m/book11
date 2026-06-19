@@ -4,12 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>هوشنگ</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         /* ==========================================================
            فونت ایران‌سنس ایکس (تنها یک فایل Medium موجود است)
-           برای جلوگیری از Fallback، هر سه وزن به همین فایل نسبت داده می‌شود
            ========================================================== */
         @font-face {
             font-family: 'IRANSansX';
@@ -30,19 +28,13 @@
             font-display: swap;
         }
 
-        /* ===== اعمال اجباری فونت روی تک‌تک المان‌ها ===== */
-        html,
-        body,
-        * {
-            font-family: 'IRANSansX', Tahoma, sans-serif !important;
-        }
+        html, body, * { font-family: 'IRANSansX', Tahoma, sans-serif !important; }
 
         body {
             background-color: #f8fafc;
             min-height: 100vh;
         }
 
-        /* ===== کارت‌های شیشه‌ای ===== */
         .glass-card {
             background: rgba(255, 255, 255, 0.82);
             backdrop-filter: blur(14px);
@@ -50,76 +42,33 @@
             border: 1px solid rgba(255, 255, 255, 0.55);
         }
 
-        /* ===== اسکرول اختصاصی ===== */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .bar-chart-container {
             mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
         }
 
-        /* ===== کانفتی (کاغذ رنگی) ===== */
         #confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999; overflow: hidden;
         }
         .confetti-piece {
-            position: absolute;
-            top: -20px;
-            width: 10px;
-            height: 6px;
-            border-radius: 2px;
-            opacity: 1;
-            animation: confettiFall linear forwards;
+            position: absolute; top: -20px; width: 10px; height: 6px;
+            border-radius: 2px; opacity: 1; animation: confettiFall linear forwards;
         }
         @keyframes confettiFall {
-            0% {
-                transform: translateY(0) rotate(0deg) scale(1);
-                opacity: 1;
-            }
-            20% {
-                transform: translateY(20vh) rotate(80deg) translateX(18px);
-                opacity: 1;
-            }
-            40% {
-                transform: translateY(40vh) rotate(200deg) translateX(-22px);
-                opacity: 1;
-            }
-            60% {
-                transform: translateY(60vh) rotate(350deg) translateX(14px);
-                opacity: 0.9;
-            }
-            80% {
-                transform: translateY(80vh) rotate(500deg) translateX(-10px);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(105vh) rotate(720deg) translateX(6px);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+            20% { transform: translateY(20vh) rotate(80deg) translateX(18px); opacity: 1; }
+            40% { transform: translateY(40vh) rotate(200deg) translateX(-22px); opacity: 1; }
+            60% { transform: translateY(60vh) rotate(350deg) translateX(14px); opacity: 0.9; }
+            80% { transform: translateY(80vh) rotate(500deg) translateX(-10px); opacity: 0.7; }
+            100% { transform: translateY(105vh) rotate(720deg) translateX(6px); opacity: 0; }
         }
 
-        /* ===== مودال تنظیمات ===== */
         .settings-overlay {
             background: rgba(15, 23, 42, 0.55);
             backdrop-filter: blur(6px);
@@ -127,64 +76,43 @@
             transition: opacity 0.25s ease;
         }
         .settings-modal {
-            max-width: 420px;
-            width: 92%;
+            max-width: 420px; width: 92%;
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
         }
-        .settings-modal.hidden-modal {
-            transform: scale(0.92) translateY(20px);
-            opacity: 0;
-            pointer-events: none;
-        }
-        .settings-modal.visible-modal {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .settings-modal.hidden-modal { transform: scale(0.92) translateY(20px); opacity: 0; pointer-events: none; }
+        .settings-modal.visible-modal { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
 
-        @media (max-width: 640px) {
-            .confetti-piece {
-                width: 7px;
-                height: 5px;
-            }
-        }
+        @media (max-width: 640px) { .confetti-piece { width: 7px; height: 5px; } }
     </style>
 </head>
 <body>
 
-    <!-- ===== کانتینر کانفتی ===== -->
+    <audio id="bg-music" src="music1.mp3" loop preload="auto"></audio>
+
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[9999] flex flex-col gap-2"></div>
+
     <div id="confetti-container"></div>
 
-    <!-- ===== مودال تنظیمات ===== -->
     <div id="settings-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="settings-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                    <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     تنظیمات
                 </h3>
                 <button id="close-settings-btn" class="text-slate-400 hover:text-slate-700 transition-colors p-2 rounded-xl hover:bg-slate-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
             <p class="text-sm text-slate-500 mb-6">مدیریت اطلاعات پیشرفت شما</p>
             <div class="flex flex-col gap-4">
                 <button id="export-data-btn" class="flex items-center justify-center gap-3 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-indigo-600 to-indigo-500 text-white font-bold shadow-md shadow-indigo-200/50 hover:shadow-indigo-300/60 hover:scale-[1.02] transition-all duration-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    خروجی اطلاعات (دانلود نسخه پشتیبان)
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                    خروجی اطلاعات
                 </button>
                 <button id="import-data-btn" class="flex items-center justify-center gap-3 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-600 to-emerald-500 text-white font-bold shadow-md shadow-emerald-200/50 hover:shadow-emerald-300/60 hover:scale-[1.02] transition-all duration-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                    بازیابی اطلاعات (آپلود فایل پشتیبان)
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    بازیابی اطلاعات
                 </button>
                 <input id="file-input" type="file" accept=".json" class="hidden" />
             </div>
@@ -192,10 +120,7 @@
         </div>
     </div>
 
-    <!-- ===== محتوای اصلی ===== -->
     <div class="max-w-6xl mx-auto px-4 pt-8 pb-12">
-
-        <!-- ===== هدر ===== -->
         <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 glass-card p-6 rounded-3xl shadow-xl shadow-slate-100">
             <div>
                 <h1 class="text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent">هوشنگ؛ برنامه‌ریزی امتحان نهایی</h1>
@@ -205,22 +130,16 @@
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span id="current-date-display" class="font-bold text-slate-700 text-sm">امروز: —</span>
                 <button id="settings-toggle-btn" class="mr-1 p-1.5 rounded-xl text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200" title="تنظیمات">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
             </div>
         </header>
 
-        <!-- ===== نوارهای پیشرفت ===== -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="glass-card p-6 rounded-3xl shadow-lg shadow-slate-100 border border-slate-100">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-sm font-bold text-slate-600 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                        </svg>
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
                         میزان پیشرفت برنامه‌ی امروز
                     </span>
                     <span id="today-progress-percent" class="text-lg font-black text-indigo-600">0%</span>
@@ -232,9 +151,7 @@
             <div class="glass-card p-6 rounded-3xl shadow-lg shadow-slate-100 border border-slate-100">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-sm font-bold text-slate-600 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                        <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                         پیشرفت کل دوره
                     </span>
                     <span id="total-progress-percent" class="text-lg font-black text-emerald-600">0%</span>
@@ -245,13 +162,10 @@
             </div>
         </section>
 
-        <!-- ===== نمودار آماری ===== -->
         <section class="mb-8 glass-card p-6 rounded-3xl shadow-lg shadow-slate-100 border border-slate-100">
             <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-2">
-                    <svg class="w-6 h-6 text-fuchsia-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
+                    <svg class="w-6 h-6 text-fuchsia-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
                     <h3 class="text-lg font-bold text-slate-700">آمار و نمودار مطالعه</h3>
                 </div>
                 <div class="text-sm text-slate-500 bg-fuchsia-50 px-4 py-2 rounded-xl">
@@ -264,10 +178,7 @@
             </div>
         </section>
 
-        <!-- ===== بخش اصلی: لیست تسک‌ها + تقویم ===== -->
         <main id="main-panel-area" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-
-            <!-- لیست تسک‌ها -->
             <div class="lg:col-span-2 order-1 lg:order-1 space-y-6">
                 <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-50 min-h-[500px]">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-5 mb-6 gap-4">
@@ -275,102 +186,71 @@
                             <div id="day-badge-container" class="mb-2 min-h-[28px] flex items-center"></div>
                             <h2 id="selected-day-title" class="text-2xl font-black text-slate-800">بارگذاری...</h2>
                         </div>
-                        <div class="text-sm text-slate-400 bg-slate-50 px-4 py-2 rounded-xl self-start sm:self-auto">
-                            جمع مطالعه امروز: <span id="day-total-minutes" class="font-bold text-slate-700">0</span> دقیقه
+                        
+                        <div class="flex flex-col gap-2 self-start sm:self-auto items-end w-full sm:w-auto">
+                            <div class="text-sm text-slate-400 bg-slate-50 px-4 py-2 rounded-xl w-full text-center sm:text-right">
+                                جمع مطالعه امروز: <span id="day-total-minutes" class="font-bold text-slate-700">0</span> دقیقه
+                            </div>
+                            <button id="music-btn" onclick="toggleUserMusic()" class="flex items-center justify-center gap-2 w-full text-xs px-3 py-2 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors shadow-sm">
+                                <svg id="music-icon-off" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
+                                <svg id="music-icon-on" class="w-4 h-4 hidden text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                                <span id="music-btn-text">موسیقی: قطع</span>
+                            </button>
                         </div>
+                        
                     </div>
                     <div id="tasks-list-container" class="space-y-4"></div>
                 </div>
             </div>
 
-            <!-- تقویم روزها -->
             <div class="lg:col-span-1 order-2 lg:order-2 glass-card p-5 rounded-3xl shadow-xl max-h-[680px] flex flex-col">
                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">تقویم روزهای دوره</h3>
                 <div id="days-menu-container" class="space-y-2 overflow-y-auto custom-scrollbar pr-1 flex-1"></div>
             </div>
-
         </main>
     </div>
 
     <script>
-        // ============================================================
-        //  داده‌های برنامه
-        // ============================================================
         const scheduleData = [
-            { id: 1, dateStr: "۲۶ خرداد", label: "سه‌شنبه", tasks: ["فارسی، ستایش", "جامعه‌شناسی، درس ۱", "دینی، درس ۱",
-                    "عربی، درس ۱، قواعد", "زبان، درس ۱، پارت ۱ از ۴", "تاریخ، درس ۱"
-                ] },
-            { id: 2, dateStr: "۲۷ خرداد", label: "چهارشنبه", tasks: ["فارسی، درس ۱", "جامعه‌شناسی، درس ۲",
-                    "دینی، درس ۲", "عربی، درس ۱، ترجمه", "زبان، درس ۱، پارت ۲ از ۴", "تاریخ، درس ۲"
-                ] },
-            { id: 3, dateStr: "۲۸ خرداد", label: "پنجشنبه", tasks: ["فارسی، درس ۲", "جامعه‌شناسی، درس ۳",
-                    "دینی، درس ۳", "عربی، درس ۲، قواعد", "زبان، درس ۱، پارت ۳ از ۴", "تاریخ، درس ۳"
-                ] },
-            { id: 4, dateStr: "۲۹ خرداد", label: "جمعه", tasks: ["فارسی، درس ۳", "جامعه‌شناسی، درس ۴", "دینی، درس ۴",
-                    "عربی، درس ۲، ترجمه", "زبان، درس ۱، پارت ۴ از ۴", "تاریخ، درس ۴"
-                ] },
-            { id: 5, dateStr: "۳۰ خرداد", label: "شنبه", tasks: ["فارسی، درس ۵", "جامعه‌شناسی، درس ۵", "دینی، درس ۵",
-                    "عربی، درس ۳، قواعد", "زبان، درس ۲، پارت ۱ از ۴", "تاریخ، درس ۵"
-                ] },
-            { id: 6, dateStr: "۳۱ خرداد", label: "یکشنبه", tasks: ["فارسی، درس ۶", "جامعه‌شناسی، درس ۶",
-                    "دینی، درس ۶", "عربی، درس ۳، ترجمه", "زبان، درس ۲، پارت ۲ از ۴", "تاریخ، درس ۶"
-                ] },
-            { id: 7, dateStr: "۱ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۷", "جامعه‌شناسی، درس ۷", "دینی، درس ۷",
-                    "عربی، درس ۴، قواعد", "زبان، درس ۲، پارت ۳ از ۴", "تاریخ، درس ۷"
-                ] },
-            { id: 8, dateStr: "۲ تیر", label: "سه‌شنبه", tasks: ["فارسی، درس ۸", "جامعه‌شناسی، درس ۸",
-                    "دینی، درس ۸", "عربی، درس ۴، ترجمه", "زبان، درس ۲، پارت ۴ از ۴", "تاریخ، درس ۸"
-                ] },
+            { id: 1, dateStr: "۲۶ خرداد", label: "سه‌شنبه", tasks: ["فارسی، ستایش", "جامعه‌شناسی، درس ۱", "دینی، درس ۱", "عربی، درس ۱، قواعد", "زبان، درس ۱، پارت ۱ از ۴", "تاریخ، درس ۱"] },
+            { id: 2, dateStr: "۲۷ خرداد", label: "چهارشنبه", tasks: ["فارسی، درس ۱", "جامعه‌شناسی، درس ۲", "دینی، درس ۲", "عربی، درس ۱، ترجمه", "زبان، درس ۱، پارت ۲ از ۴", "تاریخ، درس ۲"] },
+            { id: 3, dateStr: "۲۸ خرداد", label: "پنجشنبه", tasks: ["فارسی، درس ۲", "جامعه‌شناسی، درس ۳", "دینی، درس ۳", "عربی، درس ۲، قواعد", "زبان، درس ۱، پارت ۳ از ۴", "تاریخ، درس ۳"] },
+            { id: 4, dateStr: "۲۹ خرداد", label: "جمعه", tasks: ["فارسی، درس ۳", "جامعه‌شناسی، درس ۴", "دینی، درس ۴", "عربی، درس ۲، ترجمه", "زبان، درس ۱، پارت ۴ از ۴", "تاریخ، درس ۴"] },
+            { id: 5, dateStr: "۳۰ خرداد", label: "شنبه", tasks: ["فارسی، درس ۵", "جامعه‌شناسی، درس ۵", "دینی، درس ۵", "عربی، درس ۳، قواعد", "زبان، درس ۲، پارت ۱ از ۴", "تاریخ، درس ۵"] },
+            { id: 6, dateStr: "۳۱ خرداد", label: "یکشنبه", tasks: ["فارسی، درس ۶", "جامعه‌شناسی، درس ۶", "دینی، درس ۶", "عربی، درس ۳، ترجمه", "زبان، درس ۲، پارت ۲ از ۴", "تاریخ، درس ۶"] },
+            { id: 7, dateStr: "۱ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۷", "جامعه‌شناسی، درس ۷", "دینی، درس ۷", "عربی، درس ۴، قواعد", "زبان، درس ۲، پارت ۳ از ۴", "تاریخ، درس ۷"] },
+            { id: 8, dateStr: "۲ تیر", label: "سه‌شنبه", tasks: ["فارسی، درس ۸", "جامعه‌شناسی، درس ۸", "دینی، درس ۸", "عربی، درس ۴، ترجمه", "زبان، درس ۲، پارت ۴ از ۴", "تاریخ، درس ۸"] },
             { id: 9, dateStr: "۳ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
             { id: 10, dateStr: "۴ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
-            { id: 11, dateStr: "۵ تیر", label: "شنبه", tasks: ["فارسی، درس ۹", "جامعه‌شناسی، درس ۹", "دینی، درس ۹",
-                    "زبان، درس ۳، پارت ۱ از ۴", "تاریخ، درس ۹"
-                ] },
-            { id: 12, dateStr: "۶ تیر", label: "یکشنبه", tasks: ["فارسی، درس ۱۰", "جامعه‌شناسی، درس ۱۰",
-                    "دینی، درس ۱۰", "عربی، درس ۵، قواعد", "تاریخ، درس ۱۰"
-                ] },
-            { id: 13, dateStr: "۷ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۱۱", "جامعه‌شناسی، درس ۱۱",
-                    "دینی، درس ۱۱", "زبان، درس ۳، پارت ۲ از ۴", "تاریخ، درس ۱۱"
-                ] },
-            { id: 14, dateStr: "۸ تیر", label: "سه‌شنبه", tasks: ["فارسی، درس ۱۲", "جامعه‌شناسی، درس ۱۲",
-                    "دینی، درس ۱۲", "عربی، درس ۵، ترجمه", "تاریخ، درس ۱۲"
-                ] },
-            { id: 15, dateStr: "۹ تیر", label: "چهارشنبه", tasks: ["فارسی، درس ۱۴", "جامعه‌شناسی، درس ۱۳",
-                    "دینی، درس ۱۳", "زبان، درس ۳، پارت ۳ از ۴", "تاریخ، درس ۱۳"
-                ] },
-            { id: 16, dateStr: "۱۰ تیر", label: "پنجشنبه", tasks: ["فارسی، درس ۱۵", "جامعه‌شناسی، درس ۱۴",
-                    "دینی، درس ۱۴", "عربی، درس ۶، قواعد", "تاریخ، درس ۱۴"
-                ] },
-            { id: 17, dateStr: "۱۱ تیر", label: "جمعه", tasks: ["فارسی، درس ۱۶", "جامعه‌شناسی، درس ۱۵",
-                    "دینی، درس ۱۵", "زبان، درس ۳، پارت ۴ از ۴", "تاریخ، درس ۱۵"
-                ] },
-            { id: 18, dateStr: "۱۲ تیر", label: "شنبه", tasks: ["فارسی، درس ۱۷", "فارسی، درس ۱۸", "فارسی، نیایش",
-                    "دینی، درس ۱۶"
-                ] },
+            { id: 11, dateStr: "۵ تیر", label: "شنبه", tasks: ["فارسی، درس ۹", "جامعه‌شناسی، درس ۹", "دینی، درس ۹", "زبان، درس ۳، پارت ۱ از ۴", "تاریخ، درس ۹"] },
+            { id: 12, dateStr: "۶ تیر", label: "یکشنبه", tasks: ["فارسی، درس ۱۰", "جامعه‌شناسی، درس ۱۰", "دینی، درس ۱۰", "عربی، درس ۵، قواعد", "تاریخ، درس ۱۰"] },
+            { id: 13, dateStr: "۷ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۱۱", "جامعه‌شناسی، درس ۱۱", "دینی، درس ۱۱", "زبان، درس ۳، پارت ۲ از ۴", "تاریخ، درس ۱۱"] },
+            { id: 14, dateStr: "۸ تیر", label: "سه‌شنبه", tasks: ["فارسی، درس ۱۲", "جامعه‌شناسی، درس ۱۲", "دینی، درس ۱۲", "عربی، درس ۵، ترجمه", "تاریخ، درس ۱۲"] },
+            { id: 15, dateStr: "۹ تیر", label: "چهارشنبه", tasks: ["فارسی، درس ۱۴", "جامعه‌شناسی، درس ۱۳", "دینی، درس ۱۳", "زبان، درس ۳، پارت ۳ از ۴", "تاریخ، درس ۱۳"] },
+            { id: 16, dateStr: "۱۰ تیر", label: "پنجشنبه", tasks: ["فارسی، درس ۱۵", "جامعه‌شناسی، درس ۱۴", "دینی، درس ۱۴", "عربی، درس ۶، قواعد", "تاریخ، درس ۱۴"] },
+            { id: 17, dateStr: "۱۱ تیر", label: "جمعه", tasks: ["فارسی، درس ۱۶", "جامعه‌شناسی، درس ۱۵", "دینی، درس ۱۵", "زبان، درس ۳، پارت ۴ از ۴", "تاریخ، درس ۱۵"] },
+            { id: 18, dateStr: "۱۲ تیر", label: "شنبه", tasks: ["فارسی، درس ۱۷", "فارسی، درس ۱۸", "فارسی، نیایش", "دینی، درس ۱۶"] },
             { id: 19, dateStr: "۱۳ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
             { id: 20, dateStr: "۱۴ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
             { id: 21, dateStr: "۱۵ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
-            { id: 22, dateStr: "۱۶ تیر", label: "چهارشنبه", tasks: ["عربی، درس ۶، ترجمه", "عربی، درس ۷، قواعد",
-                    "دینی، درس ۱۷"
-                ] },
-            { id: 23, dateStr: "۱۷ تیر", label: "پنجشنبه", tasks: ["تاریخ، درس ۱۶", "عربی، درس ۷، ترجمه",
-                    "دینی، درس ۱۸", "جامعه‌شناسی، درس ۱۶"
-                ] }
+            { id: 22, dateStr: "۱۶ تیر", label: "چهارشنبه", tasks: ["عربی، درس ۶، ترجمه", "عربی، درس ۷، قواعد", "دینی، درس ۱۷"] },
+            { id: 23, dateStr: "۱۷ تیر", label: "پنجشنبه", tasks: ["تاریخ، درس ۱۶", "عربی، درس ۷، ترجمه", "دینی، درس ۱۸", "جامعه‌شناسی، درس ۱۶"] }
         ];
 
-        // ============================================================
-        //  وضعیت اولیه
-        // ============================================================
         let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v3')) || {};
         let activeDayId = 1;
         let realCurrentDayId = null;
+        
+        // تنظیمات تایمر زنده
+        let activeTimerObj = { taskKey: null, interval: null, seconds: 0, idx: null };
 
-        // ============================================================
-        //  ابزارها
-        // ============================================================
+        // تنظیمات موزیک هوشمند
+        const audio = document.getElementById('bg-music');
+        audio.muted = true; // پیش‌فرض قطع
+        let isMusicWantedByUser = false;
+
         function p2eDigits(str) {
-            return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
-                .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+            return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
         }
 
         function saveToStorage() {
@@ -379,16 +259,11 @@
             renderStatistics();
         }
 
-        // ============================================================
-        //  تشخیص روز جاری
-        // ============================================================
         function initCurrentDateDetection() {
             try {
                 const options = { month: 'long', day: 'numeric' };
-                const formatter = new Intl.DateTimeFormat('fa-IR', options);
-                const formattedToday = formatter.format(new Date());
+                const formattedToday = new Intl.DateTimeFormat('fa-IR', options).format(new Date());
                 document.getElementById('current-date-display').innerText = `امروز: ${formattedToday}`;
-
                 const todayClean = p2eDigits(formattedToday.trim().replace(/\s+/g, ' '));
                 const matchedDay = scheduleData.find(item => {
                     const dataClean = p2eDigits(item.dateStr.trim().replace(/\s+/g, ' '));
@@ -397,10 +272,9 @@
                 if (matchedDay) {
                     realCurrentDayId = matchedDay.id;
                     activeDayId = matchedDay.id;
-                    document.getElementById('today-greeting').innerText =
-                        `برنامه امروزت (${matchedDay.label} ${matchedDay.dateStr}) رو برو انجام بده. لعن عمر فراموش نشه!`;
+                    document.getElementById('today-greeting').innerText = `برنامه امروزت (${matchedDay.label} ${matchedDay.dateStr}) رو برو انجام بده. لعن عمر فراموش نشه!`;
                 }
-            } catch (_) { /* fallback */ }
+            } catch (_) {}
         }
 
         window.goToCurrentDay = function() {
@@ -412,52 +286,43 @@
             }
         };
 
-        // ============================================================
-        //  رندر تقویم روزها
-        // ============================================================
         function renderDaysMenu() {
             const container = document.getElementById('days-menu-container');
             container.innerHTML = '';
             scheduleData.forEach(day => {
                 const isSelected = day.id === activeDayId;
                 let completedCount = 0;
-                day.tasks.forEach((_, idx) => {
-                    if (userProgress[`day_${day.id}_task_${idx}`]?.completed) completedCount++;
-                });
+                day.tasks.forEach((_, idx) => { if (userProgress[`day_${day.id}_task_${idx}`]?.completed) completedCount++; });
                 const isFullyDone = completedCount === day.tasks.length && day.tasks.length > 0;
 
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className =
-                    `w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${
-                        isSelected
-                            ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold'
-                            : isFullyDone
-                                ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70'
-                                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'
-                    }`;
-                btn.onclick = () => {
-                    activeDayId = day.id;
-                    renderDaysMenu();
-                    renderFocusedDay();
-                    updateOverallProgressBars();
-                };
-                btn.innerHTML = `
-                    <div class="flex flex-col">
-                        <span class="${isSelected ? 'text-indigo-100' : 'text-slate-400'} text-xs font-semibold">${day.label}</span>
-                        <span class="text-sm mt-0.5">${day.dateStr}</span>
-                    </div>
-                    <span class="text-xs px-2.5 py-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : isFullyDone ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">
-                        ${completedCount}/${day.tasks.length}
-                    </span>
-                `;
+                btn.className = `w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${isSelected ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold' : isFullyDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'}`;
+                btn.onclick = () => { activeDayId = day.id; renderDaysMenu(); renderFocusedDay(); updateOverallProgressBars(); };
+                btn.innerHTML = `<div class="flex flex-col"><span class="${isSelected ? 'text-indigo-100' : 'text-slate-400'} text-xs font-semibold">${day.label}</span><span class="text-sm mt-0.5">${day.dateStr}</span></div><span class="text-xs px-2.5 py-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : isFullyDone ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">${completedCount}/${day.tasks.length}</span>`;
                 container.appendChild(btn);
             });
         }
 
-        // ============================================================
-        //  رندر روز انتخاب‌شده + تسک‌ها
-        // ============================================================
+        // ویژگی شماره 1 (لینک‌دار کردن نام دروس)
+        function formatSubjectLink(taskName) {
+            const linkMap = {
+                "فارسی": "farsi.html",
+                "تاریخ": "tarikh.html",
+                "جامعه‌شناسی": "jamee.html",
+                "جامعه شناسی": "jamee.html",
+                "دینی": "dini.html",
+                "عربی": "arabi.html",
+                "زبان": "zaban.html"
+            };
+            for (const [subj, link] of Object.entries(linkMap)) {
+                if (taskName.startsWith(subj)) {
+                    return taskName.replace(subj, `<a href="${link}" class="text-indigo-600 hover:text-indigo-800 font-extrabold underline decoration-indigo-300 underline-offset-4 transition-colors">${subj}</a>`);
+                }
+            }
+            return taskName;
+        }
+
         function renderFocusedDay() {
             const currentDayObj = scheduleData.find(d => d.id === activeDayId);
             if (!currentDayObj) return;
@@ -466,76 +331,62 @@
 
             const badgeContainer = document.getElementById('day-badge-container');
             if (realCurrentDayId) {
-                if (activeDayId === realCurrentDayId) {
-                    badgeContainer.innerHTML =
-                        `<span class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full shadow-sm">روز جاری</span>`;
-                } else {
-                    badgeContainer.innerHTML =
-                        `<button onclick="goToCurrentDay()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-500 hover:text-white border border-indigo-100 px-3 py-1.5 rounded-full shadow-sm transition-all cursor-pointer inline-flex items-center gap-1.5 group">
-                            <svg class="w-3.5 h-3.5 text-indigo-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
-                            رفتن به روز جاری
-                        </button>`;
-                }
-            } else {
-                badgeContainer.innerHTML =
-                    `<span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">برنامه انتخاب شده</span>`;
-            }
+                if (activeDayId === realCurrentDayId) badgeContainer.innerHTML = `<span class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full shadow-sm">روز جاری</span>`;
+                else badgeContainer.innerHTML = `<button onclick="goToCurrentDay()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-500 hover:text-white border border-indigo-100 px-3 py-1.5 rounded-full shadow-sm transition-all cursor-pointer inline-flex items-center gap-1.5 group"><svg class="w-3.5 h-3.5 text-indigo-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>رفتن به روز جاری</button>`;
+            } else badgeContainer.innerHTML = `<span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">برنامه انتخاب شده</span>`;
 
             const listContainer = document.getElementById('tasks-list-container');
             listContainer.innerHTML = '';
-            let dayTotalMin = 0;
-
+            
             currentDayObj.tasks.forEach((taskName, idx) => {
                 const taskKey = `day_${activeDayId}_task_${idx}`;
                 const isCompleted = userProgress[taskKey]?.completed || false;
                 const minutesSpent = userProgress[taskKey]?.minutes || '';
+                const taskDisplayName = formatSubjectLink(taskName);
 
-                if (isCompleted && minutesSpent) {
-                    dayTotalMin += parseInt(minutesSpent) || 0;
+                // مدیریت نمایش هنگام کار کردن تایمر همون تسک
+                const isTimerActive = activeTimerObj.taskKey === taskKey;
+                let displayTime = minutesSpent;
+                let isReadOnly = "";
+                let timerIcon = getPlayIcon();
+                if (isTimerActive) {
+                    const m = Math.floor(activeTimerObj.seconds / 60);
+                    const s = activeTimerObj.seconds % 60;
+                    displayTime = `${m}:${s < 10 ? '0' : ''}${s}`;
+                    isReadOnly = "readonly";
+                    timerIcon = getPauseIcon();
                 }
 
                 const row = document.createElement('div');
-                row.className =
-                    `flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition-all duration-300 gap-4 ${
-                        isCompleted
-                            ? 'bg-gradient-to-l from-emerald-50/70 to-white border-emerald-200 shadow-sm'
-                            : 'bg-white border-slate-100 hover:border-slate-200 shadow-sm hover:shadow'
-                    }`;
-
+                row.className = `flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition-all duration-300 gap-4 ${isCompleted ? 'bg-gradient-to-l from-emerald-50/70 to-white border-emerald-200 shadow-sm' : 'bg-white border-slate-100 hover:border-slate-200 shadow-sm hover:shadow'}`;
+                
+                // ویژگی شماره 2 (اضافه شدن دکمه تایمر به همراه تغییر نوع input به متن برای نمایش ثانیه)
                 row.innerHTML = `
                     <div class="flex items-center gap-4 flex-1">
                         <label class="relative flex items-center cursor-pointer">
-                            <input type="checkbox" ${isCompleted ? 'checked' : ''} 
-                                onchange="toggleTaskStatus(${idx}, this.checked)"
-                                class="peer sr-only">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleTaskStatus(${idx}, this.checked)" class="peer sr-only">
                             <div class="w-6 h-6 bg-white border-2 border-slate-200 rounded-lg transition-all peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center shadow-sm">
-                                <svg class="w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
+                                <svg class="w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                             </div>
                         </label>
                         <span class="text-sm font-semibold transition-colors duration-200 ${isCompleted ? 'text-emerald-900 line-through opacity-75' : 'text-slate-700'}">
-                            ${taskName}
+                            ${taskDisplayName}
                         </span>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-auto">
+                        <button id="timer-btn-${idx}" onclick="toggleTimer(${idx})" class="p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm" title="شروع / توقف تایمر">
+                            ${timerIcon}
+                        </button>
                         <span class="text-xs text-slate-400">زمان:</span>
-                        <input type="number" min="0" placeholder="0" 
-                            value="${minutesSpent}"
-                            oninput="updateTaskMinutes(${idx}, this.value)"
-                            class="w-20 px-3 py-1.5 text-center bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 placeholder-slate-300">
+                        <input type="text" id="time-input-${idx}" placeholder="0" value="${displayTime}" ${isReadOnly} oninput="updateTaskMinutes(${idx}, this.value)" class="w-20 px-3 py-1.5 text-center bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 placeholder-slate-300">
                         <span class="text-xs text-slate-400">دقیقه</span>
                     </div>
                 `;
                 listContainer.appendChild(row);
             });
-
-            document.getElementById('day-total-minutes').innerText = dayTotalMin;
+            updateDayTotalUI();
         }
 
-        // ============================================================
-        //  کنترل تسک‌ها
-        // ============================================================
         window.toggleTaskStatus = function(idx, checked) {
             const taskKey = `day_${activeDayId}_task_${idx}`;
             if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0 };
@@ -543,146 +394,208 @@
             saveToStorage();
             renderFocusedDay();
             renderDaysMenu();
-
-            // === کانفتی: فقط وقتی تیک می‌خورد ===
-            if (checked) {
-                launchConfetti();
-            }
+            if (checked) launchConfetti();
         };
 
         window.updateTaskMinutes = function(idx, value) {
+            if (value.includes(':')) return; // در حین کار تایمر مقادیر دستی رو نادیده بگیر
             const taskKey = `day_${activeDayId}_task_${idx}`;
             if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0 };
             userProgress[taskKey].minutes = value ? parseInt(value) : 0;
             saveToStorage();
-
-            let dayTotalMin = 0;
-            const currentDayObj = scheduleData.find(d => d.id === activeDayId);
-            currentDayObj.tasks.forEach((_, tIdx) => {
-                const tk = `day_${activeDayId}_task_${tIdx}`;
-                if (userProgress[tk]?.completed && userProgress[tk]?.minutes) {
-                    dayTotalMin += parseInt(userProgress[tk].minutes) || 0;
-                }
-            });
-            document.getElementById('day-total-minutes').innerText = dayTotalMin;
+            updateDayTotalUI();
         };
 
-        // ============================================================
-        //  نوارهای پیشرفت
-        // ============================================================
-        function updateOverallProgressBars() {
-            let totalTasks = 0,
-                totalDone = 0;
-            let activeTasks = 0,
-                activeDone = 0;
+        function updateDayTotalUI() {
+            let dayTotalMin = 0;
+            const currentDayObj = scheduleData.find(d => d.id === activeDayId);
+            if(currentDayObj) {
+                currentDayObj.tasks.forEach((_, tIdx) => {
+                    const tk = `day_${activeDayId}_task_${tIdx}`;
+                    if (userProgress[tk]?.completed && userProgress[tk]?.minutes) {
+                        dayTotalMin += parseInt(userProgress[tk].minutes) || 0;
+                    }
+                });
+            }
+            document.getElementById('day-total-minutes').innerText = dayTotalMin;
+        }
 
+        /* === توابع ویژگی شماره 2 (سیستم تایمر) === */
+       let totalSecondsElapsed = 0; 
+
+   // --- ۱. جایگزین کردن متغیر قبلی ---
+// دیگه اون totalSecondsElapsed سراسری رو نیاز نداریم
+
+// --- ۲. تغییر در تابع toggleTimer ---
+window.toggleTimer = function(idx) {
+    const taskKey = `day_${activeDayId}_task_${idx}`;
+    
+    // لود کردن ثانیه‌های ذخیره شده برای همین تسک خاص
+    // (اگه چیزی ذخیره نشده، از صفر شروع کن)
+    if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0, seconds: 0 };
+    
+    if (audio.paused && isMusicWantedByUser) audio.play().catch(()=>{});
+
+    if (activeTimerObj.taskKey === taskKey) {
+        // --- استپ کردن تایمر ---
+        clearInterval(activeTimerObj.interval);
+        
+        // گرد کردن رو به بالا (Math.ceil)
+        const minutesRoundedUp = Math.ceil(userProgress[taskKey].seconds / 60);
+
+        userProgress[taskKey].minutes = minutesRoundedUp;
+        saveToStorage();
+
+        const input = document.getElementById(`time-input-${idx}`);
+        if (input) {
+            input.value = minutesRoundedUp;
+            input.removeAttribute('readonly');
+        }
+        const btn = document.getElementById(`timer-btn-${idx}`);
+        if (btn) btn.innerHTML = getPlayIcon();
+
+        activeTimerObj.taskKey = null;
+        activeTimerObj.interval = null;
+        activeTimerObj.idx = null;
+
+        updateDayTotalUI();
+        showToast("تایمر متوقف شد.");
+        if (isMusicWantedByUser) audio.muted = true;
+    } else {
+        // --- شروع یا ادامه دادن تایمر ---
+        if (activeTimerObj.taskKey) {
+            toggleTimer(activeTimerObj.idx);
+        }
+
+        activeTimerObj.taskKey = taskKey;
+        activeTimerObj.idx = idx;
+
+        const input = document.getElementById(`time-input-${idx}`);
+        const btn = document.getElementById(`timer-btn-${idx}`);
+        if (input) input.setAttribute('readonly', 'true');
+        if (btn) btn.innerHTML = getPauseIcon();
+
+        activeTimerObj.interval = setInterval(() => {
+            // افزایش ثانیه مختص همین تسک
+            userProgress[taskKey].seconds = (userProgress[taskKey].seconds || 0) + 1;
+            
+            if (input) {
+                const m = Math.floor(userProgress[taskKey].seconds / 60);
+                const s = userProgress[taskKey].seconds % 60;
+                input.value = `${m}:${s < 10 ? '0' : ''}${s}`;
+            }
+        }, 1000);
+
+        showToast("تایمر شروع شد.");
+        if (isMusicWantedByUser) audio.muted = false;
+    }
+};
+
+        function getPlayIcon() { return `<svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
+        function getPauseIcon() { return `<svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 text-sm font-bold flex items-center gap-2 border border-slate-700';
+            toast.innerHTML = `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> ${msg}`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        /* === توابع ویژگی شماره 3 (موزیک هوشمند) === */
+        window.toggleUserMusic = function() {
+            isMusicWantedByUser = !isMusicWantedByUser;
+            const btnOn = document.getElementById('music-icon-on');
+            const btnOff = document.getElementById('music-icon-off');
+            const btnText = document.getElementById('music-btn-text');
+            const btnWrap = document.getElementById('music-btn');
+
+            if (audio.paused) audio.play().catch(() => console.log("Waiting for user interaction"));
+
+            if (isMusicWantedByUser) {
+                btnOn.classList.remove('hidden');
+                btnOff.classList.add('hidden');
+                btnText.innerText = "موسیقی: فعال (هماهنگ با تایمر)";
+                btnWrap.classList.replace('text-slate-500', 'text-indigo-700');
+                btnWrap.classList.replace('bg-slate-100', 'bg-indigo-100');
+                
+                // اگه همون موقع یه تایمر فعاله، صدا وصل بشه
+                if (activeTimerObj.taskKey) audio.muted = false;
+                else audio.muted = true;
+            } else {
+                btnOn.classList.add('hidden');
+                btnOff.classList.remove('hidden');
+                btnText.innerText = "موسیقی: قطع";
+                btnWrap.classList.replace('text-indigo-700', 'text-slate-500');
+                btnWrap.classList.replace('bg-indigo-100', 'bg-slate-100');
+                audio.muted = true;
+            }
+        };
+
+        // بقیه توابع اصلی (نوار پیشرفت، نمودارها و تنظیمات) دست‌نخورده باقی می‌ماند...
+        function updateOverallProgressBars() {
+            let totalTasks = 0, totalDone = 0, activeTasks = 0, activeDone = 0;
             scheduleData.forEach(day => {
                 day.tasks.forEach((_, idx) => {
                     totalTasks++;
                     const done = userProgress[`day_${day.id}_task_${idx}`]?.completed || false;
                     if (done) totalDone++;
-                    if (day.id === activeDayId) {
-                        activeTasks++;
-                        if (done) activeDone++;
-                    }
+                    if (day.id === activeDayId) { activeTasks++; if (done) activeDone++; }
                 });
             });
-
             const tp = activeTasks > 0 ? Math.round((activeDone / activeTasks) * 100) : 0;
             document.getElementById('today-progress-percent').innerText = `${tp}%`;
             document.getElementById('today-progress-bar').style.width = `${tp}%`;
-
             const totP = totalTasks > 0 ? Math.round((totalDone / totalTasks) * 100) : 0;
             document.getElementById('total-progress-percent').innerText = `${totP}%`;
             document.getElementById('total-progress-bar').style.width = `${totP}%`;
         }
 
-        // ============================================================
-        //  نمودار آماری
-        // ============================================================
         function renderStatistics() {
             const container = document.getElementById('stats-chart-container');
             container.innerHTML = '';
-            let maxMinutes = 0,
-                grandTotal = 0;
-
+            let maxMinutes = 0, grandTotal = 0;
             const dayStats = scheduleData.map(day => {
                 let daily = 0;
                 day.tasks.forEach((_, idx) => {
                     const tk = `day_${day.id}_task_${idx}`;
-                    if (userProgress[tk]?.completed && userProgress[tk]?.minutes) {
-                        daily += parseInt(userProgress[tk].minutes) || 0;
-                    }
+                    if (userProgress[tk]?.completed && userProgress[tk]?.minutes) daily += parseInt(userProgress[tk].minutes) || 0;
                 });
                 if (daily > maxMinutes) maxMinutes = daily;
                 grandTotal += daily;
                 return { id: day.id, label: day.dateStr, minutes: daily, isRest: day.label === "استراحت" };
             });
-
             document.getElementById('grand-total-minutes').innerText = grandTotal;
-            document.getElementById('grand-total-hours').innerText =
-                `(${Math.floor(grandTotal/60)} ساعت و ${grandTotal%60} دقیقه)`;
-
+            document.getElementById('grand-total-hours').innerText = `(${Math.floor(grandTotal/60)} ساعت و ${grandTotal%60} دقیقه)`;
             const scale = maxMinutes === 0 ? 100 : maxMinutes;
-
             dayStats.forEach(stat => {
                 const h = stat.minutes > 0 ? Math.max((stat.minutes / scale) * 100, 4) : 2;
                 const wrapper = document.createElement('div');
                 wrapper.className = 'flex flex-col items-center flex-shrink-0 w-10 sm:w-12 group cursor-pointer';
-                wrapper.onclick = () => {
-                    activeDayId = stat.id;
-                    renderDaysMenu();
-                    renderFocusedDay();
-                    document.getElementById('main-panel-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                };
-
-                let barColor = stat.minutes > 0 ?
-                    'from-fuchsia-500 to-purple-400 group-hover:to-purple-300' :
-                    (stat.isRest ? 'bg-slate-100 border border-dashed border-slate-300' : 'bg-slate-200');
-
-                wrapper.innerHTML = `
-                    <div class="relative w-full flex justify-center h-32 items-end mb-2 rounded-t-lg transition-all duration-300 group-hover:-translate-y-1">
-                        <div class="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-xs py-1.5 px-3 rounded-xl whitespace-nowrap z-10 pointer-events-none shadow-lg">
-                            ${stat.minutes} دقیقه
-                            <div class="w-2 h-2 bg-slate-800 rotate-45 absolute -bottom-1 left-1/2 transform -translate-x-1/2"></div>
-                        </div>
-                        <div class="w-full rounded-t-md transition-all duration-700 ease-out ${stat.minutes > 0 ? 'bg-gradient-to-t ' + barColor + ' shadow-md shadow-fuchsia-200' : barColor}" 
-                             style="height: ${h}%"></div>
-                    </div>
-                    <span class="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap mt-2 ${stat.id === activeDayId ? 'text-fuchsia-600 font-bold' : ''}">
-                        ${stat.label}
-                    </span>
-                `;
+                wrapper.onclick = () => { activeDayId = stat.id; renderDaysMenu(); renderFocusedDay(); document.getElementById('main-panel-area').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+                let barColor = stat.minutes > 0 ? 'from-fuchsia-500 to-purple-400 group-hover:to-purple-300' : (stat.isRest ? 'bg-slate-100 border border-dashed border-slate-300' : 'bg-slate-200');
+                wrapper.innerHTML = `<div class="relative w-full flex justify-center h-32 items-end mb-2 rounded-t-lg transition-all duration-300 group-hover:-translate-y-1"><div class="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-xs py-1.5 px-3 rounded-xl whitespace-nowrap z-10 pointer-events-none shadow-lg">${stat.minutes} دقیقه<div class="w-2 h-2 bg-slate-800 rotate-45 absolute -bottom-1 left-1/2 transform -translate-x-1/2"></div></div><div class="w-full rounded-t-md transition-all duration-700 ease-out ${stat.minutes > 0 ? 'bg-gradient-to-t ' + barColor + ' shadow-md shadow-fuchsia-200' : barColor}" style="height: ${h}%"></div></div><span class="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap mt-2 ${stat.id === activeDayId ? 'text-fuchsia-600 font-bold' : ''}">${stat.label}</span>`;
                 container.appendChild(wrapper);
             });
         }
 
-        // ============================================================
-        //  💥 کانفتی (کاغذ رنگی)
-        // ============================================================
         let confettiTimer = null;
-
         function launchConfetti() {
             const container = document.getElementById('confetti-container');
             container.innerHTML = '';
-
-            const colors = [
-                '#EF4444', '#F97316', '#EAB308', '#22C55E',
-                '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6',
-                '#F472B6', '#A78BFA', '#34D399', '#FBBF24',
-                '#F87171', '#60A5FA', '#C084FC', '#FB923C'
-            ];
-
+            const colors = ['#EF4444', '#F97316', '#EAB308', '#22C55E', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6'];
             const count = 65;
             const frag = document.createDocumentFragment();
-
             for (let i = 0; i < count; i++) {
                 const el = document.createElement('div');
                 el.className = 'confetti-piece';
-                const sizeW = 6 + Math.random() * 10;
-                const sizeH = 4 + Math.random() * 7;
-                el.style.width = sizeW + 'px';
-                el.style.height = sizeH + 'px';
+                el.style.width = (6 + Math.random() * 10) + 'px';
+                el.style.height = (4 + Math.random() * 7) + 'px';
                 el.style.background = colors[Math.floor(Math.random() * colors.length)];
                 el.style.left = Math.random() * 100 + '%';
                 el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
@@ -691,61 +604,15 @@
                 el.style.transform = `rotate(${Math.random() * 360}deg)`;
                 frag.appendChild(el);
             }
-
             container.appendChild(frag);
-
             clearTimeout(confettiTimer);
-            confettiTimer = setTimeout(() => {
-                container.innerHTML = '';
-            }, 2800);
+            confettiTimer = setTimeout(() => { container.innerHTML = ''; }, 2800);
         }
 
-        // ============================================================
-        //  تنظیمات: خروجی / ورودی
-        // ============================================================
-        function openSettings() {
-            const overlay = document.getElementById('settings-overlay');
-            const modal = document.getElementById('settings-modal');
-            overlay.classList.remove('opacity-0', 'pointer-events-none');
-            overlay.classList.add('opacity-100', 'pointer-events-auto');
-            modal.classList.remove('hidden-modal');
-            modal.classList.add('visible-modal');
-            document.getElementById('import-status').innerText = '';
-        }
-
-        function closeSettings() {
-            const overlay = document.getElementById('settings-overlay');
-            const modal = document.getElementById('settings-modal');
-            overlay.classList.remove('opacity-100', 'pointer-events-auto');
-            overlay.classList.add('opacity-0', 'pointer-events-none');
-            modal.classList.remove('visible-modal');
-            modal.classList.add('hidden-modal');
-        }
-
-        function exportData() {
-            try {
-                const dataStr = JSON.stringify(userProgress, null, 2);
-                const blob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                document.getElementById('import-status').innerText = '✅ خروجی با موفقیت ذخیره شد.';
-                document.getElementById('import-status').className = 'text-sm text-center text-emerald-600 min-h-[24px]';
-            } catch (_) {
-                document.getElementById('import-status').innerText = '❌ خطا در خروجی اطلاعات.';
-                document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]';
-            }
-        }
-
-        function importData() {
-            document.getElementById('file-input').click();
-        }
-
+        function openSettings() { document.getElementById('settings-overlay').classList.remove('opacity-0', 'pointer-events-none'); document.getElementById('settings-overlay').classList.add('opacity-100', 'pointer-events-auto'); document.getElementById('settings-modal').classList.remove('hidden-modal'); document.getElementById('settings-modal').classList.add('visible-modal'); document.getElementById('import-status').innerText = ''; }
+        function closeSettings() { document.getElementById('settings-overlay').classList.remove('opacity-100', 'pointer-events-auto'); document.getElementById('settings-overlay').classList.add('opacity-0', 'pointer-events-none'); document.getElementById('settings-modal').classList.remove('visible-modal'); document.getElementById('settings-modal').classList.add('hidden-modal'); }
+        function exportData() { try { const dataStr = JSON.stringify(userProgress, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); document.getElementById('import-status').innerText = '✅ خروجی ذخیره شد.'; document.getElementById('import-status').className = 'text-sm text-center text-emerald-600 min-h-[24px]'; } catch (_) { document.getElementById('import-status').innerText = '❌ خطا.'; document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]'; } }
+        function importData() { document.getElementById('file-input').click(); }
         function handleFileImport(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -754,68 +621,25 @@
                 try {
                     const imported = JSON.parse(ev.target.result);
                     if (typeof imported === 'object' && imported !== null) {
-                        let valid = true;
-                        for (const key of Object.keys(imported)) {
-                            if (!key.startsWith('day_') || typeof imported[key] !== 'object') {
-                                valid = false;
-                                break;
-                            }
-                            if (typeof imported[key].completed !== 'boolean' || typeof imported[key].minutes !== 'number') {
-                                valid = false;
-                                break;
-                            }
-                        }
-                        if (valid || Object.keys(imported).length === 0) {
-                            userProgress = imported;
-                            saveToStorage();
-                            renderDaysMenu();
-                            renderFocusedDay();
-                            renderStatistics();
-                            document.getElementById('import-status').innerText = '✅ اطلاعات با موفقیت بازیابی شد.';
-                            document.getElementById('import-status').className =
-                            'text-sm text-center text-emerald-600 min-h-[24px]';
-                        } else {
-                            document.getElementById('import-status').innerText = '❌ فرمت فایل معتبر نیست.';
-                            document.getElementById('import-status').className =
-                            'text-sm text-center text-red-500 min-h-[24px]';
-                        }
-                    } else {
-                        document.getElementById('import-status').innerText = '❌ فایل معتبر نیست.';
-                        document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]';
-                    }
-                } catch (_) {
-                    document.getElementById('import-status').innerText = '❌ خطا در خواندن فایل.';
-                    document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-[24px]';
-                }
+                        userProgress = imported; saveToStorage(); renderDaysMenu(); renderFocusedDay(); renderStatistics();
+                        document.getElementById('import-status').innerText = '✅ اطلاعات بازیابی شد.'; document.getElementById('import-status').className = 'text-sm text-center text-emerald-600 min-h-[24px]';
+                    } else throw new Error();
+                } catch (_) { document.getElementById('import-status').innerText = '❌ فایل معتبر نیست.'; document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]'; }
             };
             reader.readAsText(file);
             e.target.value = '';
         }
 
-        // ============================================================
-        //  اتصال رویدادها
-        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
-            initCurrentDateDetection();
-            renderDaysMenu();
-            renderFocusedDay();
-            updateOverallProgressBars();
-            renderStatistics();
-
+            initCurrentDateDetection(); renderDaysMenu(); renderFocusedDay(); updateOverallProgressBars(); renderStatistics();
             document.getElementById('settings-toggle-btn').addEventListener('click', openSettings);
             document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
-            document.getElementById('settings-overlay').addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) closeSettings();
-            });
+            document.getElementById('settings-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSettings(); });
             document.getElementById('export-data-btn').addEventListener('click', exportData);
             document.getElementById('import-data-btn').addEventListener('click', importData);
             document.getElementById('file-input').addEventListener('change', handleFileImport);
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeSettings();
-            });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSettings(); });
         });
     </script>
-
 </body>
 </html>
