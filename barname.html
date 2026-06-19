@@ -93,6 +93,7 @@
 
     <div id="confetti-container"></div>
 
+    <!-- تنظیمات -->
     <div id="settings-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="settings-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50">
             <div class="flex items-center justify-between mb-6">
@@ -117,6 +118,38 @@
                 <input id="file-input" type="file" accept=".json" class="hidden" />
             </div>
             <div id="import-status" class="mt-4 text-sm text-center text-slate-500 min-h-[24px]"></div>
+        </div>
+    </div>
+
+    <!-- پنجره پاپ‌آپ انتخاب زمان شروع تایمر (ویژگی جدید) -->
+    <div id="timer-choice-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="timer-choice-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50 max-w-md w-full">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="timer-choice-title" class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    شروع تایمر
+                </h3>
+            </div>
+            <p class="text-sm text-slate-500 mb-6 leading-relaxed">برای این درس، هم زمان دستی وارد شده و هم تاریخچه تایمر وجود دارد. مایلید تایمر از کدام زمان ادامه پیدا کند؟</p>
+            <div class="flex flex-col gap-3">
+                <button id="choice-manual-btn" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-indigo-50 to-indigo-100/50 text-indigo-700 font-bold border border-indigo-100 hover:from-indigo-100 hover:to-indigo-200/50 transition-all text-right flex justify-between items-center group cursor-pointer">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        ادامه از زمان دستی:
+                    </span>
+                    <span id="choice-manual-time" class="font-black text-indigo-900 bg-white/80 px-3 py-1 rounded-xl text-sm border border-indigo-200/40">۰ دقیقه</span>
+                </button>
+                <button id="choice-timer-btn" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-50 to-emerald-100/50 text-emerald-700 font-bold border border-emerald-100 hover:from-emerald-100 hover:to-emerald-200/50 transition-all text-right flex justify-between items-center group cursor-pointer">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        ادامه از زمان قبلی تایمر:
+                    </span>
+                    <span id="choice-timer-time" class="font-black text-emerald-900 bg-white/80 px-3 py-1 rounded-xl text-sm border border-emerald-200/40">۰۰:۰۰</span>
+                </button>
+                <button onclick="closeTimerChoiceModal()" class="w-full py-3 px-5 rounded-2xl bg-slate-100 text-slate-500 font-bold hover:bg-slate-200 transition-all text-center text-sm mt-2 cursor-pointer">
+                    انصراف
+                </button>
+            </div>
         </div>
     </div>
 
@@ -191,7 +224,7 @@
                             <div class="text-sm text-slate-400 bg-slate-50 px-4 py-2 rounded-xl w-full text-center sm:text-right">
                                 جمع مطالعه امروز: <span id="day-total-minutes" class="font-bold text-slate-700">0</span> دقیقه
                             </div>
-                            <button id="music-btn" onclick="toggleUserMusic()" class="flex items-center justify-center gap-2 w-full text-xs px-3 py-2 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors shadow-sm">
+                            <button id="music-btn" onclick="toggleUserMusic()" class="flex items-center justify-center gap-2 w-full text-xs px-3 py-2 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors shadow-sm cursor-pointer">
                                 <svg id="music-icon-off" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
                                 <svg id="music-icon-on" class="w-4 h-4 hidden text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
                                 <span id="music-btn-text">موسیقی: قطع</span>
@@ -297,14 +330,13 @@
 
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = `w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${isSelected ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold' : isFullyDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'}`;
+                btn.className = `w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${isSelected ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold' : isFullyDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'} cursor-pointer`;
                 btn.onclick = () => { activeDayId = day.id; renderDaysMenu(); renderFocusedDay(); updateOverallProgressBars(); };
                 btn.innerHTML = `<div class="flex flex-col"><span class="${isSelected ? 'text-indigo-100' : 'text-slate-400'} text-xs font-semibold">${day.label}</span><span class="text-sm mt-0.5">${day.dateStr}</span></div><span class="text-xs px-2.5 py-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : isFullyDone ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">${completedCount}/${day.tasks.length}</span>`;
                 container.appendChild(btn);
             });
         }
 
-        // ویژگی شماره 1 (لینک‌دار کردن نام دروس)
         function formatSubjectLink(taskName) {
             const linkMap = {
                 "فارسی": "farsi.html",
@@ -344,7 +376,6 @@
                 const minutesSpent = userProgress[taskKey]?.minutes || '';
                 const taskDisplayName = formatSubjectLink(taskName);
 
-                // مدیریت نمایش هنگام کار کردن تایمر همون تسک
                 const isTimerActive = activeTimerObj.taskKey === taskKey;
                 let displayTime = minutesSpent;
                 let isReadOnly = "";
@@ -360,7 +391,6 @@
                 const row = document.createElement('div');
                 row.className = `flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition-all duration-300 gap-4 ${isCompleted ? 'bg-gradient-to-l from-emerald-50/70 to-white border-emerald-200 shadow-sm' : 'bg-white border-slate-100 hover:border-slate-200 shadow-sm hover:shadow'}`;
                 
-                // ویژگی شماره 2 (اضافه شدن دکمه تایمر به همراه تغییر نوع input به متن برای نمایش ثانیه)
                 row.innerHTML = `
                     <div class="flex items-center gap-4 flex-1">
                         <label class="relative flex items-center cursor-pointer">
@@ -374,7 +404,7 @@
                         </span>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-auto">
-                        <button id="timer-btn-${idx}" onclick="toggleTimer(${idx})" class="p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm" title="شروع / توقف تایمر">
+                        <button id="timer-btn-${idx}" onclick="toggleTimer(${idx})" class="p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm cursor-pointer" title="شروع / توقف تایمر">
                             ${timerIcon}
                         </button>
                         <span class="text-xs text-slate-400">زمان:</span>
@@ -398,7 +428,7 @@
         };
 
         window.updateTaskMinutes = function(idx, value) {
-            if (value.includes(':')) return; // در حین کار تایمر مقادیر دستی رو نادیده بگیر
+            if (value.includes(':')) return; 
             const taskKey = `day_${activeDayId}_task_${idx}`;
             if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0 };
             userProgress[taskKey].minutes = value ? parseInt(value) : 0;
@@ -420,76 +450,134 @@
             document.getElementById('day-total-minutes').innerText = dayTotalMin;
         }
 
-        /* === توابع ویژگی شماره 2 (سیستم تایمر) === */
-       let totalSecondsElapsed = 0; 
-
-   // --- ۱. جایگزین کردن متغیر قبلی ---
-// دیگه اون totalSecondsElapsed سراسری رو نیاز نداریم
-
-// --- ۲. تغییر در تابع toggleTimer ---
-window.toggleTimer = function(idx) {
-    const taskKey = `day_${activeDayId}_task_${idx}`;
-    
-    // لود کردن ثانیه‌های ذخیره شده برای همین تسک خاص
-    // (اگه چیزی ذخیره نشده، از صفر شروع کن)
-    if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0, seconds: 0 };
-    
-    if (audio.paused && isMusicWantedByUser) audio.play().catch(()=>{});
-
-    if (activeTimerObj.taskKey === taskKey) {
-        // --- استپ کردن تایمر ---
-        clearInterval(activeTimerObj.interval);
-        
-        // گرد کردن رو به بالا (Math.ceil)
-        const minutesRoundedUp = Math.ceil(userProgress[taskKey].seconds / 60);
-
-        userProgress[taskKey].minutes = minutesRoundedUp;
-        saveToStorage();
-
-        const input = document.getElementById(`time-input-${idx}`);
-        if (input) {
-            input.value = minutesRoundedUp;
-            input.removeAttribute('readonly');
-        }
-        const btn = document.getElementById(`timer-btn-${idx}`);
-        if (btn) btn.innerHTML = getPlayIcon();
-
-        activeTimerObj.taskKey = null;
-        activeTimerObj.interval = null;
-        activeTimerObj.idx = null;
-
-        updateDayTotalUI();
-        showToast("تایمر متوقف شد.");
-        if (isMusicWantedByUser) audio.muted = true;
-    } else {
-        // --- شروع یا ادامه دادن تایمر ---
-        if (activeTimerObj.taskKey) {
-            toggleTimer(activeTimerObj.idx);
-        }
-
-        activeTimerObj.taskKey = taskKey;
-        activeTimerObj.idx = idx;
-
-        const input = document.getElementById(`time-input-${idx}`);
-        const btn = document.getElementById(`timer-btn-${idx}`);
-        if (input) input.setAttribute('readonly', 'true');
-        if (btn) btn.innerHTML = getPauseIcon();
-
-        activeTimerObj.interval = setInterval(() => {
-            // افزایش ثانیه مختص همین تسک
-            userProgress[taskKey].seconds = (userProgress[taskKey].seconds || 0) + 1;
+        /* === توابع سیستم تایمر ارتقایافته همراه با پاپ‌آپ هوشمند تعارض زمان === */
+        window.toggleTimer = function(idx) {
+            const taskKey = `day_${activeDayId}_task_${idx}`;
             
-            if (input) {
-                const m = Math.floor(userProgress[taskKey].seconds / 60);
-                const s = userProgress[taskKey].seconds % 60;
-                input.value = `${m}:${s < 10 ? '0' : ''}${s}`;
-            }
-        }, 1000);
+            if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0, seconds: 0 };
+            
+            if (audio.paused && isMusicWantedByUser) audio.play().catch(()=>{});
 
-        showToast("تایمر شروع شد.");
-        if (isMusicWantedByUser) audio.muted = false;
-    }
-};
+            if (activeTimerObj.taskKey === taskKey) {
+                // --- استپ کردن تایمر ---
+                clearInterval(activeTimerObj.interval);
+                
+                const minutesRoundedUp = Math.ceil(userProgress[taskKey].seconds / 60);
+                userProgress[taskKey].minutes = minutesRoundedUp;
+                saveToStorage();
+
+                const input = document.getElementById(`time-input-${idx}`);
+                if (input) {
+                    input.value = minutesRoundedUp;
+                    input.removeAttribute('readonly');
+                }
+                const btn = document.getElementById(`timer-btn-${idx}`);
+                if (btn) btn.innerHTML = getPlayIcon();
+
+                activeTimerObj.taskKey = null;
+                activeTimerObj.interval = null;
+                activeTimerObj.idx = null;
+
+                updateDayTotalUI();
+                showToast("تایمر متوقف شد.");
+                if (isMusicWantedByUser) audio.muted = true;
+            } else {
+                // --- درخواست شروع تایمر جدید ---
+                const currentDayObj = scheduleData.find(d => d.id === activeDayId);
+                const taskName = currentDayObj ? currentDayObj.tasks[idx] : "درس";
+                const manualInput = document.getElementById(`time-input-${idx}`).value;
+                const manualMin = manualInput && !manualInput.includes(':') ? parseInt(manualInput) : 0;
+                const savedSeconds = userProgress[taskKey]?.seconds || 0;
+
+                // فرمول بررسی وجود همزمان تایمر قبلی و ادیت دستی جدید
+                const hasConflict = savedSeconds > 0 && Math.ceil(savedSeconds / 60) !== manualMin && Math.floor(savedSeconds / 60) !== manualMin;
+
+                if (hasConflict) {
+                    // باز کردن پنجره انتخاب زمان به همراه ارسال کالبک‌های مربوطه
+                    openTimerChoiceModal(taskName, manualMin, savedSeconds, 
+                        () => {
+                            // انتخاب زمان دستی
+                            userProgress[taskKey].seconds = manualMin * 60;
+                            startTimerExecution(idx, taskKey);
+                        },
+                        () => {
+                            // انتخاب تاریخچه تایمر (ادامه بدون تغییر ثانیه‌ها)
+                            startTimerExecution(idx, taskKey);
+                        }
+                    );
+                } else {
+                    // در صورت عدم تعارض، روال عادی اجرا می‌شود
+                    if (savedSeconds === 0 && manualMin > 0) {
+                        userProgress[taskKey].seconds = manualMin * 60;
+                    }
+                    startTimerExecution(idx, taskKey);
+                }
+            }
+        };
+
+        function startTimerExecution(idx, taskKey) {
+            // اگر تایمر دیگه‌ای از قبل باز بود اول اون رو خاموش کن
+            if (activeTimerObj.taskKey && activeTimerObj.taskKey !== taskKey) {
+                toggleTimer(activeTimerObj.idx);
+            }
+
+            activeTimerObj.taskKey = taskKey;
+            activeTimerObj.idx = idx;
+
+            const input = document.getElementById(`time-input-${idx}`);
+            const btn = document.getElementById(`timer-btn-${idx}`);
+            if (input) input.setAttribute('readonly', 'true');
+            if (btn) btn.innerHTML = getPauseIcon();
+
+            activeTimerObj.interval = setInterval(() => {
+                userProgress[taskKey].seconds = (userProgress[taskKey].seconds || 0) + 1;
+                
+                if (input) {
+                    const m = Math.floor(userProgress[taskKey].seconds / 60);
+                    const s = userProgress[taskKey].seconds % 60;
+                    input.value = `${m}:${s < 10 ? '0' : ''}${s}`;
+                }
+            }, 1000);
+
+            showToast("تایمر شروع شد.");
+            if (isMusicWantedByUser) audio.muted = false;
+        }
+
+        function openTimerChoiceModal(taskName, manualMin, savedSeconds, onSelectManual, onSelectTimer) {
+            document.getElementById('timer-choice-title').innerText = `شروع تایمر برای: ${taskName}`;
+            document.getElementById('choice-manual-time').innerText = `${manualMin} دقیقه`;
+            
+            const m = Math.floor(savedSeconds / 60);
+            const s = savedSeconds % 60;
+            document.getElementById('choice-timer-time').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            
+            const overlay = document.getElementById('timer-choice-overlay');
+            const modal = document.getElementById('timer-choice-modal');
+            
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            overlay.classList.add('opacity-100', 'pointer-events-auto');
+            modal.classList.remove('hidden-modal');
+            modal.classList.add('visible-modal');
+            
+            document.getElementById('choice-manual-btn').onclick = () => {
+                onSelectManual();
+                closeTimerChoiceModal();
+            };
+            
+            document.getElementById('choice-timer-btn').onclick = () => {
+                onSelectTimer();
+                closeTimerChoiceModal();
+            };
+        }
+
+        function closeTimerChoiceModal() {
+            const overlay = document.getElementById('timer-choice-overlay');
+            const modal = document.getElementById('timer-choice-modal');
+            overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('visible-modal');
+            modal.classList.add('hidden-modal');
+        }
 
         function getPlayIcon() { return `<svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
         function getPauseIcon() { return `<svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
@@ -498,7 +586,7 @@ window.toggleTimer = function(idx) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 text-sm font-bold flex items-center gap-2 border border-slate-700';
-            toast.innerHTML = `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> ${msg}`;
+            toast.innerHTML = `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"</svg> ${msg}`;
             container.appendChild(toast);
             requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
             setTimeout(() => {
@@ -507,7 +595,6 @@ window.toggleTimer = function(idx) {
             }, 3000);
         }
 
-        /* === توابع ویژگی شماره 3 (موزیک هوشمند) === */
         window.toggleUserMusic = function() {
             isMusicWantedByUser = !isMusicWantedByUser;
             const btnOn = document.getElementById('music-icon-on');
@@ -524,7 +611,6 @@ window.toggleTimer = function(idx) {
                 btnWrap.classList.replace('text-slate-500', 'text-indigo-700');
                 btnWrap.classList.replace('bg-slate-100', 'bg-indigo-100');
                 
-                // اگه همون موقع یه تایمر فعاله، صدا وصل بشه
                 if (activeTimerObj.taskKey) audio.muted = false;
                 else audio.muted = true;
             } else {
@@ -537,7 +623,6 @@ window.toggleTimer = function(idx) {
             }
         };
 
-        // بقیه توابع اصلی (نوار پیشرفت، نمودارها و تنظیمات) دست‌نخورده باقی می‌ماند...
         function updateOverallProgressBars() {
             let totalTasks = 0, totalDone = 0, activeTasks = 0, activeDone = 0;
             scheduleData.forEach(day => {
@@ -635,11 +720,14 @@ window.toggleTimer = function(idx) {
             document.getElementById('settings-toggle-btn').addEventListener('click', openSettings);
             document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
             document.getElementById('settings-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSettings(); });
+            document.getElementById('timer-choice-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeTimerChoiceModal(); });
             document.getElementById('export-data-btn').addEventListener('click', exportData);
             document.getElementById('import-data-btn').addEventListener('click', importData);
             document.getElementById('file-input').addEventListener('change', handleFileImport);
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSettings(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSettings(); closeTimerChoiceModal(); } });
         });
+
     </script>
+
 </body>
 </html>
