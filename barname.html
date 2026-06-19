@@ -93,7 +93,6 @@
 
     <div id="confetti-container"></div>
 
-    <!-- تنظیمات -->
     <div id="settings-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="settings-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50">
             <div class="flex items-center justify-between mb-6">
@@ -121,7 +120,6 @@
         </div>
     </div>
 
-    <!-- پنجره پاپ‌آپ انتخاب زمان شروع تایمر (ویژگی جدید) -->
     <div id="timer-choice-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="timer-choice-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50 max-w-md w-full">
             <div class="flex items-center justify-between mb-4">
@@ -248,7 +246,7 @@
             { id: 1, dateStr: "۲۶ خرداد", label: "سه‌شنبه", tasks: ["فارسی، ستایش", "جامعه‌شناسی، درس ۱", "دینی، درس ۱", "عربی، درس ۱، قواعد", "زبان، درس ۱، پارت ۱ از ۴", "تاریخ، درس ۱"] },
             { id: 2, dateStr: "۲۷ خرداد", label: "چهارشنبه", tasks: ["فارسی، درس ۱", "جامعه‌شناسی، درس ۲", "دینی، درس ۲", "عربی، درس ۱، ترجمه", "زبان، درس ۱، پارت ۲ از ۴", "تاریخ، درس ۲"] },
             { id: 3, dateStr: "۲۸ خرداد", label: "پنجشنبه", tasks: ["فارسی، درس ۲", "جامعه‌شناسی، درس ۳", "دینی، درس ۳", "عربی، درس ۲، قواعد", "زبان، درس ۱، پارت ۳ از ۴", "تاریخ، درس ۳"] },
-            { id: 4, dateStr: "۲۹ خرداد", label: "جمعه", tasks: ["فارسی، درس ۳", "جامعه‌شناسی، درس ۴", "دینی، درس ۴", "عربی، درس ۲، ترجمه", "زبان، درس ۱، پارت ۴ از ۴", "تاریخ، درس ۴"] },
+            { id: 4, dateStr: "۲۹ خرداد", label: "جمعه", tasks: ["فارسی، درس ۳", "جامعه‌شناسی، درس ۴", "دینی، درس ۴", "عربی، درس ۲، ترجمه", "زبان، Joint_1_4", "تاریخ، درس ۴"] },
             { id: 5, dateStr: "۳۰ خرداد", label: "شنبه", tasks: ["فارسی، درس ۵", "جامعه‌شناسی، درس ۵", "دینی، درس ۵", "عربی، درس ۳، قواعد", "زبان، درس ۲، پارت ۱ از ۴", "تاریخ، درس ۵"] },
             { id: 6, dateStr: "۳۱ خرداد", label: "یکشنبه", tasks: ["فارسی، درس ۶", "جامعه‌شناسی، درس ۶", "دینی، درس ۶", "عربی، درس ۳، ترجمه", "زبان، درس ۲، پارت ۲ از ۴", "تاریخ، درس ۶"] },
             { id: 7, dateStr: "۱ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۷", "جامعه‌شناسی، درس ۷", "دینی، درس ۷", "عربی، درس ۴، قواعد", "زبان، درس ۲، پارت ۳ از ۴", "تاریخ، درس ۷"] },
@@ -279,7 +277,7 @@
 
         // تنظیمات موزیک هوشمند
         const audio = document.getElementById('bg-music');
-        audio.muted = true; // پیش‌فرض قطع
+        audio.muted = true; 
         let isMusicWantedByUser = false;
 
         function p2eDigits(str) {
@@ -349,7 +347,8 @@
             };
             for (const [subj, link] of Object.entries(linkMap)) {
                 if (taskName.startsWith(subj)) {
-                    return taskName.replace(subj, `<a href="${link}" class="text-indigo-600 hover:text-indigo-800 font-extrabold underline decoration-indigo-300 underline-offset-4 transition-colors">${subj}</a>`);
+                    // افزودن target="_blank" برای باز شدن در تب جدید
+                    return taskName.replace(subj, `<a href="${link}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-extrabold underline decoration-indigo-300 underline-offset-4 transition-colors">${subj}</a>`);
                 }
             }
             return taskName;
@@ -450,7 +449,7 @@
             document.getElementById('day-total-minutes').innerText = dayTotalMin;
         }
 
-        /* === توابع سیستم تایمر ارتقایافته همراه با پاپ‌آپ هوشمند تعارض زمان === */
+        /* === سیستم تایمر ارتقایافته === */
         window.toggleTimer = function(idx) {
             const taskKey = `day_${activeDayId}_task_${idx}`;
             
@@ -479,7 +478,8 @@
                 activeTimerObj.idx = null;
 
                 updateDayTotalUI();
-                showToast("تایمر متوقف شد.");
+                // متن نوتیفیکیشن واضح‌تر برای توقف
+                showToast("تایمر متوقف شد و زمان مطالعه با موفقیت ثبت شد.");
                 if (isMusicWantedByUser) audio.muted = true;
             } else {
                 // --- درخواست شروع تایمر جدید ---
@@ -489,34 +489,28 @@
                 const manualMin = manualInput && !manualInput.includes(':') ? parseInt(manualInput) : 0;
                 const savedSeconds = userProgress[taskKey]?.seconds || 0;
 
-                // فرمول بررسی وجود همزمان تایمر قبلی و ادیت دستی جدید
                 const hasConflict = savedSeconds > 0 && Math.ceil(savedSeconds / 60) !== manualMin && Math.floor(savedSeconds / 60) !== manualMin;
 
                 if (hasConflict) {
-                    // باز کردن پنجره انتخاب زمان به همراه ارسال کالبک‌های مربوطه
                     openTimerChoiceModal(taskName, manualMin, savedSeconds, 
                         () => {
-                            // انتخاب زمان دستی
                             userProgress[taskKey].seconds = manualMin * 60;
-                            startTimerExecution(idx, taskKey);
+                            startTimerExecution(idx, taskKey, taskName);
                         },
                         () => {
-                            // انتخاب تاریخچه تایمر (ادامه بدون تغییر ثانیه‌ها)
-                            startTimerExecution(idx, taskKey);
+                            startTimerExecution(idx, taskKey, taskName);
                         }
                     );
                 } else {
-                    // در صورت عدم تعارض، روال عادی اجرا می‌شود
                     if (savedSeconds === 0 && manualMin > 0) {
                         userProgress[taskKey].seconds = manualMin * 60;
                     }
-                    startTimerExecution(idx, taskKey);
+                    startTimerExecution(idx, taskKey, taskName);
                 }
             }
         };
 
-        function startTimerExecution(idx, taskKey) {
-            // اگر تایمر دیگه‌ای از قبل باز بود اول اون رو خاموش کن
+        function startTimerExecution(idx, taskKey, taskName) {
             if (activeTimerObj.taskKey && activeTimerObj.taskKey !== taskKey) {
                 toggleTimer(activeTimerObj.idx);
             }
@@ -532,6 +526,9 @@
             activeTimerObj.interval = setInterval(() => {
                 userProgress[taskKey].seconds = (userProgress[taskKey].seconds || 0) + 1;
                 
+                userProgress[taskKey].minutes = Math.ceil(userProgress[taskKey].seconds / 60);
+                localStorage.setItem('study_dashboard_progress_v3', JSON.stringify(userProgress));
+                
                 if (input) {
                     const m = Math.floor(userProgress[taskKey].seconds / 60);
                     const s = userProgress[taskKey].seconds % 60;
@@ -539,7 +536,8 @@
                 }
             }, 1000);
 
-            showToast("تایمر شروع شد.");
+            // متن نوتیفیکیشن صمیمی و واضح برای شروع تایمر
+            showToast(`تایمر برای درس فعال شد. با تمرکز بخون!`);
             if (isMusicWantedByUser) audio.muted = false;
         }
 
@@ -579,20 +577,27 @@
             modal.classList.add('hidden-modal');
         }
 
+        // حرف r از این قسمت حذف شد
         function getPlayIcon() { return `<svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
         function getPauseIcon() { return `<svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
 
+        // مشکل تگ‌های توست حل شد و ظاهرش بهتر شد
         function showToast(msg) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 text-sm font-bold flex items-center gap-2 border border-slate-700';
-            toast.innerHTML = `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"</svg> ${msg}`;
+            toast.className = 'bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 text-sm font-bold flex items-center gap-3 border border-slate-700';
+            toast.innerHTML = `
+                <div class="bg-indigo-500/20 p-1.5 rounded-lg flex-shrink-0">
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <span>${msg}</span>
+            `;
             container.appendChild(toast);
             requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
             setTimeout(() => {
                 toast.classList.add('translate-y-10', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            }, 3500); // زمان رو یکم بردم بالاتر که قشنگ خونده بشه
         }
 
         window.toggleUserMusic = function() {
@@ -725,6 +730,16 @@
             document.getElementById('import-data-btn').addEventListener('click', importData);
             document.getElementById('file-input').addEventListener('change', handleFileImport);
             document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSettings(); closeTimerChoiceModal(); } });
+        });
+
+        window.addEventListener('beforeunload', () => {
+            if (activeTimerObj.taskKey) {
+                const taskKey = activeTimerObj.taskKey;
+                if (userProgress[taskKey]) {
+                    userProgress[taskKey].minutes = Math.ceil(userProgress[taskKey].seconds / 60);
+                }
+            }
+            localStorage.setItem('study_dashboard_progress_v3', JSON.stringify(userProgress));
         });
 
     </script>
