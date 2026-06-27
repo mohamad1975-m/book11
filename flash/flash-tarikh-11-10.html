@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تاریخ 11 ، درس 10</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --theme: linear-gradient(135deg, #a13689, #a1534a); }
+        body { font-family: 'IRANSansX', sans-serif; background: #f0f2f5; padding: 15px; user-select: none; margin:0; }
+        .head { background: var(--theme); color: white; padding: 30px 15px; border-radius: 0 0 30px 30px; text-align: center; margin: -15px -15px 20px -15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .nav-container { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .btn.active { background: #1e293b; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { height: 250px; perspective: 1000px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .card-inner { transform: rotateY(180deg); }
+        .face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; border-radius: 25px; text-align: center; font-size: 1.1rem; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .front { background: white; border: 1px solid #eee; color: #333; }
+        .back { background: var(--theme); color: white; transform: rotateY(180deg); }
+        .leitner-box { display: none; max-width: 450px; margin: 20px auto; perspective: 1000px; }
+        .leitner-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .l-btn { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .l-easy { background: #2ec4b6; } .l-hard { background: #ff9f43; } .l-fail { background: #e71d36; }
+        .slide-out { animation: slideOut 0.5s forwards; }
+        @keyframes slideOut { 0% { transform: scale(1) translateX(0); opacity: 1; } 100% { transform: scale(0.8) translateX(-100px); opacity: 0; } }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1 style="margin:0">تاریخ 11 ، درس 10</h1>
+        <p style="opacity: 0.9; margin: 10px 0 5px 0; font-size: 1.1rem;">📌 تاریخ | درس درس 10 | پایه 11</p>
+        <p style="opacity: 0.8; margin: 0; font-size: 0.9rem;">📑 تعداد کارت: 50 تا</p>
+        <p style="opacity: 0.9; margin: 5px 0 0 0; font-size: 0.95rem;">BUL</p>
+    </div>
+    <div class="nav-container">
+        <button class="btn active" id="btnGrid" onclick="changeMode('grid')">📱 لیست</button>
+        <button class="btn" id="btnLeitner" onclick="changeMode('leitner')">🧠 لایتنر</button>
+        <div id="searchWrapper">
+            <input type="text" id="srch" placeholder="🔍 جستجو..." oninput="renderGrid()" style="padding:10px; border-radius:10px; border:1px solid #ddd; width:120px">
+        </div>
+    </div>
+    <div id="gridView" class="grid"></div>
+    <div id="leitnerView" class="leitner-box">
+        <div id="leitnerCardContainer"></div>
+        <div class="leitner-actions">
+            <button class="l-btn l-fail" onclick="processLeitner('fail')">❌ بلد نبودم</button>
+            <button class="l-btn l-hard" onclick="processLeitner('hard')">⚠️ سخت بود</button>
+            <button class="l-btn l-easy" onclick="processLeitner('easy')">✅ ساده بود</button>
+        </div>
+        <p id="leitnerStat" style="text-align:center; margin-top:20px; font-weight:bold; color:#64748b"></p>
+    </div>
+    <script>
+        const cardsData = [{"q":"سه سلسلۀ ترکان که از اواخر قرن چهارم تا اوایل قرن هفتم هجری بر ایران حکومت کردند کدامند؟","a":"غزنویان، سلجوقیان و خوارزمشاهیان"},{"q":"آلپَتگین، از سپهسالاران سامانی، در اواسط قرن چهارم هجری در کدام شهر حکومتی محلی ایجاد کرد؟","a":"غزنه (غزنی/ غزنین)"},{"q":"چه کسی حکومت مستقل غزنویان را در شهر غزنه تأسیس کرد؟","a":"محمود فرزند سَبُکَتگین"},{"q":"سلطان محمود غزنوی با چه بهانه‌ای به شهر ری (تحت حاکمیت آل بویه) حمله کرد؟","a":"مبارزه با مخالفان خلافت عباسی و بهانۀ اسماعیلی بودن مردم"},{"q":"یکی از نتایج فرهنگی حملات پی‌در‌پی سلطان محمود به هند چه بود؟","a":"راه یافتن و گسترش دین اسلام و زبان فارسی به شبه‌قاره هند"},{"q":"نبرد سرنوشت‌سازی که به سلطۀ غزنویان بر خراسان پایان داد چه نام داشت؟","a":"نبرد دَنْدانَقان (۴۳۱ ق)"},{"q":"کدام مورخ بزرگ قرن ۴ و ۵ هجری وقایع دوران غزنویان را در کتاب خود شرح داده است؟","a":"ابوالفضل بیهقی"},{"q":"طغرل سلجوقی پس از تصرف کدام شهر، آن را به عنوان مرکز حکومت خود برگزید؟","a":"نیشابور (۴۲۹ ق)"},{"q":"خلیفۀ عباسی پس از رهایی از تسلط آل بویه توسط طغرل، چه لقبی به او داد؟","a":"سلطان رُکن‌الدوله"},{"q":"در نبرد مَلأزگرد (۴۶۳ ق)، سلجوقیان بر کدام امپراتوری پیروز شدند؟","a":"امپراتوری روم شرقی"},{"q":"نتیجه جغرافیایی نبرد مَلأزگرد برای قلمرو سلجوقیان چه بود؟","a":"اسارت امپراتور روم و افزودن آسیای صغیر به متصرفات سلجوقی"},{"q":"سلسلۀ سلجوقی در زمان کدام پادشاه به اوج قدرت خود رسید؟","a":"سلطان ملکشاه"},{"q":"دو شخصیت قدرتمند که مرگ آن‌ها آغازگر ضعف حکومت سلجوقیان شد چه کسانی بودند؟","a":"خواجه نظام‌الملک و ملکشاه"},{"q":"علاوه بر اختلافات داخلی، کدام گروه‌ها در ضعف و زوال حکومت سلجوقی موثر بودند؟","a":"اسماعیلیان و اتابکان"},{"q":"تکش، حاکم خوارزم، با شکست دادن آخرین سلطان سلجوقی در چه سالی بر بخش وسیعی از ایران مسلط شد؟","a":"سال ۵۹۰ هجری قمری"},{"q":"علت تیرگی روابط سلطان محمد خوارزمشاه با خلیفۀ عباسی چه بود؟","a":"خودداری خلیفه از تأیید حکومت خوارزمشاهیان"},{"q":"حملۀ چنگیزخان مغول به ایران در زمان کدام پادشاه خوارزمشاهی رخ داد؟","a":"سلطان محمد خوارزمشاه (۶۱۶ ق)"},{"q":"چرا فرمانروایان غزنوی و سلجوقی از دیوان‌سالاران ایرانی استفاده می‌کردند؟","a":"برای ادارۀ قلمرو رو به توسعۀ خود و نیاز به تشکیلات دیوانی"},{"q":"دو دیوان‌سالار بزرگ و مشهور عصر سلجوقی چه کسانی بودند؟","a":"عمیدالملک کُندری و خواجه نظام‌الملک توسی"},{"q":"تقابل میان «دیوان‌سالاران» و «نظامیان» در تاریخ ایران به چه نامی معروف است؟","a":"تقابل اهل قلم و اهل شمشیر"},{"q":"هدف خواجه نظام‌الملک از تقویت نظام اداری مبتنی بر میراث کهن ایرانی چه بود؟","a":"ایجاد ثبات و مقابله با نیروی سرکش امیران و نظامیان سلجوقی"},{"q":"در عصر سلجوقی، کدام نهاد اداری در رأس همۀ دیوان‌ها قرار داشت؟","a":"دیوان وزارت (که وزیر در رأس آن بود)"},{"q":"تغییر عمدۀ نظام اداری در دورۀ خوارزمشاهی نسبت به دورۀ سلجوقی چه بود؟","a":"کاهش شدید قدرت و نقش وزیر و گاهی حذف منصب او"},{"q":"سه بخش اصلی شهرهای ایران در این دوران را نام ببرید.","a":"کُهَندِژ (ارگ)، شارستان (شهرستان) و رَبَض (شهر بیرونی)"},{"q":"چرا در دورۀ سلجوقی «رَبَض» یا شهر بیرونی گسترش یافت؟","a":"به دلیل رشد تجارت و افزایش جمعیت شهرها"},{"q":"کدام عناصر شهری در دورۀ تحول شهرنشینی سلجوقی به «شهر بیرونی» منتقل شدند؟","a":"مسجد جامع و بازار"},{"q":"نام دیوانی که وظیفۀ محاسبه درآمدها (مالیات) و هزینه‌های کشور را بر عهده داشت چیست؟","a":"دیوان اِستیفا (به ریاست مستوفی‌الممالک)"},{"q":"وظیفۀ «دیوان اِنشا» یا «دیوان طُغرا» چه بود؟","a":"نگارش، تنظیم، ثبت و ارسال احکام و نامه‌های حکومتی"},{"q":"کدام دیوان بر عملکرد دیوانیان (به‌ویژه مستوفیان) و دخل و خرج کشور نظارت می‌کرد؟","a":"دیوان اِشراف (به ریاست مُشرف)"},{"q":"«دیوان عَرْض» چه مسئولیتی در قبال سپاه داشت؟","a":"نظارت بر امور اداری، مالی، آمار سپاهیان و پرداخت حقوق آنان"},{"q":"بافت مذهبی جمعیت شهری و روستایی ایران در این دوران عمدتاً از چه مذهبی بود؟","a":"اهل تسنن"},{"q":"پنج شهر مهم که از مراکز اصلی شیعه‌نشین ایران در این دوران بودند را نام ببرید.","a":"بِیهَق (سبزوار)، ری، گرگان، ساری و قم"},{"q":"چرا پیروان مذهب اسماعیلیه مورد تعقیب و آزار حکومت‌های غزنوی و سلجوقی بودند؟","a":"چون از مهم‌ترین مخالفان خلافت عباسی و این دو حکومت بودند"},{"q":"مهم‌ترین فعالیت اقتصادی مردم ایران در عصر غزنوی، سلجوقی و خوارزمشاهی چه بود؟","a":"کشاورزی"},{"q":"عمدۀ زمین‌های ایران در دوران اسلامی تحت کدام شکل مالکیت بود؟","a":"مالکیت دولتی یا دیوانی"},{"q":"نظام «اِقطاع» به چه معناست؟","a":"واگذاری زمین به افراد نظامی یا صاحبان مشاغل دیوانی در قبال خدمت"},{"q":"چرا گسترش نظام اِقطاع در درازمدت به ضعف حکومت سلجوقی منجر شد؟","a":"به دلیل تمایل صاحبان اقطاع به استقلال و جدایی مناطق تحت تصرف خود"},{"q":"کدام گروه در بازار وظیفۀ انجام معاملات پولی و تسهیل مبادلۀ کالاها را بر عهده داشتند؟","a":"صرافان"},{"q":"رسمیت یافتن زبان فارسی در دستگاه اداری ایران در کدام دورۀ تاریخی قطعی شد؟","a":"دورۀ سلجوقی (با تلاش دیوان‌سالاران ایرانی)"},{"q":"شاهنامه، نماد هویت ایرانی و زبان فارسی، توسط چه کسی سروده شد؟","a":"حکیم فردوسی"},{"q":"چهار شاعر مشهور اواخر دورۀ سلجوقی و خوارزمشاهی را نام ببرید.","a":"سنایی، انوری، خاقانی و عطار"},{"q":"ابوریحان بیرونی در چه علومی تخصص داشت و در کدام عصر می‌زیست؟","a":"نجوم و جغرافیا - عصر غزنوی"},{"q":"حکیم عمر خیام نیشابوری در چه علومی برجسته بود؟","a":"ریاضیات و نجوم"},{"q":"نویسندۀ کتاب «ذخیرۀ خوارزمشاهی» در علم پزشکی کیست؟","a":"سید اسماعیل جُرجانی"},{"q":"مدارس «نظامیه» به همت چه کسی و در کدام شهرها ساخته شدند؟","a":"خواجه نظام‌الملک توسی در شهرهایی چون بغداد، اصفهان و نیشابور"},{"q":"در مدارس نظامیه چه دانشی و بر اساس کدام مذهب تدریس می‌شد؟","a":"فقه شافعی و دانش‌های وابسته به آن"},{"q":"کدام عالم بزرگ اسلامی در مدارس نظامیه هم درس خواند و هم تدریس کرد؟","a":"امام محمد غزالی"},{"q":"چرا مسجد «جامع عتیق» اصفهان در تاریخ معماری ایران اهمیت دارد؟","a":"به عنوان الگویی برای مساجد چهار ایوانی در دوره‌های بعدی شناخته شد"},{"q":"یکی از درخشان‌ترین هنرهای دورۀ سلجوقی که شیوه‌های آن به غرب قلمرو اسلامی نیز منتقل شد، چه بود؟","a":"هنر فلزکاری"},{"q":"در دورۀ سلجوقی، مرکز مهم سفالگری از شرق ایران به کدام شهر مرکزی منتقل شد؟","a":"کاشان"}];
+        let leitnerQueue = [...cardsData];
+        function createCardEl(data) {
+            const wrap = document.createElement('div');
+            wrap.className = 'card slide-in';
+            wrap.onclick = () => wrap.classList.toggle('flip');
+            wrap.innerHTML = '<div class="card-inner"><div class="face front">' + data.q + '</div><div class="face back">' + data.a + '</div></div>';
+            return wrap;
+        }
+        function renderGrid() {
+            const query = document.getElementById('srch').value;
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+            cardsData.filter(c => c.q.includes(query) || c.a.includes(query))
+                     .forEach(c => container.appendChild(createCardEl(c)));
+        }
+        function changeMode(m) {
+            document.getElementById('gridView').style.display = m === 'grid' ? 'grid' : 'none';
+            document.getElementById('leitnerView').style.display = m === 'leitner' ? 'block' : 'none';
+            document.getElementById('searchWrapper').style.display = m === 'grid' ? 'block' : 'none';
+            document.getElementById('btnGrid').classList.toggle('active', m === 'grid');
+            document.getElementById('btnLeitner').classList.toggle('active', m === 'leitner');
+            if(m === 'leitner') renderLeitner();
+        }
+        function renderLeitner() {
+            const container = document.getElementById('leitnerCardContainer');
+            container.innerHTML = '';
+            if(leitnerQueue.length > 0) {
+                container.appendChild(createCardEl(leitnerQueue[0]));
+                document.getElementById('leitnerStat').innerText = 'کارت‌های باقی‌مانده: ' + leitnerQueue.length;
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:40px;"><h2>🎉 فوق‌العاده بود!</h2><button class="btn" style="background:var(--theme); color:white; margin:auto" onclick="leitnerQueue=[...cardsData]; renderLeitner();">شروع مجدد</button></div>';
+                document.getElementById('leitnerStat').innerText = '';
+            }
+        }
+        function processLeitner(result) {
+            if(leitnerQueue.length === 0) return;
+            const currentCard = document.querySelector('#leitnerCardContainer .card');
+            currentCard.classList.add('slide-out');
+            setTimeout(() => {
+                const item = leitnerQueue.shift();
+                if(result === 'fail') leitnerQueue.push(item);
+                else if (result === 'hard') {
+                    const mid = Math.floor(leitnerQueue.length / 2);
+                    leitnerQueue.splice(mid, 0, item);
+                }
+                renderLeitner();
+            }, 400);
+        }
+        renderGrid();
+    </script>
+</body>
+</html>
