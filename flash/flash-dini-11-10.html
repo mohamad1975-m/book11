@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دینی 11 ، درس 10</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --theme: linear-gradient(135deg, #0d8bab, #3cd3c1); }
+        body { font-family: 'IRANSansX', sans-serif; background: #f0f2f5; padding: 15px; user-select: none; margin:0; }
+        .head { background: var(--theme); color: white; padding: 30px 15px; border-radius: 0 0 30px 30px; text-align: center; margin: -15px -15px 20px -15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .nav-container { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 10px; border-radius: 20px; display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn { padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+        .btn.active { background: #1e293b; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+        .card { height: 250px; perspective: 1000px; cursor: pointer; position: relative; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .card.flip .card-inner { transform: rotateY(180deg); }
+        .face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 25px; border-radius: 25px; text-align: center; font-size: 1.1rem; line-height: 1.6; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .front { background: white; border: 1px solid #eee; color: #333; }
+        .back { background: var(--theme); color: white; transform: rotateY(180deg); }
+        .leitner-box { display: none; max-width: 450px; margin: 20px auto; perspective: 1000px; }
+        .leitner-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .l-btn { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .l-easy { background: #2ec4b6; } .l-hard { background: #ff9f43; } .l-fail { background: #e71d36; }
+        .slide-out { animation: slideOut 0.5s forwards; }
+        @keyframes slideOut { 0% { transform: scale(1) translateX(0); opacity: 1; } 100% { transform: scale(0.8) translateX(-100px); opacity: 0; } }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { 0% { transform: translateY(30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1 style="margin:0">دینی 11 ، درس 10</h1>
+        <p style="opacity: 0.9; margin: 10px 0 5px 0; font-size: 1.1rem;">📌 دینی | درس 10 | پایه 11</p>
+        <p style="opacity: 0.8; margin: 0; font-size: 0.9rem;">📑 تعداد کارت: 50 تا</p>
+        <p style="opacity: 0.9; margin: 5px 0 0 0; font-size: 0.95rem;">لعن عمر فراموش نشه!</p>
+    </div>
+    <div class="nav-container">
+        <button class="btn active" id="btnGrid" onclick="changeMode('grid')">📱 لیست</button>
+        <button class="btn" id="btnLeitner" onclick="changeMode('leitner')">🧠 لایتنر</button>
+        <div id="searchWrapper">
+            <input type="text" id="srch" placeholder="🔍 جستجو..." oninput="renderGrid()" style="padding:10px; border-radius:10px; border:1px solid #ddd; width:120px">
+        </div>
+    </div>
+    <div id="gridView" class="grid"></div>
+    <div id="leitnerView" class="leitner-box">
+        <div id="leitnerCardContainer"></div>
+        <div class="leitner-actions">
+            <button class="l-btn l-fail" onclick="processLeitner('fail')">❌ بلد نبودم</button>
+            <button class="l-btn l-hard" onclick="processLeitner('hard')">⚠️ سخت بود</button>
+            <button class="l-btn l-easy" onclick="processLeitner('easy')">✅ ساده بود</button>
+        </div>
+        <p id="leitnerStat" style="text-align:center; margin-top:20px; font-weight:bold; color:#64748b"></p>
+    </div>
+    <script>
+        const cardsData = [{"q":"امیرالمؤمنین (ع) با مشاهده رفتار مسلمانان روزگار خود، چه چیزی را پیش‌بینی می‌کرد؟","a":"سرنوشت و آینده نابسامان جامعه اسلامی"},{"q":"طبق فرموده امام علی (ع)، در زمان آینده چه چیزی پوشیده‌تر از حق خواهد بود؟","a":"چیزی پوشیده‌تر از حق نخواهد بود."},{"q":"بر اساس سخن امام علی (ع)، در ایام آینده چه چیزی رایج‌تر از دروغ بر خدا و پیامبر نیست؟","a":"چیزی رایج‌تر از دروغ بر خدا و پیامبر نخواهد بود."},{"q":"در پیش‌بینی امام علی (ع)، قرآن در چه صورتی کم‌بهاترین کالا نزد مردم می‌شود؟","a":"در صورتی که بخواهد به درستی خوانده شود."},{"q":"چه زمانی قرآن به فراوان‌ترین کالا در جامعه تبدیل می‌شود؟","a":"زمانی که بخواهند آن را وارونه و به نفع دنیاطلبان معنا کنند."},{"q":"در ایام مورد نظر امام علی (ع)، وضعیت «معروف» در شهرها چگونه خواهد بود؟","a":"معروف به چیزی ناشناخته تبدیل می‌شود."},{"q":"در آینده پیش‌بینی شده توسط امام علی (ع)، وضعیت «منکر و گناه» چگونه است؟","a":"منکر به چیزی شناخته‌شده تبدیل می‌شود."},{"q":"شرط تشخیص راه رستگاری از نظر امام علی (ع) چیست؟","a":"تشخیص دادن کسانی که به راه رستگاری پشت کرده‌اند."},{"q":"شرط وفادار ماندن به عهد با قرآن چیست؟","a":"شناسایی پیمان‌شکنان."},{"q":"پیرو قرآن بودن مشروط به شناخت چه کسانی است؟","a":"شناخت فراموش‌کنندگان قرآن."},{"q":"راه حل نهایی امام علی (ع) برای یافتن حق، طلب کردن آن از چه کسانی است؟","a":"طلب کردن از اهل آن (اهل‌بیت)."},{"q":"ویژگی بارز اهل‌بیت (ع) در برخورد با دین چیست؟","a":"آن‌ها هرگز با دین مخالفت نمی‌کنند و در آن اختلاف ندارند."},{"q":"کدام سلسله با حاکمیت خود، دنیای اسلام را تا حد زیادی به جاهلیت بازگرداند؟","a":"بنی‌امیه."},{"q":"بنی‌امیه با چه عناوینی مجاهدان راه حق را شهید یا زندانی می‌کردند؟","a":"به نام اسلام و جانشینی پیامبر (ص)."},{"q":"اقدام اول ائمه (ع) در راستای مرجعیت دینی چه بود؟","a":"تعلیم و تفسیر قرآن کریم."},{"q":"حاکمان زمان به چه افرادی میدان می‌دادند تا قرآن را تفسیر کنند؟","a":"افراد فاقد صلاحیت."},{"q":"اقدام دوم ائمه (ع) برای حفظ مرجعیت دینی چه نام داشت؟","a":"حفظ سخنان و سیره پیامبر (ص)."},{"q":"بعد از رحلت رسول خدا (ص)، چه ممنوعیتی در جامعه ایجاد شد؟","a":"ممنوعیت نوشتن سخنان ایشان."},{"q":"کدام شخصیت‌های بزرگ به ممنوعیت نوشتن احادیث پیامبر توجه نکردند؟","a":"امیرالمؤمنین (ع) و حضرت فاطمه (س)."},{"q":"امام رضا (ع) به اجبارِ کدام خلیفه از مدینه به مرو حرکت کرد؟","a":"مأمون عباسی."},{"q":"امام رضا (ع) در مسیر حرکت خود در کدام شهر مورد استقبال هزاران نفر قرار گرفت؟","a":"نیشابور."},{"q":"نام مشهور حدیثی که امام رضا (ع) در نیشابور بیان کرد چیست؟","a":"حدیث زنجیره طلایی (سلسلة الذهب)."},{"q":"طبق حدیث سلسله الذهب، قلعه محکم خداوند چیست؟","a":"کلمه «لا اله الا اللّه»."},{"q":"پاداش وارد شدن به قلعه «لا اله الا اللّه» چیست؟","a":"امان ماندن از عذاب الهی."},{"q":"شرط اساسی برای بهره‌مندی از توحید در حدیث امام رضا (ع) چیست؟","a":"پذیرش ولایت امام (بُشروطها و انا من شروطها)."},{"q":"مقصود امام رضا (ع) از ذکر شرط برای کلمه توحید چه بود؟","a":"تجلی توحید در زندگی اجتماعی با ولایت امام میسر می‌شود."},{"q":"چرا حدیث نیشابور به «سلسلة الذهب» معروف است؟","a":"به دلیل توالی و پشت سر هم آمدن اسامی پیشوایان معصوم در سند آن."},{"q":"اقدام سوم ائمه (ع) برای پاسخ به نیازهای جدید جامعه چه بود؟","a":"تبیین معارف اسلامی متناسب با نیازهای نو."},{"q":"چه عاملی باعث ایجاد سوالات جدید در زمینه‌های احکام و اخلاق شد؟","a":"گسترش سرزمین‌های اسلامی."},{"q":"کدام کتاب شامل سخنان ارزشمند حضرت علی (ع) است؟","a":"نهج‌البلاغه."},{"q":"کتاب «صحیفه سجادیه» شامل دعاهای کدام امام است؟","a":"امام سجاد (ع)."},{"q":"نویسنده کتاب حدیثی «کافی» کیست؟","a":"کلینی."},{"q":"کتاب «من لایحضره الفقیه» اثر کدام دانشمند است؟","a":"شیخ صدوق."},{"q":"دو کتاب «تهذیب» و «استبصار» اثر کیست؟","a":"شیخ طوسی."},{"q":"به چهار کتاب اصلی حدیثی شیعه چه می‌گویند؟","a":"کتب اربعه."},{"q":"اقدام چهارم ائمه (ع) در راستای تعلیم دین چه بود؟","a":"تربیت شخصیت‌های اسلامی."},{"q":"کدام یاران برجسته رسول خدا (ص) پس از ایشان گرد امام علی (ع) جمع شدند؟","a":"سلمان فارسی، عمار، ابوذر و مقداد."},{"q":"اویس قرنی و کمیل بن زیاد در چه زمینه‌ای پیشرو بودند؟","a":"عرفان و معنویت."},{"q":"کدام شاگرد امام علی (ع) به عنوان «مفسر قرآن کریم» شناخته می‌شد؟","a":"عبدالله بن عباس."},{"q":"مالک اشتر و محمد بن ابی‌بکر در چه حوزه‌ای سرآمد بودند؟","a":"پیشتازان جهاد و مبارزه."},{"q":"تعداد شاگردان ثبت شده امام سجاد (ع) چند نفر است؟","a":"۱۷۰ نفر."},{"q":"ابوحمزه ثمالی از شاگردان برجسته کدام امام بود؟","a":"امام سجاد (ع)."},{"q":"کدام شاگرد امام سجاد (ع) به دلیل پیروی از ایشان توسط فرماندار بنی‌امیه شهید شد؟","a":"سعید بن جبیر."},{"q":"عصر شکل‌گیری مذاهب مختلف و حضور اندیشه‌های گوناگون از زمان کدام امام آغاز شد؟","a":"امام باقر (ع)."},{"q":"کدام خلیفه عباسی جلسات مناظره میان ادیان و مذاهب تشکیل می‌داد؟","a":"مأمون عباسی."},{"q":"آیا بهره‌مندی از دانش ائمه (ع) تنها به شیعیان اختصاص داشت؟","a":"خیر، هر طالب علمی می‌توانست از دانش ایشان استفاده کند."},{"q":"ابوحنیفه (پیشوای مذهب حنفی) از محضر کدام امام بهره برده است؟","a":"امام صادق (ع)."},{"q":"نام دو تن از پیشوایان مذاهب چهارگانه اهل سنت که از دانش ائمه (ع) بهره‌مند شدند چیست؟","a":"مالک بن انس و محمد بن ادریس (شافعی)."},{"q":"یکی از نتایج تلاش ائمه (ع) برای آیندگان چه بود؟","a":"پدید آمدن ذخیره بزرگی از علم و دانش دین."},{"q":"دانشمندان و مجتهدان با استفاده از ذخیره علمی ائمه (ع) چه وظیفه‌ای دارند؟","a":"بیان احکام اسلام مطابق با زمان برای مردم."}];
+        let leitnerQueue = [...cardsData];
+        function createCardEl(data) {
+            const wrap = document.createElement('div');
+            wrap.className = 'card slide-in';
+            wrap.onclick = () => wrap.classList.toggle('flip');
+            wrap.innerHTML = '<div class="card-inner"><div class="face front">' + data.q + '</div><div class="face back">' + data.a + '</div></div>';
+            return wrap;
+        }
+        function renderGrid() {
+            const query = document.getElementById('srch').value;
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+            cardsData.filter(c => c.q.includes(query) || c.a.includes(query))
+                     .forEach(c => container.appendChild(createCardEl(c)));
+        }
+        function changeMode(m) {
+            document.getElementById('gridView').style.display = m === 'grid' ? 'grid' : 'none';
+            document.getElementById('leitnerView').style.display = m === 'leitner' ? 'block' : 'none';
+            document.getElementById('searchWrapper').style.display = m === 'grid' ? 'block' : 'none';
+            document.getElementById('btnGrid').classList.toggle('active', m === 'grid');
+            document.getElementById('btnLeitner').classList.toggle('active', m === 'leitner');
+            if(m === 'leitner') renderLeitner();
+        }
+        function renderLeitner() {
+            const container = document.getElementById('leitnerCardContainer');
+            container.innerHTML = '';
+            if(leitnerQueue.length > 0) {
+                container.appendChild(createCardEl(leitnerQueue[0]));
+                document.getElementById('leitnerStat').innerText = 'کارت‌های باقی‌مانده: ' + leitnerQueue.length;
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:40px;"><h2>🎉 فوق‌العاده بود!</h2><button class="btn" style="background:var(--theme); color:white; margin:auto" onclick="leitnerQueue=[...cardsData]; renderLeitner();">شروع مجدد</button></div>';
+                document.getElementById('leitnerStat').innerText = '';
+            }
+        }
+        function processLeitner(result) {
+            if(leitnerQueue.length === 0) return;
+            const currentCard = document.querySelector('#leitnerCardContainer .card');
+            currentCard.classList.add('slide-out');
+            setTimeout(() => {
+                const item = leitnerQueue.shift();
+                if(result === 'fail') leitnerQueue.push(item);
+                else if (result === 'hard') {
+                    const mid = Math.floor(leitnerQueue.length / 2);
+                    leitnerQueue.splice(mid, 0, item);
+                }
+                renderLeitner();
+            }, 400);
+        }
+        renderGrid();
+    </script>
+</body>
+</html>
