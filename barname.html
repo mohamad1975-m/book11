@@ -294,33 +294,20 @@
 
     <script>
         const baseScheduleData = [
-            { id: 1, dateStr: "۲۶ خرداد", label: "سه‌شنبه", tasks: ["فارسی، ستایش", "جامعه‌شناسی، درس ۱", "دینی، درس ۱", "عربی، درس ۱، قواعد", "زبان، درس ۱، پارت ۱ از ۴", "تاریخ، درس ۱"] },
-            { id: 2, dateStr: "۲۷ خرداد", label: "چهارشنبه", tasks: ["فارسی، درس ۱", "جامعه‌شناسی، درس ۲", "دینی، درس ۲", "عربی، درس ۱، ترجمه", "زبان، درس ۱، پارت ۲ از ۴", "تاریخ، درس ۲"] },
-            { id: 3, dateStr: "۲۸ خرداد", label: "پنجشنبه", tasks: ["فارسی، درس ۲", "جامعه‌شناسی، درس ۳", "دینی، درس ۳", "عربی، درس ۲، قواعد", "زبان، درس ۱، پارت ۳ از ۴", "تاریخ، درس ۳"] },
-            { id: 4, dateStr: "۲۹ خرداد", label: "جمعه", tasks: ["فارسی، درس ۳", "جامعه‌شناسی، درس ۴", "دینی، درس ۴", "عربی، درس ۲، ترجمه", "زبان، Joint_1_4", "تاریخ، درس ۴"] },
-            { id: 5, dateStr: "۳۰ خرداد", label: "شنبه", tasks: ["فارسی، درس ۵", "جامعه‌شناسی، درس ۵", "دینی، درس ۵", "عربی، درس ۳، قواعد", "زبان، درس ۲، پارت ۱ از ۴", "تاریخ، درس ۵"] },
-            { id: 6, dateStr: "۳۱ خرداد", label: "یکشنبه", tasks: ["فارسی، درس ۶", "جامعه‌شناسی، درس ۶", "دینی، درس ۶", "عربی، درس ۳، ترجمه", "زبان، درس ۲، پارت ۲ از ۴", "تاریخ، درس ۶"] },
-            { id: 7, dateStr: "۱ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۷", "جامعه‌شناسی، درس ۷", "دینی، درس ۷", "عربی، درس ۴، قواعد", "زبان، درس ۲، پارت ۳ از ۴", "تاریخ، درس ۷"] },
-            { id: 8, dateStr: "۲ تیر", label: "سه‌شنبه", tasks: ["فارسی، درس ۸", "جامعه‌شناسی، درس ۸", "دینی، درس ۸", "عربی، درس ۴، ترجمه", "زبان، درس ۲، پارت ۴ از ۴", "تاریخ، درس ۸"] },
-            { id: 9, dateStr: "۳ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
-            { id: 10, dateStr: "۴ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
-            { id: 11, dateStr: "۵ تیر", label: "شنبه", tasks: ["فارسی، درس ۹", "جامعه‌شناسی، درس ۹", "دینی، درس ۹", "زبان، درس ۳، پارت ۱ از ۴", "تاریخ، درس ۹"] },
-            { id: 12, dateStr: "۶ تیر", label: "یکشنبه", tasks: ["فارسی، درس ۱۰", "جامعه‌شناسی، درس ۱۰", "دینی، درس ۱۰", "عربی، درس ۵، قواعد", "تاریخ، درس ۱۰"] },
-            { id: 13, dateStr: "۷ تیر", label: "دوشنبه", tasks: ["فارسی، درس ۱۱", "جامعه‌شناسی، درس ۱۱", "دینی، درس ۱۱", "زبان، درس ۳، پارت ۲ از ۴", "تاریخ، درس ۱۱"] },
-            { id: 14, dateStr: "۸ تیر", label: "سه‌شنبه", tasks: ["فارسی، درس ۱۲", "جامعه‌شناسی، درس ۱۲", "دینی، درس ۱۲", "عربی، درس ۵، ترجمه", "تاریخ، درس ۱۲"] },
-            { id: 15, dateStr: "۹ تیر", label: "چهارشنبه", tasks: ["فارسی، درس ۱۴", "جامعه‌شناسی، درس ۱۳", "دینی، درس ۱۳", "زبان، درس ۳، پارت ۳ از ۴", "تاریخ، درس ۱۳"] },
-            { id: 16, dateStr: "۱۰ تیر", label: "پنجشنبه", tasks: ["فارسی، درس ۱۵", "جامعه‌شناسی، درس ۱۴", "دینی، درس ۱۴", "عربی، درس ۶، قواعد", "تاریخ، درس ۱۴"] },
-            { id: 17, dateStr: "۱۱ تیر", label: "جمعه", tasks: ["فارسی، درس ۱۶", "جامعه‌شناسی، درس ۱۵", "دینی، درس ۱۵", "زبان، درس ۳، پارت ۴ از ۴", "تاریخ، درس ۱۵"] },
-            { id: 18, dateStr: "۱۲ تیر", label: "شنبه", tasks: ["فارسی، درس ۱۷", "فارسی، درس ۱۸", "فارسی، نیایش", "دینی، درس ۱۶"] },
-            { id: 19, dateStr: "۱۳ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
-            { id: 20, dateStr: "۱۴ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
-            { id: 21, dateStr: "۱۵ تیر", label: "استراحت", tasks: ["استراحت / زمان آزاد (برنامه‌ای ثبت نشده است)"] },
-            { id: 22, dateStr: "۱۶ تیر", label: "چهارشنبه", tasks: ["عربی، درس ۶، ترجمه", "عربی، درس ۷، قواعد", "دینی، درس ۱۷"] },
-            { id: 23, dateStr: "۱۷ تیر", label: "پنجشنبه", tasks: ["تاریخ، درس ۱۶", "عربی، درس ۷، ترجمه", "دینی، درس ۱۸", "جامعه‌شناسی، درس ۱۶"] }
+            { id: 17, dateStr: "۱۷ تیر", label: "چهارشنبه", tasks: ["فارسی، فصل ۱", "فارسی، فصل ۲"] },
+            { id: 18, dateStr: "۱۸ تیر", label: "پنجشنبه", tasks: ["فارسی، فصل 3", "فارسی، فصل 4"] },
+            { id: 19, dateStr: "۱۹ تیر", label: "جمعه", tasks: ["فارسی، فصل 5", "فارسی، فصل 6"] },
+            { id: 20, dateStr: "۲۰ تیر", label: "شنبه", tasks: ["فارسی، فصل 7", "فارسی، فصل 8"] },
+            { id: 21, dateStr: "21 تیر", label: "یکشنبه", tasks: ["فارسی، مرور", "فارسی، حل نمونه سوال"] },
+            { id: 22, dateStr: "22 تیر", label: "دوشنبه", tasks: [] },
+            { id: 23, dateStr: "23 تیر", label: "سه شنبه", tasks: ["تاریخ، درس 3", "تاریخ، درس 4", "تاریخ، درس 10", "تاریخ، درس 11"] },
+            { id: 24, dateStr: "24 تیر", label: "چهارشنبه", tasks: ["تاریخ، درس 5", "تاریخ، درس 6", "تاریخ، درس 12", "تاریخ، درس 13"] },
+            { id: 25, dateStr: "25 تیر", label: "پنجشنبه", tasks: ["تاریخ، درس 7", "تاریخ، درس 8", "تاریخ، درس 14", "تاریخ، درس 15"] },
+            { id: 26, dateStr: "26 تیر", label: "جمعه", tasks: ["تاریخ، درس 1", "تاریخ، درس 2", "تاریخ، درس 9", "تاریخ، درس 16", "تاریخ، مرور کل کتاب", "تاریخ، حل نمونه سوال"] }
         ];
 
         let scheduleData = [];
-        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v3')) || {};
+        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v5')) || {};
         let activeDayId = 1;
         let realCurrentDayId = null;
         let currentMoveTarget = null;
@@ -337,9 +324,20 @@
 
         // Initialize Schedule
         function initSchedule() {
-            const savedSchedule = localStorage.getItem('study_dashboard_schedule_v3');
+            const savedSchedule = localStorage.getItem('study_dashboard_schedule_v4');
             if (savedSchedule) {
-                scheduleData = JSON.parse(savedSchedule);
+                let parsedSchedule = JSON.parse(savedSchedule);
+                
+                // رفع مشکل کش شدن روزهای قدیمی مرورگر: آپدیت نام روز و تاریخ از سورس اصلی
+                scheduleData = parsedSchedule.map(day => {
+                    const baseDay = baseScheduleData.find(b => b.id === day.id);
+                    if (baseDay) {
+                        return { ...day, label: baseDay.label, dateStr: baseDay.dateStr };
+                    }
+                    return day;
+                });
+                
+                localStorage.setItem('study_dashboard_schedule_v3', JSON.stringify(scheduleData));
             } else {
                 scheduleData = baseScheduleData.map(day => ({
                     ...day,
@@ -374,10 +372,11 @@
                 const options = { month: 'long', day: 'numeric' };
                 const formattedToday = new Intl.DateTimeFormat('fa-IR', options).format(new Date());
                 document.getElementById('current-date-display').innerText = `امروز: ${formattedToday}`;
+                
                 const todayClean = p2eDigits(formattedToday.trim().replace(/\s+/g, ' '));
                 const matchedDay = scheduleData.find(item => {
                     const dataClean = p2eDigits(item.dateStr.trim().replace(/\s+/g, ' '));
-                    return todayClean.includes(dataClean) || dataClean.includes(todayClean);
+                    return todayClean === dataClean;
                 });
                 if (matchedDay) {
                     realCurrentDayId = matchedDay.id;
@@ -399,9 +398,12 @@
         function renderDaysMenu() {
             const container = document.getElementById('days-menu-container');
             container.innerHTML = '';
+            
             scheduleData.forEach(day => {
                 const isSelected = day.id === activeDayId;
+                const isToday = day.id === realCurrentDayId;
                 let completedCount = 0;
+                
                 day.tasks.forEach((taskObj) => { 
                     if (userProgress[taskObj.origKey]?.completed) completedCount++; 
                 });
@@ -409,11 +411,26 @@
 
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = `w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${isSelected ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold' : isFullyDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'} cursor-pointer`;
-                btn.onclick = () => { activeDayId = day.id; renderDaysMenu(); renderFocusedDay(); updateOverallProgressBars(); };
-                btn.innerHTML = `<div class="flex flex-col"><span class="${isSelected ? 'text-indigo-100' : 'text-slate-400'} text-xs font-semibold">${day.label}</span><span class="text-sm mt-0.5">${day.dateStr}</span></div><span class="text-xs px-2.5 py-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : isFullyDone ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">${completedCount}/${day.tasks.length}</span>`;
+                btn.className = `w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${isSelected ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold active-day-btn' : isFullyDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'} cursor-pointer`;
+                
+                btn.onclick = () => { activeDayId = day.id; renderDaysMenu(); renderFocusedDay(); updateOverallProgressBars(); renderStatistics(); };
+                
+                let todayBadge = isToday && !isSelected ? `<span class="text-[10px] bg-fuchsia-100 text-fuchsia-700 px-1.5 py-0.5 rounded mr-1 whitespace-nowrap border border-fuchsia-200">امروز</span>` : '';
+
+                btn.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="${isSelected ? 'text-indigo-100' : 'text-slate-400'} text-xs font-semibold flex items-center">${day.label} ${todayBadge}</span>
+                        <span class="text-sm mt-0.5">${day.dateStr}</span>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : isFullyDone ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">${completedCount}/${day.tasks.length}</span>
+                `;
                 container.appendChild(btn);
             });
+
+            setTimeout(() => {
+                const activeBtn = container.querySelector('.active-day-btn');
+                if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 10);
         }
 
         function formatSubjectLink(taskName) {
@@ -442,9 +459,9 @@
 
             const badgeContainer = document.getElementById('day-badge-container');
             if (realCurrentDayId) {
-                if (activeDayId === realCurrentDayId) badgeContainer.innerHTML = `<span class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full shadow-sm">روز جاری</span>`;
-                else badgeContainer.innerHTML = `<button onclick="goToCurrentDay()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-500 hover:text-white border border-indigo-100 px-3 py-1.5 rounded-full shadow-sm transition-all cursor-pointer inline-flex items-center gap-1.5 group"><svg class="w-3.5 h-3.5 text-indigo-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>رفتن به روز جاری</button>`;
-            } else badgeContainer.innerHTML = `<span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">برنامه انتخاب شده</span>`;
+                if (activeDayId === realCurrentDayId) badgeContainer.innerHTML = `<span class="text-xs font-bold text-fuchsia-700 bg-fuchsia-50 border border-fuchsia-200 px-3 py-1 rounded-full shadow-sm">امروز</span>`;
+                else badgeContainer.innerHTML = `<button onclick="goToCurrentDay()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-500 hover:text-white border border-indigo-100 px-3 py-1.5 rounded-full shadow-sm transition-all cursor-pointer inline-flex items-center gap-1.5 group"><svg class="w-3.5 h-3.5 text-indigo-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>رفتن به برنامه امروز</button>`;
+            } else badgeContainer.innerHTML = `<span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">برنامه انتخاب selected</span>`;
 
             const listContainer = document.getElementById('tasks-list-container');
             listContainer.innerHTML = '';
@@ -633,7 +650,6 @@
             if (isMusicWantedByUser) audio.muted = false;
         }
 
-        // Modals & Extras
         function openTimerChoiceModal(taskName, manualMin, savedSeconds, onSelectManual, onSelectTimer) {
             document.getElementById('timer-choice-title').innerText = `شروع تایمر برای: ${taskName}`;
             document.getElementById('choice-manual-time').innerText = `${manualMin} دقیقه`;
@@ -661,7 +677,6 @@
             modal.classList.add('hidden-modal');
         }
 
-        /* Books Modal Features */
         window.openBooksModal = function() {
             const container = document.getElementById('books-list-container');
             container.innerHTML = '';
@@ -670,15 +685,24 @@
             scheduleData.forEach(day => {
                 day.tasks.forEach(t => {
                     let subj = t.name.includes('،') ? t.name.split('،')[0].trim() : 'سایر';
-                    if (t.name.includes('استراحت')) return; // ignore rest items
+                    if (t.name.includes('استراحت')) return;
                     if (!subjects[subj]) subjects[subj] = [];
                     subjects[subj].push({ ...t, dayId: day.id, dayLabel: day.label, dateStr: day.dateStr });
                 });
             });
 
+            const extractNum = (str) => {
+                const numStr = p2eDigits(str).match(/\d+/);
+                return numStr ? parseInt(numStr[0]) : 999;
+            };
+
             for (const [subj, tasks] of Object.entries(subjects)) {
+                tasks.sort((a, b) => extractNum(a.name) - extractNum(b.name));
+
                 const details = document.createElement('details');
+                details.setAttribute('name', 'books-accordion');
                 details.className = 'mb-3 bg-slate-50 border border-slate-100 rounded-2xl overflow-hidden shadow-sm group';
+                
                 details.innerHTML = `
                     <summary class="cursor-pointer font-bold text-slate-700 bg-white p-4 flex justify-between items-center group-open:bg-fuchsia-50 transition-colors">
                         <span class="flex items-center gap-2">
@@ -712,6 +736,7 @@
             activeDayId = dayId;
             renderDaysMenu();
             renderFocusedDay();
+            renderStatistics();
             document.getElementById('main-panel-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
@@ -722,7 +747,6 @@
             document.getElementById('books-modal').classList.add('hidden-modal');
         };
 
-        /* Move Task Features */
         window.openMoveModal = function(dayId, taskIndex, taskKey) {
             if (activeTimerObj.taskKey === taskKey) toggleTimer(taskIndex, taskKey);
             
@@ -731,12 +755,32 @@
             container.innerHTML = '';
             
             scheduleData.forEach(day => {
-                const isCurrent = day.id === dayId;
+                const isSource = day.id === dayId;          
+                const isToday = day.id === realCurrentDayId;  
+                
+                let btnClass = 'w-full text-right p-3 rounded-xl mb-2 flex justify-between items-center transition-colors text-sm font-bold shadow-sm cursor-pointer ';
+                let badgeHtml = '';
+
+                if (isSource) {
+                    btnClass += 'bg-slate-100 text-slate-400 cursor-not-allowed border border-transparent';
+                    badgeHtml = '<span class="text-xs bg-slate-200 text-slate-500 px-2 py-1 rounded-md">روز مبدا</span>';
+                } else if (isToday) {
+                    btnClass += 'bg-fuchsia-50 border border-fuchsia-200 text-fuchsia-700 hover:bg-fuchsia-100';
+                    badgeHtml = '<span class="text-xs bg-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded-md">امروز</span>';
+                } else {
+                    btnClass += 'bg-white border border-slate-200 text-slate-700 hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700';
+                    badgeHtml = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>';
+                }
+
                 const btn = document.createElement('button');
-                btn.className = `w-full text-right p-3 rounded-xl mb-2 flex justify-between items-center transition-colors text-sm font-bold ${isCurrent ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-transparent' : 'bg-white border border-slate-200 text-slate-700 hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700 cursor-pointer shadow-sm'}`;
-                btn.disabled = isCurrent;
+                btn.className = btnClass;
+                btn.disabled = isSource;
                 btn.onclick = () => executeMoveTask(day.id);
-                btn.innerHTML = `<span>${day.label} (${day.dateStr})</span> ${isCurrent ? '<span class="text-xs bg-slate-200 px-2 py-1 rounded-md">روز فعلی</span>' : '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>'}`;
+                btn.innerHTML = `<span>${day.label} (${day.dateStr})</span> ${badgeHtml}`;
+                
+                if (isToday) btn.id = 'move-today-btn';
+                if (isSource) btn.id = 'move-source-btn';
+                
                 container.appendChild(btn);
             });
             
@@ -744,6 +788,13 @@
             document.getElementById('move-task-overlay').classList.add('opacity-100', 'pointer-events-auto');
             document.getElementById('move-task-modal').classList.remove('hidden-modal');
             document.getElementById('move-task-modal').classList.add('visible-modal');
+
+            setTimeout(() => {
+                const targetToScroll = document.getElementById('move-today-btn') || document.getElementById('move-source-btn');
+                if (targetToScroll) {
+                    targetToScroll.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 10);
         };
 
         window.closeMoveModal = function() {
@@ -769,6 +820,7 @@
             
             renderDaysMenu();
             renderFocusedDay();
+            renderStatistics();
         };
 
         function getPlayIcon() { return `<svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
@@ -838,18 +890,39 @@
                 grandTotal += daily;
                 return { id: day.id, label: day.dateStr, minutes: daily, isRest: day.label === "استراحت" };
             });
+            
             document.getElementById('grand-total-minutes').innerText = grandTotal;
             document.getElementById('grand-total-hours').innerText = `(${Math.floor(grandTotal/60)} ساعت و ${grandTotal%60} دقیقه)`;
             const scale = maxMinutes === 0 ? 100 : maxMinutes;
+            
             dayStats.forEach(stat => {
                 const h = stat.minutes > 0 ? Math.max((stat.minutes / scale) * 100, 4) : 2;
                 const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col items-center flex-shrink-0 w-10 sm:w-12 group cursor-pointer';
-                wrapper.onclick = () => { activeDayId = stat.id; renderDaysMenu(); renderFocusedDay(); document.getElementById('main-panel-area').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+                
+                // افزودن کلاس نشانه برای پیدا کردن ستون روز فعال جهت اسکرول
+                let activeClass = stat.id === activeDayId ? 'active-chart-bar' : '';
+                wrapper.className = `flex flex-col items-center flex-shrink-0 w-10 sm:w-12 group cursor-pointer ${activeClass}`;
+                
+                wrapper.onclick = () => { 
+                    activeDayId = stat.id; 
+                    renderDaysMenu(); 
+                    renderFocusedDay(); 
+                    renderStatistics();
+                    document.getElementById('main-panel-area').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+                };
+                
                 let barColor = stat.minutes > 0 ? 'from-fuchsia-500 to-purple-400 group-hover:to-purple-300' : (stat.isRest ? 'bg-slate-100 border border-dashed border-slate-300' : 'bg-slate-200');
                 wrapper.innerHTML = `<div class="relative w-full flex justify-center h-32 items-end mb-2 rounded-t-lg transition-all duration-300 group-hover:-translate-y-1"><div class="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-xs py-1.5 px-3 rounded-xl whitespace-nowrap z-10 pointer-events-none shadow-lg">${stat.minutes} دقیقه<div class="w-2 h-2 bg-slate-800 rotate-45 absolute -bottom-1 left-1/2 transform -translate-x-1/2"></div></div><div class="w-full rounded-t-md transition-all duration-700 ease-out ${stat.minutes > 0 ? 'bg-gradient-to-t ' + barColor + ' shadow-md shadow-fuchsia-200' : barColor}" style="height: ${h}%"></div></div><span class="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap mt-2 ${stat.id === activeDayId ? 'text-fuchsia-600 font-bold' : ''}">${stat.label}</span>`;
                 container.appendChild(wrapper);
             });
+
+            // اجرای اسکرول نرم برای نمودار مطالعه به سمت روز فعال
+            setTimeout(() => {
+                const activeBar = container.querySelector('.active-chart-bar');
+                if (activeBar) {
+                    activeBar.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                }
+            }, 50);
         }
 
         let confettiTimer = null;
@@ -893,14 +966,12 @@
                 try {
                     const imported = JSON.parse(ev.target.result);
                     if (typeof imported === 'object' && imported !== null) {
-                        // Support for new format with customized schedule
                         if (imported.progress) {
                             userProgress = imported.progress;
                             if (imported.schedule) {
                                 scheduleData = imported.schedule;
                             }
                         } else {
-                            // Support legacy imports
                             userProgress = imported;
                         }
                         saveToStorage(); renderDaysMenu(); renderFocusedDay(); renderStatistics();
@@ -917,7 +988,6 @@
             document.getElementById('settings-toggle-btn').addEventListener('click', openSettings);
             document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
             
-            // Closing modals by clicking overlay
             document.getElementById('settings-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSettings(); });
             document.getElementById('timer-choice-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeTimerChoiceModal(); });
             document.getElementById('books-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeBooksModal(); });
