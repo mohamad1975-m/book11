@@ -308,7 +308,11 @@
         ];
 
         let scheduleData = [];
-        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v7')) || {};
+        let progressV7 = JSON.parse(localStorage.getItem('study_dashboard_progress_v7')) || {};
+let progressV3 = JSON.parse(localStorage.getItem('study_dashboard_progress_v3')) || {};
+let userProgress = { ...progressV7, ...progressV3 };
+// یکسان‌سازی دائمی روی کلید v7
+localStorage.setItem('study_dashboard_progress_v7', JSON.stringify(userProgress));
         let activeDayId = 1;
         let realCurrentDayId = null;
         let currentMoveTarget = null;
@@ -395,12 +399,12 @@ function initSchedule() {
             showToast('برنامه با موفقیت به حالت پیش‌فرض بازگشت.');
         };
 
-        function saveToStorage() {
-            localStorage.setItem('study_dashboard_progress_v3', JSON.stringify(userProgress));
-            localStorage.setItem('study_dashboard_schedule_v4', JSON.stringify(scheduleData));
-            updateOverallProgressBars();
-            renderStatistics(false); // جلوگیری از اسکرول خودکار هنگام ذخیره وضعیت
-        }
+function saveToStorage() {
+    localStorage.setItem('study_dashboard_progress_v7', JSON.stringify(userProgress));
+    localStorage.setItem('study_dashboard_schedule_v4', JSON.stringify(scheduleData));
+    updateOverallProgressBars();
+    renderStatistics(false); 
+}
 
         function initCurrentDateDetection() {
             try {
@@ -687,7 +691,7 @@ function initSchedule() {
                 userProgress[taskKey].seconds = currentSeconds;
                 userProgress[taskKey].minutes = Math.ceil(currentSeconds / 60);
                 
-                localStorage.setItem('study_dashboard_progress_v3', JSON.stringify(userProgress));
+                localStorage.setItem('study_dashboard_progress_v7', JSON.stringify(userProgress));
                 
                 if (input) {
                     const m = Math.floor(currentSeconds / 60);
