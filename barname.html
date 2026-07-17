@@ -303,11 +303,12 @@
             { id: 23, dateStr: "23 تیر", label: "سه شنبه", tasks: ["تاریخ، درس 3", "تاریخ، درس 4", "تاریخ، درس 10", "تاریخ، درس 11"] },
             { id: 24, dateStr: "24 تیر", label: "چهارشنبه", tasks: ["تاریخ، درس 5", "تاریخ، درس 6", "تاریخ، درس 12", "تاریخ، درس 13"] },
             { id: 25, dateStr: "25 تیر", label: "پنجشنبه", tasks: ["تاریخ، درس 1", "تاریخ، درس 7", "تاریخ، درس 14", "تاریخ، درس 15"] },
-            { id: 26, dateStr: "26 تیر", label: "جمعه", tasks: ["تاریخ، درس 2", "تاریخ، درس 8", "تاریخ، درس 9", "تاریخ، درس 16", "تاریخ، مرور کل کتاب", "تاریخ، حل نمونه سوال"] }
+            { id: 26, dateStr: "26 تیر", label: "جمعه", tasks: ["تاریخ، درس 2", "تاریخ، درس 8", "تاریخ، درس 9", "تاریخ، درس 16", "تاریخ، حل نمونه سوال"] },
+            { id: 27, dateStr: "27 تیر", label: "شنبه", tasks: ["مرور تاریخ، درس 7 و 8", "مرور تاریخ، درس 11 و 12", "مرور تاریخ، درس 13 و 14", "مرور تاریخ، درس 3 و 4", "مرور تاریخ، درس 5 و 6", "مرور تاریخ، درس 9", "مرور تاریخ، درس 10", "مرور تاریخ، درس 1 و 2", "مرور تاریخ، درس 15", "مرور تاریخ، درس 16"] }
         ];
 
         let scheduleData = [];
-        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v3')) || {};
+        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v7')) || {};
         let activeDayId = 1;
         let realCurrentDayId = null;
         let currentMoveTarget = null;
@@ -323,33 +324,67 @@
         }
 
         // Initialize Schedule
-        function initSchedule() {
-            const savedSchedule = localStorage.getItem('study_dashboard_schedule_v4');
-            if (savedSchedule) {
-                let parsedSchedule = JSON.parse(savedSchedule);
-                
-                // آپدیت نام روز و تاریخ از سورس اصلی
-                scheduleData = parsedSchedule.map(day => {
-                    const baseDay = baseScheduleData.find(b => b.id === day.id);
-                    if (baseDay) {
-                        return { ...day, label: baseDay.label, dateStr: baseDay.dateStr };
-                    }
-                    return day;
-                });
-                
-                localStorage.setItem('study_dashboard_schedule_v4', JSON.stringify(scheduleData));
-            } else {
-                scheduleData = baseScheduleData.map(day => ({
-                    ...day,
-                    tasks: day.tasks.map((taskName, idx) => ({
-                        name: taskName,
-                        origKey: `day_${day.id}_task_${idx}`
-                    }))
-                }));
-                localStorage.setItem('study_dashboard_schedule_v4', JSON.stringify(scheduleData));
-            }
-        }
+function initSchedule() {
+    const savedSchedule = localStorage.getItem('study_dashboard_schedule_v4');
+    const parsedSchedule = savedSchedule ? JSON.parse(savedSchedule) : [];
 
+    // ۱. ساختار استاندارد را از کدهای اصلی شما (baseScheduleData) می‌سازیم
+    const formattedBaseData = baseScheduleData.map(day => ({
+        ...day,
+        tasks: day.tasks.map((taskName, idx) => ({
+            name: taskName,
+            origKey: `day_${day.id}_task_${idx}`
+        }))
+    }));
+
+    // ۲. اگر مرورگر کاملاً خالی است، همین ساختار استاندارد را ذخیره کن
+    if (!savedSchedule || parsedSchedule.length === 0) {
+        scheduleData = formattedBaseData;
+    } else {
+        // ۳. همگام‌سازی عمیق (مقایسه دیتای مرورگر با کدهای شما)
+        scheduleData = formattedBaseData.map(baseDay => {
+            const savedDay = parsedSchedule.find(d => d.id === baseDay.id);
+
+            // حالت الف: روز کاملاً جدید است (در کد شما هست اما در مرورگر نیست)
+            if (!savedDay) {
+                return baseDay;
+            } 
+            // حالت ب: روز از قبل وجود دارد، باید تسک‌ها را همگام کنیم
+            else {
+                const mergedTasks = [];
+                
+                // ۳.۱: حفظ تسک‌های قدیمی (که تیک خورده‌اند یا جابجا شده‌اند)
+                savedDay.tasks.forEach(savedTask => {
+                    // بررسی می‌کنیم که آیا این تسک هنوز در کدهای شما وجود دارد یا حذفش کرده‌اید؟
+                    const taskStillExists = baseDay.tasks.find(bt => bt.origKey === savedTask.origKey);
+                    if (taskStillExists) {
+                        // اگر نام تسک را در کد تغییر داده‌اید، نام جدید روی آن اعمال شود
+                        mergedTasks.push({ ...savedTask, name: taskStillExists.name });
+                    }
+                });
+
+                // ۳.۲: اضافه کردن تسک‌های کاملاً جدیدی که به این روز اضافه کرده‌اید
+                baseDay.tasks.forEach(baseTask => {
+                    const isTaskAlreadySaved = savedDay.tasks.find(st => st.origKey === baseTask.origKey);
+                    if (!isTaskAlreadySaved) {
+                        mergedTasks.push(baseTask); // تزریق تسک جدید به انتهای لیست
+                    }
+                });
+
+                // خروجی نهایی این روز ترکیب دیتای قدیمی با تغییرات جدید است
+                return {
+                    ...savedDay,              // حفظ تنظیمات کاربر (مثل باز/بسته بودن لیست)
+                    label: baseDay.label,     // آپدیت نام روز
+                    dateStr: baseDay.dateStr, // آپدیت تاریخ
+                    tasks: mergedTasks        // لیست تسک‌های همگام‌سازی‌شده
+                };
+            }
+        });
+    }
+
+    // ۴. ذخیره دائمی دیتای تمیز و همگام‌شده در مرورگر
+    localStorage.setItem('study_dashboard_schedule_v4', JSON.stringify(scheduleData));
+}
         window.resetSchedule = function() {
             localStorage.removeItem('study_dashboard_schedule_v4');
             initSchedule();
