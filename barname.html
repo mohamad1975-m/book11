@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>هوشنگ</title>
+    <title>هوشنگ؛ برنامه کنکور ۱۴۰۶</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* ==========================================================
-           فونت ایران‌سنس ایکس (تنها یک فایل Medium موجود است)
-           ========================================================== */
         @font-face {
             font-family: 'IRANSansX';
             src: url('IRANSansXFaNum-Medium.woff2') format('woff2');
@@ -47,6 +44,15 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        /* استایل سفارشی برای تیک خوردن چک‌باکس‌های نوع مطالعه */
+        .peer:checked + .checkbox-wrapper .checkbox-box {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+        .peer:checked + .checkbox-wrapper .checkbox-box svg {
+            opacity: 1;
+        }
+
         .bar-chart-container {
             mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
@@ -75,16 +81,32 @@
             -webkit-backdrop-filter: blur(6px);
             transition: opacity 0.25s ease;
         }
-        .settings-modal {
-            max-width: 420px; width: 92%;
+        .settings-modal, .task-modal, .confirm-modal {
+            max-width: 480px; width: 92%;
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
         }
-        .books-modal {
-            max-width: 600px; width: 92%; max-height: 85vh; display: flex; flex-direction: column;
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+        
+        .settings-modal.hidden-modal, .task-modal.hidden-modal, .confirm-modal.hidden-modal { transform: scale(0.92) translateY(20px); opacity: 0; pointer-events: none; }
+        .settings-modal.visible-modal, .task-modal.visible-modal, .confirm-modal.visible-modal { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
+
+        .dropdown-menu {
+            transform-origin: top right;
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
-        .settings-modal.hidden-modal, .books-modal.hidden-modal { transform: scale(0.92) translateY(20px); opacity: 0; pointer-events: none; }
-        .settings-modal.visible-modal, .books-modal.visible-modal { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
+        .dropdown-menu.hidden {
+            transform: scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .dropdown-menu.visible {
+            transform: scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .timer-progress-bar {
+            transition: width 5s linear;
+        }
 
         @media (max-width: 640px) { .confetti-piece { width: 7px; height: 5px; } }
     </style>
@@ -92,11 +114,161 @@
 <body>
 
     <audio id="bg-music" src="music1.mp3" loop preload="auto"></audio>
-
     <div id="toast-container" class="fixed bottom-4 right-4 z-[9999] flex flex-col gap-2"></div>
-
     <div id="confetti-container"></div>
 
+    <!-- مودال تایید شخصی سازی شده -->
+    <div id="confirm-modal-overlay" class="settings-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="confirm-modal" class="confirm-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">تایید عملیات</h3>
+            </div>
+            <p id="confirm-msg" class="text-slate-600 mb-6 text-sm leading-relaxed"></p>
+            <div class="flex gap-3">
+                <button id="confirm-yes-btn" class="flex-1 py-2.5 rounded-xl bg-gradient-to-l from-indigo-600 to-indigo-500 text-white font-bold shadow-md hover:scale-[1.02] transition-transform cursor-pointer">بله، مطمئنم</button>
+                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-colors cursor-pointer">لغو</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نوتیفیکیشن پایان تایمر معکوس -->
+    <div id="timer-expire-notification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] w-[90%] max-w-sm bg-slate-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 transform translate-y-32 opacity-0 pointer-events-none">
+        <div class="p-5">
+            <h4 class="text-white font-bold text-lg mb-1">زمان مطالعه به پایان رسید!</h4>
+            <p class="text-slate-300 text-sm mb-4">می‌توانید مطالعه را تمام کنید یا برای ثبت اضافه تایم ادامه دهید.</p>
+            <div class="flex gap-3">
+                <button id="expire-end-btn" class="flex-1 py-2 rounded-xl bg-rose-500 text-white font-bold text-sm hover:bg-rose-600 transition-colors cursor-pointer">اتمام مطالعه</button>
+                <button id="expire-continue-btn" class="flex-1 py-2 rounded-xl bg-slate-700 text-slate-300 border border-slate-600 font-bold text-sm hover:bg-slate-600 transition-colors cursor-pointer">ادامه مطالعه</button>
+            </div>
+        </div>
+        <div class="h-1.5 w-full bg-slate-700">
+            <div id="timer-expire-bar" class="h-full bg-indigo-500 w-full timer-progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- مودال افزودن/ویرایش درس -->
+    <div id="task-modal-overlay" class="settings-overlay fixed inset-0 z-[70] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="task-modal" class="task-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50 overflow-visible max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200">
+                <h3 id="task-modal-title" class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    افزودن درس جدید
+                </h3>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-700 transition-colors p-2 rounded-xl hover:bg-slate-100 cursor-pointer">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            
+            <input type="hidden" id="task-modal-idx" value="-1">
+            
+            <div class="space-y-5">
+                <!-- بخش نام کتاب (درس) -->
+                <div class="relative">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">نام کتاب (درس)</label>
+                    <input type="text" id="task-name-input" oninput="showSuggestions(this.value)" autocomplete="off" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all bg-white" placeholder="مثال: فیزیک">
+                    <div id="autocomplete-suggestions" class="absolute z-50 w-full bg-white border border-slate-200 rounded-xl mt-1 shadow-lg max-h-48 overflow-y-auto hidden custom-scrollbar"></div>
+                </div>
+
+                <!-- بخش مبحث -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">مبحث / شماره درس</label>
+                    <input type="text" id="task-topic-input" autocomplete="off" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all bg-white" placeholder="مثال: حرکت شناسی یا درس اول">
+                </div>
+
+                <!-- بخش تایمر معکوس -->
+                <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                    <label class="relative flex items-center justify-between cursor-pointer mb-3">
+                        <span class="text-sm font-bold text-indigo-900">استفاده از تایمر معکوس</span>
+                        <div class="relative flex items-center cursor-pointer">
+                            <input type="checkbox" id="task-countdown-checkbox" onchange="handleCountdownChange(this)" class="peer sr-only">
+                            <div class="w-6 h-6 bg-white border-2 border-indigo-200 rounded transition-all peer-checked:bg-indigo-600 peer-checked:border-indigo-600 flex items-center justify-center shadow-sm">
+                                <svg class="w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                        </div>
+                    </label>
+                    <div id="task-target-time-container" class="hidden transition-all duration-300 opacity-0 h-0 overflow-hidden">
+                        <label class="block text-xs font-semibold text-indigo-700 mb-1 mt-2">زمان هدف (به دقیقه)</label>
+                        <input type="number" id="task-target-time" class="w-full px-4 py-2 rounded-xl border border-indigo-200 focus:outline-none focus:border-indigo-50 bg-white" placeholder="مثلاً 90">
+                    </div>
+                </div>
+
+                <!-- بخش انتخاب پایه -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">پایه تحصیلی</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="task-grade" value="دهم" class="peer sr-only">
+                            <div class="text-center px-2 py-2 rounded-xl border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-500 peer-checked:text-indigo-700 text-sm font-semibold transition-all hover:bg-slate-50">دهم</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="task-grade" value="یازدهم" class="peer sr-only">
+                            <div class="text-center px-2 py-2 rounded-xl border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-500 peer-checked:text-indigo-700 text-sm font-semibold transition-all hover:bg-slate-50">یازدهم</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="task-grade" value="دوازدهم" class="peer sr-only">
+                            <div class="text-center px-2 py-2 rounded-xl border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-500 peer-checked:text-indigo-700 text-sm font-semibold transition-all hover:bg-slate-50">دوازدهم</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="task-grade" value="جامع" class="peer sr-only">
+                            <div class="text-center px-2 py-2 rounded-xl border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-500 peer-checked:text-indigo-700 text-sm font-semibold transition-all hover:bg-slate-50">جامع</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- بخش نوع مطالعه -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">نوع مطالعه (چند انتخاب مجاز است)</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="task-type" value="مطالعه" class="peer sr-only">
+                            <div class="checkbox-wrapper flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-700 text-sm font-semibold transition-all hover:bg-slate-50">
+                                <div class="checkbox-box w-4 h-4 rounded border border-slate-300 flex items-center justify-center transition-colors">
+                                    <svg class="w-3 h-3 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                مطالعه
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="task-type" value="حل تست" class="peer sr-only">
+                            <div class="checkbox-wrapper flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-700 text-sm font-semibold transition-all hover:bg-slate-50">
+                                <div class="checkbox-box w-4 h-4 rounded border border-slate-300 flex items-center justify-center transition-colors">
+                                    <svg class="w-3 h-3 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                حل تست
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="task-type" value="بررسی تست" class="peer sr-only">
+                            <div class="checkbox-wrapper flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-700 text-sm font-semibold transition-all hover:bg-slate-50">
+                                <div class="checkbox-box w-4 h-4 rounded border border-slate-300 flex items-center justify-center transition-colors">
+                                    <svg class="w-3 h-3 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                بررسی تست
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="task-type" value="حل و بررسی تشریحی" class="peer sr-only">
+                            <div class="checkbox-wrapper flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-700 text-sm font-semibold transition-all hover:bg-slate-50">
+                                <div class="checkbox-box w-4 h-4 rounded border border-slate-300 flex items-center justify-center transition-colors">
+                                    <svg class="w-3 h-3 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                تشریحی
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="saveTask()" class="w-full py-3.5 mt-2 rounded-xl bg-gradient-to-l from-indigo-600 to-indigo-500 text-white font-bold shadow-md shadow-indigo-200/50 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                    ذخیره درس
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- تنظیمات -->
     <div id="settings-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="settings-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50">
             <div class="flex items-center justify-between mb-6">
@@ -108,30 +280,28 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <p class="text-sm text-slate-500 mb-6">مدیریت اطلاعات پیشرفت شما</p>
             <div class="flex flex-col gap-4">
-                <button id="export-data-btn" class="flex items-center justify-center gap-3 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-indigo-600 to-indigo-500 text-white font-bold shadow-md shadow-indigo-200/50 hover:shadow-indigo-300/60 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                <button id="export-data-btn" class="flex items-center justify-center gap-3 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-indigo-600 to-indigo-500 text-white font-bold shadow-md shadow-indigo-200/50 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                     خروجی اطلاعات
                 </button>
-                <button id="import-data-btn" class="flex items-center justify-center gap-3 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-600 to-emerald-500 text-white font-bold shadow-md shadow-emerald-200/50 hover:shadow-emerald-300/60 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                <button id="import-data-btn" class="flex items-center justify-center gap-3 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-600 to-emerald-500 text-white font-bold shadow-md shadow-emerald-200/50 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     بازیابی اطلاعات
                 </button>
                 <input id="file-input" type="file" accept=".json" class="hidden" />
             </div>
             <div id="import-status" class="mt-4 text-sm text-center text-slate-500 min-h-[24px]"></div>
-            
             <div class="mt-6 border-t border-slate-100 pt-6">
-                <p class="text-xs text-slate-500 mb-3 leading-relaxed text-justify">اگر در چینش برنامه‌ها تغییراتی ایجاد کرده‌اید، با کلیک روی دکمه زیر می‌توانید برنامه را به حالت اولیه (پیش‌فرض) بازگردانید. این کار هیچ تاثیری روی میزان دقایق مطالعه ثبت شده‌ی شما نخواهد داشت.</p>
-                <button onclick="resetSchedule()" class="flex items-center justify-center gap-2 w-full py-3 px-5 rounded-2xl bg-rose-50 text-rose-600 font-bold border border-rose-100 hover:bg-rose-100 hover:text-rose-700 transition-all cursor-pointer">
+                <button onclick="resetSchedule()" class="flex items-center justify-center gap-2 w-full py-3 px-5 rounded-2xl bg-rose-50 text-rose-600 font-bold border border-rose-100 hover:bg-rose-100 transition-all cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                    بازگشت به حالت پیش‌فرض برنامه
+                    حذف کل تقویم و بازسازی از صفر
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- تایمر و انتخاب -->
     <div id="timer-choice-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="timer-choice-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-white/50 max-w-md w-full">
             <div class="flex items-center justify-between mb-4">
@@ -142,43 +312,20 @@
             </div>
             <p class="text-sm text-slate-500 mb-6 leading-relaxed">برای این درس، هم زمان دستی وارد شده و هم تاریخچه تایمر وجود دارد. مایلید تایمر از کدام زمان ادامه پیدا کند؟</p>
             <div class="flex flex-col gap-3">
-                <button id="choice-manual-btn" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-indigo-50 to-indigo-100/50 text-indigo-700 font-bold border border-indigo-100 hover:from-indigo-100 hover:to-indigo-200/50 transition-all text-right flex justify-between items-center group cursor-pointer">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                        ادامه از زمان دستی:
-                    </span>
+                <button id="choice-manual-btn" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-indigo-50 to-indigo-100/50 text-indigo-700 font-bold border border-indigo-100 hover:from-indigo-100 transition-all flex justify-between items-center group cursor-pointer">
+                    <span class="flex items-center gap-2">ادامه از زمان دستی:</span>
                     <span id="choice-manual-time" class="font-black text-indigo-900 bg-white/80 px-3 py-1 rounded-xl text-sm border border-indigo-200/40">۰ دقیقه</span>
                 </button>
-                <button id="choice-timer-btn" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-50 to-emerald-100/50 text-emerald-700 font-bold border border-emerald-100 hover:from-emerald-100 hover:to-emerald-200/50 transition-all text-right flex justify-between items-center group cursor-pointer">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        ادامه از زمان قبلی تایمر:
-                    </span>
+                <button id="choice-timer-btn" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-l from-emerald-50 to-emerald-100/50 text-emerald-700 font-bold border border-emerald-100 hover:from-emerald-100 transition-all flex justify-between items-center group cursor-pointer">
+                    <span class="flex items-center gap-2">ادامه از زمان قبلی:</span>
                     <span id="choice-timer-time" class="font-black text-emerald-900 bg-white/80 px-3 py-1 rounded-xl text-sm border border-emerald-200/40">۰۰:۰۰</span>
                 </button>
-                <button onclick="closeTimerChoiceModal()" class="w-full py-3 px-5 rounded-2xl bg-slate-100 text-slate-500 font-bold hover:bg-slate-200 transition-all text-center text-sm mt-2 cursor-pointer">
-                    انصراف
-                </button>
+                <button onclick="closeTimerChoiceModal()" class="w-full py-3 px-5 rounded-2xl bg-slate-100 text-slate-500 font-bold hover:bg-slate-200 transition-all text-center text-sm mt-2 cursor-pointer">انصراف</button>
             </div>
         </div>
     </div>
 
-    <div id="books-overlay" class="settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="books-modal" class="books-modal hidden-modal glass-card rounded-3xl p-6 shadow-2xl border border-white/50">
-            <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200 shrink-0">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <svg class="w-6 h-6 text-fuchsia-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                    لیست کتاب‌ها و دروس
-                </h3>
-                <button onclick="closeBooksModal()" class="text-slate-400 hover:text-slate-700 transition-colors p-2 rounded-xl hover:bg-slate-100 cursor-pointer">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-            <div id="books-list-container" class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-1">
-                </div>
-        </div>
-    </div>
-
+    <!-- انتقال درس -->
     <div id="move-task-overlay" class="settings-overlay fixed inset-0 z-[60] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="move-task-modal" class="settings-modal hidden-modal glass-card rounded-3xl p-6 shadow-2xl border border-white/50">
             <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200">
@@ -190,27 +337,28 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <p class="text-sm text-slate-500 mb-4">روز جدیدی که می‌خواهید این درس به آن منتقل شود را انتخاب کنید:</p>
-            <div id="move-days-list" class="max-h-60 overflow-y-auto custom-scrollbar pr-2 space-y-2">
-                </div>
+            <div id="move-days-list" class="max-h-60 overflow-y-auto custom-scrollbar pr-2 space-y-2"></div>
         </div>
     </div>
 
+    <!-- هدر اصلی -->
     <div class="max-w-6xl mx-auto px-4 pt-8 pb-12">
         <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 glass-card p-6 rounded-3xl shadow-xl shadow-slate-100">
             <div>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent">هوشنگ؛ برنامه‌ریزی امتحان نهایی</h1>
-                <p id="today-greeting" class="text-slate-500 text-sm mt-1">خوش آمدید! بیایید امروز هم یک گام به هدف‌مان نزدیک‌تر شویم.</p>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent">هوشنگ؛ برنامه کنکور ۱۴۰۶</h1>
+                <p id="today-greeting" class="text-slate-500 text-sm mt-1">مسیر کنکور طولانیه، اما با استمرار به هدف می‌رسی.</p>
             </div>
             <div class="flex items-center gap-2 bg-white shadow-sm border border-slate-100 px-4 py-2.5 rounded-2xl self-start md:self-auto">
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span id="current-date-display" class="font-bold text-slate-700 text-sm">امروز: —</span>
+                
                 <button id="settings-toggle-btn" class="mr-1 p-1.5 rounded-xl text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200 cursor-pointer" title="تنظیمات">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
             </div>
         </header>
 
+        <!-- آمار کلی -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="glass-card p-6 rounded-3xl shadow-lg shadow-slate-100 border border-slate-100">
                 <div class="flex justify-between items-center mb-3">
@@ -238,6 +386,7 @@
             </div>
         </section>
 
+        <!-- نمودار -->
         <section class="mb-8 glass-card p-6 rounded-3xl shadow-lg shadow-slate-100 border border-slate-100">
             <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-2">
@@ -245,10 +394,6 @@
                     <h3 class="text-lg font-bold text-slate-700">آمار و نمودار مطالعه</h3>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button onclick="openBooksModal()" class="flex items-center gap-1.5 bg-fuchsia-100 hover:bg-fuchsia-200 text-fuchsia-700 px-3 py-2 rounded-xl transition-colors font-bold shadow-sm cursor-pointer" title="نمایش کتاب‌ها و درس‌ها">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        کتاب‌ها
-                    </button>
                     <div class="text-sm text-slate-500 bg-fuchsia-50 px-4 py-2 rounded-xl border border-fuchsia-100">
                         مجموع کل: <span id="grand-total-minutes" class="font-black text-fuchsia-700 text-base">0</span> دقیقه
                         <span id="grand-total-hours" class="text-xs mr-1 opacity-70">(۰ ساعت)</span>
@@ -260,6 +405,7 @@
             </div>
         </section>
 
+        <!-- تقویم و لیست وظایف -->
         <main id="main-panel-area" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <div class="lg:col-span-2 order-1 lg:order-1 space-y-6">
                 <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border border-slate-50 min-h-[500px]">
@@ -270,267 +416,480 @@
                         </div>
                         
                         <div class="flex flex-col gap-2 self-start sm:self-auto items-end w-full sm:w-auto">
-                            <div class="text-sm text-slate-400 bg-slate-50 px-4 py-2 rounded-xl w-full text-center sm:text-right border border-slate-100">
-                                جمع مطالعه امروز: <span id="day-total-minutes" class="font-bold text-slate-700">0</span> دقیقه
-                            </div>
-                            <button id="music-btn" onclick="toggleUserMusic()" class="flex items-center justify-center gap-2 w-full text-xs px-3 py-2 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors shadow-sm cursor-pointer">
-                                <svg id="music-icon-off" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
-                                <svg id="music-icon-on" class="w-4 h-4 hidden text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                            <!-- دکمه مدیریت موسیقی؛ هم‌اندازه با دو کادر زیرین -->
+                            <button id="music-toggle-btn" class="flex items-center justify-center gap-1.5 w-full h-[38px] text-sm font-bold px-4 py-2 rounded-xl border transition-all duration-200 bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200 cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
                                 <span id="music-btn-text">موسیقی: قطع</span>
                             </button>
+                            <div class="text-sm text-slate-400 bg-slate-50 px-4 py-2 rounded-xl w-full h-[38px] flex items-center justify-center sm:justify-start border border-slate-100">
+                                جمع مطالعه امروز: <span id="day-total-minutes" class="font-bold text-slate-700 mr-1">0</span> دقیقه
+                            </div>
+                            <button onclick="openTaskModal()" class="flex items-center justify-center gap-2 w-full h-[38px] text-sm px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-md cursor-pointer font-bold">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                افزودن درس به این روز
+                            </button>
                         </div>
-                        
                     </div>
                     <div id="tasks-list-container" class="space-y-4"></div>
                 </div>
             </div>
 
-            <div class="lg:col-span-1 order-2 lg:order-2 glass-card p-5 rounded-3xl shadow-xl max-h-[680px] flex flex-col">
-                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">تقویم روزهای دوره</h3>
+            <!-- منوی روزها -->
+            <div class="lg:col-span-1 order-2 lg:order-2 glass-card p-5 rounded-3xl shadow-xl h-[680px] flex flex-col">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">تقویم سالیانه کنکور</h3>
+                <div class="mb-3 px-2">
+                    <input type="text" id="day-search-input" onkeyup="filterDays()" placeholder="جستجوی ماه یا روز (مثلاً مرداد)..." class="w-full text-sm px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 bg-white">
+                </div>
                 <div id="days-menu-container" class="space-y-2 overflow-y-auto custom-scrollbar pr-1 flex-1"></div>
             </div>
         </main>
     </div>
 
     <script>
-        const baseScheduleData = [
-            { id: 17, dateStr: "۱۷ تیر", label: "چهارشنبه", tasks: ["فارسی، فصل ۱", "فارسی، فصل ۲"] },
-            { id: 18, dateStr: "۱۸ تیر", label: "پنجشنبه", tasks: ["فارسی، فصل 3", "فارسی، فصل 4"] },
-            { id: 19, dateStr: "۱۹ تیر", label: "جمعه", tasks: ["فارسی، فصل 5", "فارسی، فصل 6"] },
-            { id: 20, dateStr: "۲۰ تیر", label: "شنبه", tasks: ["فارسی، فصل 7", "فارسی، فصل 8"] },
-            { id: 21, dateStr: "21 تیر", label: "یکشنبه", tasks: ["فارسی، مرور", "فارسی، حل نمونه سوال"] },
-            { id: 22, dateStr: "22 تیر", label: "دوشنبه", tasks: [] },
-            { id: 23, dateStr: "23 تیر", label: "سه شنبه", tasks: ["تاریخ، درس 3", "تاریخ، درس 4", "تاریخ، درس 10", "تاریخ، درس 11"] },
-            { id: 24, dateStr: "24 تیر", label: "چهارشنبه", tasks: ["تاریخ، درس 5", "تاریخ، درس 6", "تاریخ، درس 12", "تاریخ، درس 13"] },
-            { id: 25, dateStr: "25 تیر", label: "پنجشنبه", tasks: ["تاریخ، درس 1", "تاریخ، درس 7", "تاریخ، درس 14", "تاریخ، درس 15"] },
-            { id: 26, dateStr: "26 تیر", label: "جمعه", tasks: ["تاریخ، درس 2", "تاریخ، درس 8", "تاریخ، درس 9", "تاریخ، درس 16", "تاریخ، حل نمونه سوال"] },
-            { id: 27, dateStr: "27 تیر", label: "شنبه", tasks: ["مرور تاریخ، درس 7 و 8", "مرور تاریخ، درس 11 و 12", "مرور تاریخ، درس 13 و 14", "مرور تاریخ، درس 3 و 4", "مرور تاریخ، درس 5 و 6", "مرور تاریخ، درس 9", "مرور تاریخ، درس 10", "مرور تاریخ، درس 1 و 2", "مرور تاریخ، درس 15", "مرور تاریخ، درس 16"] }
-        ];
-
+        // متغیرهای وضعیت سیستم از جمله وضعیت موسیقی اضافه شد
+        let isMusicEnabled = false;
         let scheduleData = [];
-        let progressV7 = JSON.parse(localStorage.getItem('study_dashboard_progress_v7')) || {};
-let progressV3 = JSON.parse(localStorage.getItem('study_dashboard_progress_v3')) || {};
-let userProgress = { ...progressV7, ...progressV3 };
-// یکسان‌سازی دائمی روی کلید v7
-localStorage.setItem('study_dashboard_progress_v7', JSON.stringify(userProgress));
-        let activeDayId = 1;
+        let userProgress = JSON.parse(localStorage.getItem('study_dashboard_progress_v8')) || {};
+        localStorage.setItem('study_dashboard_progress_v8', JSON.stringify(userProgress));
+        
+        let activeDayId = 17; 
         let realCurrentDayId = null;
         let currentMoveTarget = null;
+        let activeTimerObj = { taskKey: null, interval: null, seconds: 0, idx: null, startTime: 0, baseSeconds: 0, notified: false };
+        let openMenuId = null; 
         
-        let activeTimerObj = { taskKey: null, interval: null, seconds: 0, idx: null, startTime: 0, baseSeconds: 0 };
+        let confirmCallback = null;
 
-        const audio = document.getElementById('bg-music');
-        audio.muted = true; 
-        let isMusicWantedByUser = false;
+        function p2eDigits(str) { return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)); }
 
-        function p2eDigits(str) {
-            return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+        // --- مدیریت موسیقی ---
+        function toggleMusicButton() {
+            isMusicEnabled = !isMusicEnabled;
+            const btn = document.getElementById('music-toggle-btn');
+            const text = document.getElementById('music-btn-text');
+            const bgMusic = document.getElementById('bg-music');
+            
+            if (isMusicEnabled) {
+                btn.classList.remove('bg-slate-100', 'text-slate-500', 'border-slate-200');
+                btn.classList.add('bg-indigo-50', 'text-indigo-600', 'border-indigo-200');
+                text.innerText = 'موسیقی: فعال';
+                
+                // اگر هم‌اکنون تایمر در حال اجراست، موسیقی باید پخش شود
+                if (activeTimerObj.taskKey) {
+                    bgMusic.play().catch(e => console.log('Audio play failed:', e));
+                }
+            } else {
+                btn.classList.add('bg-slate-100', 'text-slate-500', 'border-slate-200');
+                btn.classList.remove('bg-indigo-50', 'text-indigo-600', 'border-indigo-200');
+                text.innerText = 'موسیقی: قطع';
+                
+                // در حالت خاموش شدن دستی فوراً موسیقی متوقف می‌شود
+                bgMusic.pause();
+            }
         }
 
-        // Initialize Schedule
-function initSchedule() {
-    const savedSchedule = localStorage.getItem('study_dashboard_schedule_v4');
-    const parsedSchedule = savedSchedule ? JSON.parse(savedSchedule) : [];
-
-    // ۱. ساختار استاندارد را از کدهای اصلی شما (baseScheduleData) می‌سازیم
-    const formattedBaseData = baseScheduleData.map(day => ({
-        ...day,
-        tasks: day.tasks.map((taskName, idx) => ({
-            name: taskName,
-            origKey: `day_${day.id}_task_${idx}`
-        }))
-    }));
-
-    // ۲. اگر مرورگر کاملاً خالی است، همین ساختار استاندارد را ذخیره کن
-    if (!savedSchedule || parsedSchedule.length === 0) {
-        scheduleData = formattedBaseData;
-    } else {
-        // ۳. همگام‌سازی عمیق (مقایسه دیتای مرورگر با کدهای شما)
-        scheduleData = formattedBaseData.map(baseDay => {
-            const savedDay = parsedSchedule.find(d => d.id === baseDay.id);
-
-            // حالت الف: روز کاملاً جدید است (در کد شما هست اما در مرورگر نیست)
-            if (!savedDay) {
-                return baseDay;
-            } 
-            // حالت ب: روز از قبل وجود دارد، باید تسک‌ها را همگام کنیم
-            else {
-                const mergedTasks = [];
-                
-                // ۳.۱: حفظ تسک‌های قدیمی (که تیک خورده‌اند یا جابجا شده‌اند)
-                savedDay.tasks.forEach(savedTask => {
-                    // بررسی می‌کنیم که آیا این تسک هنوز در کدهای شما وجود دارد یا حذفش کرده‌اید؟
-                    const taskStillExists = baseDay.tasks.find(bt => bt.origKey === savedTask.origKey);
-                    if (taskStillExists) {
-                        // اگر نام تسک را در کد تغییر داده‌اید، نام جدید روی آن اعمال شود
-                        mergedTasks.push({ ...savedTask, name: taskStillExists.name });
-                    }
-                });
-
-                // ۳.۲: اضافه کردن تسک‌های کاملاً جدیدی که به این روز اضافه کرده‌اید
-                baseDay.tasks.forEach(baseTask => {
-                    const isTaskAlreadySaved = savedDay.tasks.find(st => st.origKey === baseTask.origKey);
-                    if (!isTaskAlreadySaved) {
-                        mergedTasks.push(baseTask); // تزریق تسک جدید به انتهای لیست
-                    }
-                });
-
-                // خروجی نهایی این روز ترکیب دیتای قدیمی با تغییرات جدید است
-                return {
-                    ...savedDay,              // حفظ تنظیمات کاربر (مثل باز/بسته بودن لیست)
-                    label: baseDay.label,     // آپدیت نام روز
-                    dateStr: baseDay.dateStr, // آپدیت تاریخ
-                    tasks: mergedTasks        // لیست تسک‌های همگام‌سازی‌شده
-                };
-            }
+        // Custom Confirm Modal
+        function showConfirmModal(message, callback) {
+            document.getElementById('confirm-msg').innerText = message;
+            confirmCallback = callback;
+            document.getElementById('confirm-modal-overlay').classList.remove('opacity-0', 'pointer-events-none'); 
+            document.getElementById('confirm-modal-overlay').classList.add('opacity-100', 'pointer-events-auto'); 
+            document.getElementById('confirm-modal').classList.remove('hidden-modal'); 
+            document.getElementById('confirm-modal').classList.add('visible-modal');
+        }
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal-overlay').classList.remove('opacity-100', 'pointer-events-auto'); 
+            document.getElementById('confirm-modal-overlay').classList.add('opacity-0', 'pointer-events-none'); 
+            document.getElementById('confirm-modal').classList.remove('visible-modal'); 
+            document.getElementById('confirm-modal').classList.add('hidden-modal');
+            confirmCallback = null;
+        }
+        document.getElementById('confirm-yes-btn').addEventListener('click', () => {
+            if(confirmCallback) confirmCallback();
+            closeConfirmModal();
         });
-    }
 
-    // ۴. ذخیره دائمی دیتای تمیز و همگام‌شده در مرورگر
-    localStorage.setItem('study_dashboard_schedule_v4', JSON.stringify(scheduleData));
-}
+        // --- تقویم ---
+        function generateYearlyCalendar() {
+            const newSchedule = [];
+            let currentDate = new Date(2026, 6, 8, 12, 0, 0); 
+            const endDate = new Date(2027, 7, 22, 12, 0, 0);
+            let idCounter = 17; 
+            
+            while(currentDate <= endDate) {
+                const dayMonthStr = new Intl.DateTimeFormat('fa-IR', {month: 'long', day: 'numeric'}).format(currentDate);
+                const yearStr = new Intl.DateTimeFormat('fa-IR', {year: 'numeric'}).format(currentDate);
+                const labelStr = new Intl.DateTimeFormat('fa-IR', {weekday: 'long'}).format(currentDate);
+                
+                newSchedule.push({
+                    id: idCounter++,
+                    dateStr: dayMonthStr,
+                    yearStr: yearStr,
+                    label: labelStr,
+                    tasks: []
+                });
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return newSchedule;
+        }
+
+        function initSchedule() {
+            const savedScheduleV6 = localStorage.getItem('study_dashboard_schedule_v6');
+            if (savedScheduleV6) {
+                scheduleData = JSON.parse(savedScheduleV6);
+            } else {
+                scheduleData = generateYearlyCalendar();
+                localStorage.setItem('study_dashboard_schedule_v6', JSON.stringify(scheduleData));
+            }
+        }
+
         window.resetSchedule = function() {
-            localStorage.removeItem('study_dashboard_schedule_v4');
-            initSchedule();
-            renderDaysMenu();
-            renderFocusedDay();
-            renderStatistics(true);
-            closeSettings();
-            showToast('برنامه با موفقیت به حالت پیش‌فرض بازگشت.');
+            showConfirmModal("آیا مطمئن هستید؟ کل درس‌های اضافه شده در یک سال اخیر پاک خواهد شد!", () => {
+                localStorage.removeItem('study_dashboard_schedule_v6'); initSchedule(); renderDaysMenu(); renderFocusedDay(); renderStatistics(true); closeSettings(); showToast('برنامه ریست شد.');
+            });
         };
 
-function saveToStorage() {
-    localStorage.setItem('study_dashboard_progress_v7', JSON.stringify(userProgress));
-    localStorage.setItem('study_dashboard_schedule_v4', JSON.stringify(scheduleData));
-    updateOverallProgressBars();
-    renderStatistics(false); 
-}
+        function saveToStorage() {
+            localStorage.setItem('study_dashboard_progress_v8', JSON.stringify(userProgress));
+            localStorage.setItem('study_dashboard_schedule_v6', JSON.stringify(scheduleData));
+            updateOverallProgressBars(); renderStatistics(false); 
+        }
 
         function initCurrentDateDetection() {
             try {
-                const options = { month: 'long', day: 'numeric' };
-                const formattedToday = new Intl.DateTimeFormat('fa-IR', options).format(new Date());
-                document.getElementById('current-date-display').innerText = `امروز: ${formattedToday}`;
+                const formattedToday = new Intl.DateTimeFormat('fa-IR', { month: 'long', day: 'numeric' }).format(new Date());
+                const formattedYear = new Intl.DateTimeFormat('fa-IR', { year: 'numeric' }).format(new Date());
+                document.getElementById('current-date-display').innerText = `امروز: ${formattedToday} ${formattedYear}`;
                 
                 const todayClean = p2eDigits(formattedToday.trim().replace(/\s+/g, ' '));
-                const matchedDay = scheduleData.find(item => {
-                    const dataClean = p2eDigits(item.dateStr.trim().replace(/\s+/g, ' '));
-                    return todayClean === dataClean;
-                });
-                if (matchedDay) {
-                    realCurrentDayId = matchedDay.id;
-                    activeDayId = matchedDay.id;
-                    document.getElementById('today-greeting').innerText = `برنامه امروزت (${matchedDay.label} ${matchedDay.dateStr}) رو برو انجام بده. لعن عمر فراموش نشه!`;
-                }
+                const matchedDay = scheduleData.find(item => p2eDigits(item.dateStr.trim().replace(/\s+/g, ' ')) === todayClean);
+                if (matchedDay) { realCurrentDayId = matchedDay.id; activeDayId = matchedDay.id; }
             } catch (_) {}
         }
 
         window.goToCurrentDay = function() {
-            if (realCurrentDayId) {
-                activeDayId = realCurrentDayId;
-                renderDaysMenu();
-                renderFocusedDay();
-                renderStatistics(true);
-            }
+            if (realCurrentDayId) { activeDayId = realCurrentDayId; document.getElementById('day-search-input').value = ''; filterDays(); renderDaysMenu(); renderFocusedDay(); renderStatistics(true); }
         };
 
+        window.filterDays = function() {
+            const query = p2eDigits(document.getElementById('day-search-input').value.trim());
+            document.querySelectorAll('.day-menu-btn').forEach(btn => { btn.style.display = p2eDigits(btn.innerText).includes(query) ? 'flex' : 'none'; });
+        }
+
         function renderDaysMenu() {
-            const container = document.getElementById('days-menu-container');
-            container.innerHTML = '';
-            
+            const container = document.getElementById('days-menu-container'); container.innerHTML = '';
             scheduleData.forEach(day => {
-                const isSelected = day.id === activeDayId;
-                const isToday = day.id === realCurrentDayId;
-                let completedCount = 0;
-                
-                day.tasks.forEach((taskObj) => { 
-                    if (userProgress[taskObj.origKey]?.completed) completedCount++; 
-                });
+                const isSelected = day.id === activeDayId; const isToday = day.id === realCurrentDayId;
+                let completedCount = 0; day.tasks.forEach((t) => { if (userProgress[t.origKey]?.completed) completedCount++; });
                 const isFullyDone = completedCount === day.tasks.length && day.tasks.length > 0;
 
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${isSelected ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold active-day-btn' : isFullyDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'} cursor-pointer`;
-                
+                const btn = document.createElement('button'); btn.type = 'button';
+                btn.className = `day-menu-btn w-full flex items-center justify-between p-3.5 rounded-2xl text-right transition-all duration-300 ${isSelected ? 'bg-gradient-to-l from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-200/50 scale-[1.01] font-bold active-day-btn' : isFullyDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-100 font-medium hover:bg-emerald-100/70' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-100 hover:border-slate-200'} cursor-pointer mb-2`;
                 btn.onclick = () => { activeDayId = day.id; renderDaysMenu(); renderFocusedDay(); updateOverallProgressBars(); renderStatistics(true); };
                 
                 let todayBadge = isToday && !isSelected ? `<span class="text-[10px] bg-fuchsia-100 text-fuchsia-700 px-1.5 py-0.5 rounded mr-1 whitespace-nowrap border border-fuchsia-200">امروز</span>` : '';
+                let yearHtml = `<span class="${isSelected ? 'text-indigo-200' : 'text-slate-400'} text-[11px] font-light opacity-80 mr-1">${day.yearStr}</span>`;
 
-                btn.innerHTML = `
-                    <div class="flex flex-col">
-                        <span class="${isSelected ? 'text-indigo-100' : 'text-slate-400'} text-xs font-semibold flex items-center">${day.label} ${todayBadge}</span>
-                        <span class="text-sm mt-0.5">${day.dateStr}</span>
-                    </div>
-                    <span class="text-xs px-2.5 py-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : isFullyDone ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">${completedCount}/${day.tasks.length}</span>
-                `;
+                btn.innerHTML = `<div class="flex flex-col"><span class="${isSelected ? 'text-indigo-100' : 'text-slate-400'} text-xs font-semibold flex items-center">${day.label} ${todayBadge}</span><span class="text-sm mt-0.5">${day.dateStr} ${yearHtml}</span></div><span class="text-xs px-2.5 py-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : isFullyDone ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">${completedCount}/${day.tasks.length}</span>`;
                 container.appendChild(btn);
             });
-
-            setTimeout(() => {
-                const activeBtn = container.querySelector('.active-day-btn');
-                if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 10);
+            setTimeout(() => { const activeBtn = container.querySelector('.active-day-btn'); if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 10);
         }
 
-        function formatSubjectLink(taskName) {
-            const linkMap = {
-                "فارسی": "farsi.html",
-                "تاریخ": "tarikh.html",
-                "جامعه‌شناسی": "jamee.html",
-                "جامعه شناسی": "jamee.html",
-                "دینی": "dini.html",
-                "عربی": "arabi.html",
-                "زبان": "zaban.html"
-            };
-            for (const [subj, link] of Object.entries(linkMap)) {
-                if (taskName.startsWith(subj)) {
-                    return taskName.replace(subj, `<a href="${link}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-extrabold underline decoration-indigo-300 underline-offset-4 transition-colors">${subj}</a>`);
+        // --- توابع Autocomplete ---
+        function getUniqueSubjects() {
+            const subjects = new Set();
+            scheduleData.forEach(day => day.tasks.forEach(t => subjects.add(t.name)));
+            return Array.from(subjects);
+        }
+        window.showSuggestions = function(val) {
+            const container = document.getElementById('autocomplete-suggestions'); container.innerHTML = '';
+            if(!val) { container.classList.add('hidden'); return; }
+            const unique = getUniqueSubjects();
+            const matches = unique.filter(s => s.includes(val));
+            if(matches.length === 0) { container.classList.add('hidden'); return; }
+            
+            matches.forEach(match => {
+                const div = document.createElement('div');
+                div.className = "px-4 py-3 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700 border-b border-slate-50 last:border-none";
+                div.innerText = match;
+                div.onclick = () => { document.getElementById('task-name-input').value = match; container.classList.add('hidden'); };
+                container.appendChild(div);
+            });
+            container.classList.remove('hidden');
+        };
+
+        window.handleCountdownChange = function(checkbox) {
+            const checked = checkbox.checked;
+            const idx = parseInt(document.getElementById('task-modal-idx').value);
+            
+            if (idx !== -1 && !checked) {
+                const dayObj = scheduleData.find(d => d.id === activeDayId);
+                const oldTask = dayObj.tasks[idx];
+                const tk = oldTask.origKey;
+                
+                if (oldTask.isCountdown && userProgress[tk] && (userProgress[tk].seconds > 0 || userProgress[tk].minutes > 0)) {
+                    showConfirmModal("تغییر تنظیمات تایمر باعث حذف زمان مطالعه ثبت شده قبلی می‌شود. مطمئن هستید؟", () => {
+                        userProgress[tk] = { completed: false, minutes: 0, seconds: 0 };
+                        saveToStorage();
+                        toggleCountdownInput(false);
+                    });
+                    checkbox.checked = true; // بازگشت تا تایید شود
+                    return;
                 }
             }
-            return taskName;
+            toggleCountdownInput(checked);
+        };
+
+        window.toggleCountdownInput = function(checked, immediate = false) {
+            const container = document.getElementById('task-target-time-container');
+            if (checked) {
+                container.classList.remove('hidden');
+                if (immediate) {
+                    container.classList.remove('opacity-0', 'h-0');
+                    container.classList.add('opacity-100', 'h-16');
+                } else {
+                    setTimeout(() => {
+                        container.classList.remove('opacity-0', 'h-0');
+                        container.classList.add('opacity-100', 'h-16');
+                    }, 10);
+                }
+            } else {
+                container.classList.remove('opacity-100', 'h-16');
+                container.classList.add('opacity-0', 'h-0');
+                if (immediate) {
+                    container.classList.add('hidden');
+                } else {
+                    setTimeout(() => { container.classList.add('hidden'); }, 300);
+                }
+            }
+        };
+
+        // --- CRUD Tasks ---
+        window.openTaskModal = function(idx = -1) {
+            const dayObj = scheduleData.find(d => d.id === activeDayId);
+            document.getElementById('task-modal-idx').value = idx;
+            document.getElementById('autocomplete-suggestions').classList.add('hidden');
+            
+            // ریست فرم
+            document.querySelectorAll('input[name="task-grade"]').forEach(r => r.checked = false);
+            document.querySelectorAll('input[name="task-type"]').forEach(c => c.checked = false);
+            document.getElementById('task-countdown-checkbox').checked = false;
+            document.getElementById('task-target-time').value = '';
+            toggleCountdownInput(false, true); // بستن بدون انیمیشن
+
+            if (idx === -1) {
+                document.getElementById('task-modal-title').innerHTML = `<svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> افزودن درس جدید`;
+                document.getElementById('task-name-input').value = '';
+                document.getElementById('task-topic-input').value = '';
+            } else {
+                document.getElementById('task-modal-title').innerHTML = `<svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> ویرایش درس`;
+                const t = dayObj.tasks[idx];
+                document.getElementById('task-name-input').value = t.name || '';
+                document.getElementById('task-topic-input').value = t.topic || '';
+                
+                if (t.isCountdown) {
+                    document.getElementById('task-countdown-checkbox').checked = true;
+                    document.getElementById('task-target-time').value = t.targetMinutes;
+                    toggleCountdownInput(true, true); // باز نگه داشتن کشویی بدون انیمیشن
+                }
+
+                if(t.grade) { const gRadio = document.querySelector(`input[name="task-grade"][value="${t.grade}"]`); if(gRadio) gRadio.checked = true; }
+                if(t.types) { t.types.forEach(ty => { const c = document.querySelector(`input[name="task-type"][value="${ty}"]`); if(c) c.checked = true; }); }
+            }
+            document.getElementById('task-modal-overlay').classList.remove('opacity-0', 'pointer-events-none'); document.getElementById('task-modal-overlay').classList.add('opacity-100', 'pointer-events-auto'); document.getElementById('task-modal').classList.remove('hidden-modal'); document.getElementById('task-modal').classList.add('visible-modal');
         }
+
+        window.closeTaskModal = function() {
+            document.getElementById('task-modal-overlay').classList.remove('opacity-100', 'pointer-events-auto'); document.getElementById('task-modal-overlay').classList.add('opacity-0', 'pointer-events-none'); document.getElementById('task-modal').classList.remove('visible-modal'); document.getElementById('task-modal').classList.add('hidden-modal');
+        }
+
+        window.saveTask = function() {
+            const name = document.getElementById('task-name-input').value.trim();
+            const topic = document.getElementById('task-topic-input').value.trim();
+            if (!name) return showToast("لطفا نام کتاب (درس) را وارد کنید");
+            
+            const gradeEl = document.querySelector('input[name="task-grade"]:checked');
+            const grade = gradeEl ? gradeEl.value : "";
+            
+            const typesEls = document.querySelectorAll('input[name="task-type"]:checked');
+            const types = Array.from(typesEls).map(el => el.value);
+            
+            const isCountdown = document.getElementById('task-countdown-checkbox').checked;
+            const targetMinutes = parseInt(document.getElementById('task-target-time').value) || 0;
+            
+            if (isCountdown && targetMinutes <= 0) return showToast("لطفا زمان هدف معتبر وارد کنید");
+
+            const idx = parseInt(document.getElementById('task-modal-idx').value);
+            const dayObj = scheduleData.find(d => d.id === activeDayId);
+            const taskData = { name, topic, grade, types, isCountdown, targetMinutes };
+
+            if (idx === -1) {
+                const origKeyBase = `day_${Date.now()}_task_`;
+                dayObj.tasks.push({ ...taskData, origKey: origKeyBase + activeDayId }); 
+                showToast("درس اضافه شد.");
+            } else {
+                taskData.origKey = dayObj.tasks[idx].origKey; 
+                dayObj.tasks[idx] = taskData; 
+                showToast("درس ویرایش شد.");
+            }
+            saveToStorage(); closeTaskModal(); renderDaysMenu(); renderFocusedDay();
+        }
+        
+        window.deleteTask = function(idx) {
+            showConfirmModal("آیا از حذف این درس اطمینان دارید؟", () => {
+                const dayObj = scheduleData.find(d => d.id === activeDayId);
+                const task = dayObj.tasks[idx];
+                const taskKey = task.origKey;
+                const progressBackup = userProgress[taskKey] ? JSON.parse(JSON.stringify(userProgress[taskKey])) : null;
+                
+                dayObj.tasks.splice(idx, 1); 
+                if(userProgress[taskKey]) delete userProgress[taskKey];
+                
+                saveToStorage(); 
+                renderDaysMenu(); 
+                renderFocusedDay(); 
+                
+                showUndoToast("درس حذف شد.", () => {
+                    dayObj.tasks.splice(idx, 0, task);
+                    if(progressBackup) userProgress[taskKey] = progressBackup;
+                    saveToStorage();
+                    renderDaysMenu();
+                    renderFocusedDay();
+                });
+            });
+        }
+        
+        function showUndoToast(m, undoCallback) { 
+            const c = document.getElementById('toast-container'); 
+            const t = document.createElement('div'); 
+            t.className = 'bg-slate-800 text-white px-4 py-3 rounded-2xl shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 text-sm font-bold flex items-center justify-between gap-4 border border-slate-700 z-[99999] min-w-[250px]'; 
+            t.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="bg-rose-500/20 p-1.5 rounded-lg flex-shrink-0"><svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
+                    <span>${m}</span>
+                </div>
+                <button class="text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1.5 rounded-lg transition-colors border border-indigo-500/30 cursor-pointer">واگرد</button>
+            `; 
+            const btn = t.querySelector('button');
+            let isUndone = false;
+            
+            btn.onclick = () => {
+                isUndone = true;
+                undoCallback();
+                t.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => t.remove(), 300);
+            };
+
+            c.appendChild(t); 
+            requestAnimationFrame(() => t.classList.remove('translate-y-10', 'opacity-0')); 
+            
+            setTimeout(() => { 
+                if(!isUndone) {
+                    t.classList.add('translate-y-10', 'opacity-0'); 
+                    setTimeout(() => t.remove(), 300); 
+                }
+            }, 5000); 
+        }
+
+        window.toggleTaskMenu = function(taskKey, event) {
+            event.stopPropagation();
+            const menuId = `menu-${taskKey}`;
+            const menu = document.getElementById(menuId);
+            
+            if (openMenuId && openMenuId !== menuId) {
+                const oldMenu = document.getElementById(openMenuId);
+                if (oldMenu) { oldMenu.classList.add('hidden'); oldMenu.classList.remove('visible'); }
+            }
+
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden'); menu.classList.add('visible'); openMenuId = menuId;
+            } else {
+                menu.classList.add('hidden'); menu.classList.remove('visible'); openMenuId = null;
+            }
+        }
+        
+        document.addEventListener('click', (e) => {
+            if (openMenuId) {
+                const menu = document.getElementById(openMenuId);
+                if (menu && !menu.contains(e.target) && !e.target.closest('button[onclick^="toggleTaskMenu"]')) {
+                    menu.classList.add('hidden'); menu.classList.remove('visible'); openMenuId = null;
+                }
+            }
+            const autoSugg = document.getElementById('autocomplete-suggestions');
+            if (autoSugg && !autoSugg.contains(e.target) && e.target.id !== 'task-name-input') {
+                autoSugg.classList.add('hidden');
+            }
+        });
+
 
         function renderFocusedDay() {
             const currentDayObj = scheduleData.find(d => d.id === activeDayId);
             if (!currentDayObj) return;
 
-            document.getElementById('selected-day-title').innerText = `${currentDayObj.label} - ${currentDayObj.dateStr}`;
+            document.getElementById('selected-day-title').innerHTML = `${currentDayObj.label} - ${currentDayObj.dateStr} <span class="text-lg font-normal text-slate-400 mr-1">${currentDayObj.yearStr}</span>`;
 
             const badgeContainer = document.getElementById('day-badge-container');
             if (realCurrentDayId) {
                 if (activeDayId === realCurrentDayId) badgeContainer.innerHTML = `<span class="text-xs font-bold text-fuchsia-700 bg-fuchsia-50 border border-fuchsia-200 px-3 py-1 rounded-full shadow-sm">امروز</span>`;
                 else badgeContainer.innerHTML = `<button onclick="goToCurrentDay()" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-500 hover:text-white border border-indigo-100 px-3 py-1.5 rounded-full shadow-sm transition-all cursor-pointer inline-flex items-center gap-1.5 group"><svg class="w-3.5 h-3.5 text-indigo-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7"/></svg>رفتن به برنامه امروز</button>`;
-            } else badgeContainer.innerHTML = `<span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">برنامه انتخاب شده</span>`;
-
-            const listContainer = document.getElementById('tasks-list-container');
-            listContainer.innerHTML = '';
-            
-            if (currentDayObj.tasks.length === 0) {
-                listContainer.innerHTML = '<div class="text-center p-8 text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">درسی در این روز وجود ندارد</div>';
             }
+
+            const listContainer = document.getElementById('tasks-list-container'); listContainer.innerHTML = '';
+            if (currentDayObj.tasks.length === 0) { listContainer.innerHTML = '<div class="text-center p-8 text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">درسی در این روز وجود ندارد</div>'; }
 
             currentDayObj.tasks.forEach((taskObj, idx) => {
                 const taskKey = taskObj.origKey;
                 const isCompleted = userProgress[taskKey]?.completed || false;
-                const minutesSpent = userProgress[taskKey]?.minutes || '';
-                const taskDisplayName = formatSubjectLink(taskObj.name);
-
                 const isTimerActive = activeTimerObj.taskKey === taskKey;
-                let displayTime = minutesSpent;
-                let isReadOnly = "";
-                let timerIcon = getPlayIcon();
                 
-                if (isTimerActive) {
-                    const currentSeconds = activeTimerObj.baseSeconds + Math.floor((Date.now() - activeTimerObj.startTime) / 1000);
-                    const m = Math.floor(currentSeconds / 60);
-                    const s = currentSeconds % 60;
-                    displayTime = `${m}:${s < 10 ? '0' : ''}${s}`;
-                    isReadOnly = "readonly";
-                    timerIcon = getPauseIcon();
+                let tagsHtml = '';
+                if(taskObj.grade) tagsHtml += `<span class="bg-indigo-50 text-indigo-600 border border-indigo-100 text-[10px] font-bold px-2 py-0.5 rounded-md">${taskObj.grade}</span>`;
+                if(taskObj.isCountdown) tagsHtml += `<span class="bg-amber-50 text-amber-600 border border-amber-200 text-[10px] px-2 py-0.5 rounded-md flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${taskObj.targetMinutes} دقیقه</span>`;
+                if(taskObj.types && taskObj.types.length > 0) {
+                    taskObj.types.forEach(t => { tagsHtml += `<span class="bg-slate-100 text-slate-500 border border-slate-200 text-[10px] px-2 py-0.5 rounded-md">${t}</span>`; });
                 }
 
+                let displayTime = userProgress[taskKey]?.minutes || '';
+                
+                // در حالت توقف، اگر تایمر معکوس هنوز پر نشده ثانیه را نشان بده، اگر پر شده دقیقه نهایی
+                if (!isTimerActive && taskObj.isCountdown && displayTime !== '') {
+                    const elapsed = userProgress[taskKey]?.seconds || 0;
+                    let remain = (taskObj.targetMinutes * 60) - elapsed;
+                    if (remain > 0) {
+                        displayTime = `${Math.floor(remain / 60)}:${(remain % 60).toString().padStart(2, '0')}`;
+                    } else {
+                        displayTime = userProgress[taskKey]?.minutes || 0;
+                    }
+                }
+
+                let isReadOnly = ""; let timerIcon = getPlayIcon();
+                let overtimeBadge = '';
+                
+                if (isTimerActive) {
+                    const currentSecs = activeTimerObj.baseSeconds + Math.floor((Date.now() - activeTimerObj.startTime) / 1000);
+                    
+                    if (taskObj.isCountdown) {
+                        let remain = (taskObj.targetMinutes * 60) - currentSecs;
+                        if (remain > 0) {
+                            displayTime = `${Math.floor(remain / 60)}:${(remain % 60).toString().padStart(2, '0')}`;
+                        } else {
+                            // نمایش دقیقه‌ها و ثانیه‌هایی که تا الان خوانده (ادامه عادی)
+                            displayTime = `${Math.floor(currentSecs / 60)}:${(currentSecs % 60).toString().padStart(2, '0')}`;
+                            overtimeBadge = `<div id="overtime-badge-${idx}" class="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md animate-pulse z-10 shadow-sm">شما در وقت اضافه هستید</div>`;
+                        }
+                    } else {
+                        displayTime = `${Math.floor(currentSecs / 60)}:${(currentSecs % 60).toString().padStart(2, '0')}`;
+                    }
+                    
+                    isReadOnly = "readonly"; timerIcon = getPauseIcon();
+                }
+
+                let titleHtml = taskObj.name;
+                if (taskObj.topic) titleHtml += ` <span class="font-normal text-slate-500 text-xs mr-1">- ${taskObj.topic}</span>`;
+
                 const row = document.createElement('div');
-                row.className = `flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition-all duration-300 gap-4 ${isCompleted ? 'bg-gradient-to-l from-emerald-50/70 to-white border-emerald-200 shadow-sm' : 'bg-white border-slate-100 hover:border-slate-200 shadow-sm hover:shadow'}`;
+                row.className = `flex flex-col xl:flex-row xl:items-center justify-between p-4 rounded-2xl border transition-all duration-300 gap-4 ${isCompleted ? 'bg-gradient-to-l from-emerald-50/70 to-white border-emerald-200 shadow-sm' : 'bg-white border-slate-100 hover:border-slate-200 shadow-sm hover:shadow'}`;
                 
                 row.innerHTML = `
                     <div class="flex items-center gap-4 flex-1">
@@ -540,34 +899,44 @@ function saveToStorage() {
                                 <svg class="w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                             </div>
                         </label>
-                        <span class="text-sm font-semibold transition-colors duration-200 ${isCompleted ? 'text-emerald-900 line-through opacity-75' : 'text-slate-700'}">
-                            ${taskDisplayName}
-                        </span>
+                        <div class="flex flex-col gap-1.5">
+                            <span class="text-sm font-bold transition-colors duration-200 ${isCompleted ? 'text-emerald-900 line-through opacity-75' : 'text-slate-700'}">${titleHtml}</span>
+                            <div class="flex flex-wrap gap-1.5 mt-0.5">${tagsHtml}</div>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                        <button onclick="openMoveModal(${activeDayId}, ${idx}, '${taskKey}')" class="p-2 rounded-xl bg-slate-50 hover:bg-fuchsia-50 border border-slate-200 hover:border-fuchsia-200 transition-all shadow-sm cursor-pointer text-slate-400 hover:text-fuchsia-500" title="انتقال واحد درسی به روز دیگر">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                        </button>
-                        <button id="timer-btn-${idx}" type="button" onclick="toggleTimer(${idx}, '${taskKey}')" class="p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm cursor-pointer" title="شروع / توقف تایمر">
+                    
+                    <div class="flex items-center gap-2 self-end xl:self-auto shrink-0 flex-wrap justify-end relative">
+                        
+                        <div class="relative ml-2 border-l border-slate-200 pl-2">
+                            <button onclick="toggleTaskMenu('${taskKey}', event)" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all cursor-pointer" title="گزینه‌ها">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/></svg>
+                            </button>
+                            <div id="menu-${taskKey}" class="dropdown-menu hidden absolute right-0 sm:left-0 sm:right-auto top-full mt-2 w-36 bg-white border border-slate-100 rounded-xl shadow-xl z-20 py-1.5 divide-y divide-slate-50">
+                                <button onclick="openTaskModal(${idx})" class="w-full text-right px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600 flex items-center gap-2 cursor-pointer transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    ویرایش
+                                </button>
+                                <button onclick="openMoveModal(${activeDayId}, ${idx}, '${taskKey}')" class="w-full text-right px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-fuchsia-600 flex items-center gap-2 cursor-pointer transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                    انتقال
+                                </button>
+                                <button onclick="deleteTask(${idx})" class="w-full text-right px-4 py-2 text-sm text-rose-500 hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    حذف درس
+                                </button>
+                            </div>
+                        </div>
+
+                        <button id="timer-btn-${idx}" type="button" onclick="toggleTimer(${idx}, '${taskKey}')" class="p-2 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm cursor-pointer relative z-20">
                             ${timerIcon}
                         </button>
-                        <span class="text-xs text-slate-400 hidden sm:inline">زمان:</span>
                         
                         <div class="relative flex items-center">
-                            <button id="save-time-btn-${idx}" type="button"
-                                    onmousedown="event.preventDefault(); document.getElementById('time-input-${idx}').blur(); showToast('زمان ذخیره شد');" 
-                                    class="hidden absolute -top-11 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg z-20 whitespace-nowrap flex items-center gap-1 cursor-pointer">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                ثبت
-                                <div class="w-2.5 h-2.5 bg-indigo-600 rotate-45 absolute -bottom-1 left-1/2 transform -translate-x-1/2 rounded-sm"></div>
-                            </button>
-                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="time-input-${idx}" placeholder="0" value="${displayTime}" ${isReadOnly} 
+                            ${overtimeBadge}
+                            <input type="text" inputmode="text" id="time-input-${idx}" placeholder="0" value="${displayTime}" ${isReadOnly} 
                                    oninput="updateTaskMinutes('${taskKey}', this.value)" 
-                                   onfocus="document.getElementById('save-time-btn-${idx}').classList.remove('hidden')" 
-                                   onblur="setTimeout(() => document.getElementById('save-time-btn-${idx}').classList.add('hidden'), 100)" 
-                                   class="w-16 sm:w-20 px-3 py-1.5 text-center bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 placeholder-slate-300 relative z-10">
+                                   class="w-[84px] px-3 py-1.5 text-center bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-700 font-[IRANSansX] relative z-20">
                         </div>
-                        
                         <span class="text-xs text-slate-400">دقیقه</span>
                     </div>
                 `;
@@ -576,486 +945,189 @@ function saveToStorage() {
             updateDayTotalUI();
         }
 
-        window.toggleTaskStatus = function(taskKey, checked) {
-            if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0 };
-            userProgress[taskKey].completed = checked;
-            saveToStorage();
-            renderFocusedDay();
-            renderDaysMenu();
-            if (checked) launchConfetti();
+        window.toggleTaskStatus = function(tk, checked) { if(!userProgress[tk]) userProgress[tk] = {completed: false, minutes: 0}; userProgress[tk].completed = checked; saveToStorage(); renderFocusedDay(); renderDaysMenu(); if(checked) launchConfetti(); };
+        window.updateTaskMinutes = function(tk, val) { 
+            if(val.includes(':') || val.includes('+')) return; 
+            if(!userProgress[tk]) userProgress[tk] = {completed: false, minutes: 0, seconds: 0}; 
+            const parsed = val ? parseInt(val) : 0;
+            userProgress[tk].minutes = parsed;
+            userProgress[tk].seconds = parsed * 60; // Sync seconds
+            saveToStorage(); updateDayTotalUI(); 
         };
+        
+        function updateDayTotalUI() { let tot = 0; const d = scheduleData.find(x => x.id === activeDayId); if(d) d.tasks.forEach(t => { if(userProgress[t.origKey]?.completed && userProgress[t.origKey]?.minutes) tot += parseInt(userProgress[t.origKey].minutes); }); document.getElementById('day-total-minutes').innerText = tot; }
 
-        window.updateTaskMinutes = function(taskKey, value) {
-            if (value.includes(':')) return; 
-            if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0 };
-            userProgress[taskKey].minutes = value ? parseInt(value) : 0;
-            saveToStorage();
-            updateDayTotalUI();
-        };
-
-        function updateDayTotalUI() {
-            let dayTotalMin = 0;
-            const currentDayObj = scheduleData.find(d => d.id === activeDayId);
-            if(currentDayObj) {
-                currentDayObj.tasks.forEach((taskObj) => {
-                    const tk = taskObj.origKey;
-                    if (userProgress[tk]?.completed && userProgress[tk]?.minutes) {
-                        dayTotalMin += parseInt(userProgress[tk].minutes) || 0;
-                    }
-                });
-            }
-            document.getElementById('day-total-minutes').innerText = dayTotalMin;
-        }
-
-        /* === سیستم تایمر ارتقایافته === */
+        // --- تایمر ---
         window.toggleTimer = function(idx, taskKey) {
             if (!userProgress[taskKey]) userProgress[taskKey] = { completed: false, minutes: 0, seconds: 0 };
             
-            if (audio.paused && isMusicWantedByUser) audio.play().catch(()=>{});
-
             if (activeTimerObj.taskKey === taskKey) {
-                // Stop Timer
-                clearInterval(activeTimerObj.interval);
-                
-                const exactFinalSeconds = activeTimerObj.baseSeconds + Math.floor((Date.now() - activeTimerObj.startTime) / 1000);
-                userProgress[taskKey].seconds = exactFinalSeconds;
-                
-                const minutesRoundedUp = Math.ceil(exactFinalSeconds / 60);
-                userProgress[taskKey].minutes = minutesRoundedUp;
+                // متوقف کردن تایمر
+                clearInterval(activeTimerObj.interval); 
+                const exactFinalSeconds = activeTimerObj.baseSeconds + Math.floor((Date.now() - activeTimerObj.startTime) / 1000); 
+                userProgress[taskKey].seconds = exactFinalSeconds; 
+                userProgress[taskKey].minutes = Math.ceil(exactFinalSeconds / 60); 
                 saveToStorage();
-
-                const input = document.getElementById(`time-input-${idx}`);
-                if (input) {
-                    input.value = minutesRoundedUp;
-                    input.removeAttribute('readonly');
+                
+                // توقف موسیقی در صورتی که فعال است
+                if (isMusicEnabled) {
+                    document.getElementById('bg-music').pause();
                 }
-                const btn = document.getElementById(`timer-btn-${idx}`);
-                if (btn) btn.innerHTML = getPlayIcon();
-
-                activeTimerObj.taskKey = null;
-                activeTimerObj.interval = null;
-                activeTimerObj.idx = null;
-                activeTimerObj.startTime = 0;
-                activeTimerObj.baseSeconds = 0;
-
-                updateDayTotalUI();
-                showToast("تایمر متوقف شد و زمان مطالعه با موفقیت ثبت شد.");
-                if (isMusicWantedByUser) audio.muted = true;
+                
+                const input = document.getElementById(`time-input-${idx}`); if (input) { input.removeAttribute('readonly'); }
+                const btn = document.getElementById(`timer-btn-${idx}`); if (btn) btn.innerHTML = getPlayIcon();
+                activeTimerObj.taskKey = null; 
+                activeTimerObj.notified = false;
+                updateDayTotalUI(); showToast("تایمر متوقف شد.");
+                renderFocusedDay();
             } else {
-                // Start Timer
-                const currentDayObj = scheduleData.find(d => d.id === activeDayId);
+                // شروع تایمر
+                const currentDayObj = scheduleData.find(d => d.id === activeDayId); 
                 const taskObj = currentDayObj ? currentDayObj.tasks[idx] : {name: "درس"};
-                const manualInput = document.getElementById(`time-input-${idx}`).value;
-                const manualMin = manualInput && !manualInput.includes(':') ? parseInt(manualInput) : 0;
-                const savedSeconds = userProgress[taskKey]?.seconds || 0;
-
-                const hasConflict = savedSeconds > 0 && Math.ceil(savedSeconds / 60) !== manualMin && Math.floor(savedSeconds / 60) !== manualMin;
-
+                const manualInput = document.getElementById(`time-input-${idx}`).value; 
+                const manualMin = manualInput && !manualInput.includes(':') && !manualInput.includes('+') ? parseInt(manualInput) : 0;
+                
+                const savedSeconds = userProgress[taskKey]?.seconds || 0; 
+                const hasConflict = savedSeconds > 0 && Math.ceil(savedSeconds / 60) !== manualMin && Math.floor(savedSeconds / 60) !== manualMin && !taskObj.isCountdown;
+                
                 if (hasConflict) {
-                    openTimerChoiceModal(taskObj.name, manualMin, savedSeconds, 
-                        () => {
-                            userProgress[taskKey].seconds = manualMin * 60;
-                            startTimerExecution(idx, taskKey, taskObj.name);
-                        },
-                        () => {
-                            startTimerExecution(idx, taskKey, taskObj.name);
-                        }
-                    );
-                } else {
-                    if (savedSeconds === 0 && manualMin > 0) {
-                        userProgress[taskKey].seconds = manualMin * 60;
-                    }
-                    startTimerExecution(idx, taskKey, taskObj.name);
+                    openTimerChoiceModal(taskObj.name, manualMin, savedSeconds, () => { userProgress[taskKey].seconds = manualMin * 60; startTimerExecution(idx, taskKey, taskObj); }, () => { startTimerExecution(idx, taskKey, taskObj); });
+                } else { 
+                    if (savedSeconds === 0 && manualMin > 0 && !taskObj.isCountdown) userProgress[taskKey].seconds = manualMin * 60; 
+                    startTimerExecution(idx, taskKey, taskObj); 
                 }
             }
         };
 
-        function startTimerExecution(idx, taskKey, taskName) {
-            if (activeTimerObj.taskKey && activeTimerObj.taskKey !== taskKey) {
-                toggleTimer(activeTimerObj.idx, activeTimerObj.taskKey);
+        function startTimerExecution(idx, taskKey, taskObj) {
+            if (activeTimerObj.taskKey && activeTimerObj.taskKey !== taskKey) toggleTimer(activeTimerObj.idx, activeTimerObj.taskKey);
+            
+            // پخش موسیقی در صورتی که دکمه آن روشن است
+            if (isMusicEnabled) {
+                const bgMusic = document.getElementById('bg-music');
+                bgMusic.play().catch(e => console.log('Audio play failed:', e));
             }
-
-            activeTimerObj.taskKey = taskKey;
-            activeTimerObj.idx = idx;
             
-            activeTimerObj.startTime = Date.now();
+            activeTimerObj.taskKey = taskKey; 
+            activeTimerObj.idx = idx; 
+            activeTimerObj.startTime = Date.now(); 
             activeTimerObj.baseSeconds = userProgress[taskKey].seconds || 0;
-
-            const input = document.getElementById(`time-input-${idx}`);
-            const btn = document.getElementById(`timer-btn-${idx}`);
-            if (input) input.setAttribute('readonly', 'true');
-            if (btn) btn.innerHTML = getPauseIcon();
-
+            activeTimerObj.notified = userProgress[taskKey].expiredNotified || false;
+            
+            const input = document.getElementById(`time-input-${idx}`); const btn = document.getElementById(`timer-btn-${idx}`);
+            if (input) input.setAttribute('readonly', 'true'); if (btn) btn.innerHTML = getPauseIcon();
+            
             activeTimerObj.interval = setInterval(() => {
-                const currentSeconds = activeTimerObj.baseSeconds + Math.floor((Date.now() - activeTimerObj.startTime) / 1000);
-                userProgress[taskKey].seconds = currentSeconds;
-                userProgress[taskKey].minutes = Math.ceil(currentSeconds / 60);
+                const cur = activeTimerObj.baseSeconds + Math.floor((Date.now() - activeTimerObj.startTime) / 1000); 
+                userProgress[taskKey].seconds = cur; 
+                userProgress[taskKey].minutes = Math.ceil(cur / 60); 
                 
-                localStorage.setItem('study_dashboard_progress_v7', JSON.stringify(userProgress));
-                
-                if (input) {
-                    const m = Math.floor(currentSeconds / 60);
-                    const s = currentSeconds % 60;
-                    input.value = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if (taskObj.isCountdown) {
+                    const remain = (taskObj.targetMinutes * 60) - cur;
+                    if (remain === 0 && !activeTimerObj.notified) {
+                        activeTimerObj.notified = true;
+                        userProgress[taskKey].expiredNotified = true;
+                        triggerExpireNotification(taskKey, idx);
+                    }
+                    if (input) {
+                        if (remain > 0) {
+                            input.value = `${Math.floor(remain / 60)}:${(remain % 60).toString().padStart(2, '0')}`;
+                        } else {
+                            // در زمان اضافه شده‌ایم؛ فرمت مثل تایمر عادی
+                            input.value = `${Math.floor(cur / 60)}:${(cur % 60).toString().padStart(2, '0')}`;
+                            let badge = document.getElementById(`overtime-badge-${idx}`);
+                            if (!badge) {
+                                const container = input.parentElement; 
+                                container.insertAdjacentHTML('beforeend', `<div id="overtime-badge-${idx}" class="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md animate-pulse z-10 shadow-sm">شما در وقت اضافه هستید</div>`);
+                            }
+                        }
+                    }
+                } else {
+                    if (input) { input.value = `${Math.floor(cur / 60)}:${(cur % 60).toString().padStart(2, '0')}`; }
                 }
-            }, 1000);
-
-            showToast(`تایمر برای درس فعال شد. با تمرکز بخون!`);
-            if (isMusicWantedByUser) audio.muted = false;
+            }, 1000); 
+            showToast(`تایمر فعال شد.`);
         }
 
-        function openTimerChoiceModal(taskName, manualMin, savedSeconds, onSelectManual, onSelectTimer) {
-            document.getElementById('timer-choice-title').innerText = `شروع تایمر برای: ${taskName}`;
-            document.getElementById('choice-manual-time').innerText = `${manualMin} دقیقه`;
-            const m = Math.floor(savedSeconds / 60);
-            const s = savedSeconds % 60;
-            document.getElementById('choice-timer-time').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        let expireTimeoutId = null;
+        function triggerExpireNotification(taskKey, idx) {
+            const notif = document.getElementById('timer-expire-notification');
+            const bar = document.getElementById('timer-expire-bar');
             
-            const overlay = document.getElementById('timer-choice-overlay');
-            const modal = document.getElementById('timer-choice-modal');
-            overlay.classList.remove('opacity-0', 'pointer-events-none');
-            overlay.classList.add('opacity-100', 'pointer-events-auto');
-            modal.classList.remove('hidden-modal');
-            modal.classList.add('visible-modal');
+            notif.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
             
-            document.getElementById('choice-manual-btn').onclick = () => { onSelectManual(); closeTimerChoiceModal(); };
-            document.getElementById('choice-timer-btn').onclick = () => { onSelectTimer(); closeTimerChoiceModal(); };
-        }
-
-        function closeTimerChoiceModal() {
-            const overlay = document.getElementById('timer-choice-overlay');
-            const modal = document.getElementById('timer-choice-modal');
-            overlay.classList.remove('opacity-100', 'pointer-events-auto');
-            overlay.classList.add('opacity-0', 'pointer-events-none');
-            modal.classList.remove('visible-modal');
-            modal.classList.add('hidden-modal');
-        }
-
-        window.openBooksModal = function() {
-            const container = document.getElementById('books-list-container');
-            container.innerHTML = '';
-            const subjects = {};
+            bar.style.transition = 'none';
+            bar.style.width = '100%';
             
-            scheduleData.forEach(day => {
-                day.tasks.forEach(t => {
-                    let subj = t.name.includes('،') ? t.name.split('،')[0].trim() : 'سایر';
-                    if (t.name.includes('استراحت')) return;
-                    if (!subjects[subj]) subjects[subj] = [];
-                    subjects[subj].push({ ...t, dayId: day.id, dayLabel: day.label, dateStr: day.dateStr });
-                });
-            });
+            setTimeout(() => {
+                bar.style.transition = 'width 5s linear';
+                bar.style.width = '0%';
+            }, 50);
 
-            const extractNum = (str) => {
-                const numStr = p2eDigits(str).match(/\d+/);
-                return numStr ? parseInt(numStr[0]) : 999;
+            const closeNotif = () => {
+                clearTimeout(expireTimeoutId);
+                notif.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
             };
 
-            for (const [subj, tasks] of Object.entries(subjects)) {
-                tasks.sort((a, b) => extractNum(a.name) - extractNum(b.name));
-
-                const details = document.createElement('details');
-                details.setAttribute('name', 'books-accordion');
-                details.className = 'mb-3 bg-slate-50 border border-slate-100 rounded-2xl overflow-hidden shadow-sm group';
-                
-                details.innerHTML = `
-                    <summary class="cursor-pointer font-bold text-slate-700 bg-white p-4 flex justify-between items-center group-open:bg-fuchsia-50 transition-colors">
-                        <span class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-fuchsia-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                            ${subj}
-                        </span>
-                        <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full">${tasks.length} درس</span>
-                    </summary>
-                    <div class="p-3 grid grid-cols-1 gap-2 bg-slate-50/50">
-                        ${tasks.map(t => {
-                            const isDone = userProgress[t.origKey]?.completed;
-                            const colorClass = isDone ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-rose-100 text-rose-800 border-rose-200';
-                            const icon = isDone ? '<svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : '<svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>';
-                            return `<button onclick="navigateToDay(${t.dayId}); closeBooksModal();" class="flex items-center justify-between p-3 rounded-xl border ${colorClass} hover:opacity-80 transition-opacity text-right w-full text-sm font-semibold cursor-pointer">
-                                <span class="flex items-center gap-2">${icon} ${t.name}</span>
-                                <span class="text-xs opacity-75 whitespace-nowrap bg-white/50 px-2 py-1 rounded-md">${t.dayLabel} (${t.dateStr})</span>
-                            </button>`;
-                        }).join('')}
-                    </div>
-                `;
-                container.appendChild(details);
-            }
-            
-            document.getElementById('books-overlay').classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('books-overlay').classList.add('opacity-100', 'pointer-events-auto');
-            document.getElementById('books-modal').classList.remove('hidden-modal');
-            document.getElementById('books-modal').classList.add('visible-modal');
-        };
-
-        window.navigateToDay = function(dayId) {
-            activeDayId = dayId;
-            renderDaysMenu();
-            renderFocusedDay();
-            renderStatistics(true);
-            document.getElementById('main-panel-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
-
-        window.closeBooksModal = function() {
-            document.getElementById('books-overlay').classList.remove('opacity-100', 'pointer-events-auto');
-            document.getElementById('books-overlay').classList.add('opacity-0', 'pointer-events-none');
-            document.getElementById('books-modal').classList.remove('visible-modal');
-            document.getElementById('books-modal').classList.add('hidden-modal');
-        };
-
-        window.openMoveModal = function(dayId, taskIndex, taskKey) {
-            if (activeTimerObj.taskKey === taskKey) toggleTimer(taskIndex, taskKey);
-            
-            currentMoveTarget = { dayId, taskIndex };
-            const container = document.getElementById('move-days-list');
-            container.innerHTML = '';
-            
-            scheduleData.forEach(day => {
-                const isSource = day.id === dayId;          
-                const isToday = day.id === realCurrentDayId;  
-                
-                let btnClass = 'w-full text-right p-3 rounded-xl mb-2 flex justify-between items-center transition-colors text-sm font-bold shadow-sm cursor-pointer ';
-                let badgeHtml = '';
-
-                if (isSource) {
-                    btnClass += 'bg-slate-100 text-slate-400 cursor-not-allowed border border-transparent';
-                    badgeHtml = '<span class="text-xs bg-slate-200 text-slate-500 px-2 py-1 rounded-md">روز مبدا</span>';
-                } else if (isToday) {
-                    btnClass += 'bg-fuchsia-50 border border-fuchsia-200 text-fuchsia-700 hover:bg-fuchsia-100';
-                    badgeHtml = '<span class="text-xs bg-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded-md">امروز</span>';
-                } else {
-                    btnClass += 'bg-white border border-slate-200 text-slate-700 hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700';
-                    badgeHtml = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>';
+            document.getElementById('expire-end-btn').onclick = () => {
+                closeNotif();
+                if(activeTimerObj.taskKey === taskKey) {
+                    toggleTimer(idx, taskKey); 
                 }
-
-                const btn = document.createElement('button');
-                btn.className = btnClass;
-                btn.disabled = isSource;
-                btn.onclick = () => executeMoveTask(day.id);
-                btn.innerHTML = `<span>${day.label} (${day.dateStr})</span> ${badgeHtml}`;
-                
-                if (isToday) btn.id = 'move-today-btn';
-                if (isSource) btn.id = 'move-source-btn';
-                
-                container.appendChild(btn);
-            });
+            };
             
-            document.getElementById('move-task-overlay').classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('move-task-overlay').classList.add('opacity-100', 'pointer-events-auto');
-            document.getElementById('move-task-modal').classList.remove('hidden-modal');
-            document.getElementById('move-task-modal').classList.add('visible-modal');
+            document.getElementById('expire-continue-btn').onclick = () => {
+                closeNotif();
+            };
 
-            setTimeout(() => {
-                const targetToScroll = document.getElementById('move-today-btn') || document.getElementById('move-source-btn');
-                if (targetToScroll) {
-                    targetToScroll.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 10);
+            expireTimeoutId = setTimeout(() => {
+                closeNotif();
+            }, 5000);
+        }
+
+        function openTimerChoiceModal(tName, mMin, sSec, onM, onT) { document.getElementById('timer-choice-title').innerText = `شروع تایمر: ${tName}`; document.getElementById('choice-manual-time').innerText = `${mMin} دقیقه`; document.getElementById('choice-timer-time').innerText = `${Math.floor(sSec / 60)}:${(sSec % 60).toString().padStart(2, '0')}`; document.getElementById('timer-choice-overlay').classList.remove('opacity-0', 'pointer-events-none'); document.getElementById('timer-choice-overlay').classList.add('opacity-100', 'pointer-events-auto'); document.getElementById('timer-choice-modal').classList.remove('hidden-modal'); document.getElementById('timer-choice-modal').classList.add('visible-modal'); document.getElementById('choice-manual-btn').onclick = () => { onM(); closeTimerChoiceModal(); }; document.getElementById('choice-timer-btn').onclick = () => { onT(); closeTimerChoiceModal(); }; }
+        function closeTimerChoiceModal() { document.getElementById('timer-choice-overlay').classList.remove('opacity-100', 'pointer-events-auto'); document.getElementById('timer-choice-overlay').classList.add('opacity-0', 'pointer-events-none'); document.getElementById('timer-choice-modal').classList.remove('visible-modal'); document.getElementById('timer-choice-modal').classList.add('hidden-modal'); }
+
+        window.openMoveModal = function(dId, tIdx, tKey) {
+            currentMoveTarget = { dId, tIdx }; const c = document.getElementById('move-days-list'); c.innerHTML = '';
+            scheduleData.forEach(d => { if(d.id >= activeDayId && d.id <= activeDayId + 30) { const b = document.createElement('button'); b.className = `w-full text-right p-3 rounded-xl mb-2 flex justify-between items-center transition-colors text-sm font-bold shadow-sm cursor-pointer bg-white border border-slate-200 text-slate-700 hover:border-fuchsia-300 hover:bg-fuchsia-50 hover:text-fuchsia-700`; b.onclick = () => executeMoveTask(d.id); b.innerHTML = `<span>${d.label} (${d.dateStr})</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>`; c.appendChild(b); } });
+            document.getElementById('move-task-overlay').classList.remove('opacity-0', 'pointer-events-none'); document.getElementById('move-task-overlay').classList.add('opacity-100', 'pointer-events-auto'); document.getElementById('move-task-modal').classList.remove('hidden-modal'); document.getElementById('move-task-modal').classList.add('visible-modal');
         };
-
-        window.closeMoveModal = function() {
-            document.getElementById('move-task-overlay').classList.remove('opacity-100', 'pointer-events-auto');
-            document.getElementById('move-task-overlay').classList.add('opacity-0', 'pointer-events-none');
-            document.getElementById('move-task-modal').classList.remove('visible-modal');
-            document.getElementById('move-task-modal').classList.add('hidden-modal');
-            currentMoveTarget = null;
-        };
-
-        window.executeMoveTask = function(targetDayId) {
-            if (!currentMoveTarget) return;
-            
-            const sourceDay = scheduleData.find(d => d.id === currentMoveTarget.dayId);
-            const targetDay = scheduleData.find(d => d.id === targetDayId);
-            
-            const taskObj = sourceDay.tasks.splice(currentMoveTarget.taskIndex, 1)[0];
-            targetDay.tasks.push(taskObj);
-            
-            saveToStorage();
-            closeMoveModal();
-            showToast('درس با موفقیت به تاریخ جدید منتقل شد!');
-            
-            renderDaysMenu();
-            renderFocusedDay();
-            renderStatistics(true);
-        };
+        window.closeMoveModal = function() { document.getElementById('move-task-overlay').classList.remove('opacity-100', 'pointer-events-auto'); document.getElementById('move-task-overlay').classList.add('opacity-0', 'pointer-events-none'); document.getElementById('move-task-modal').classList.remove('visible-modal'); document.getElementById('move-task-modal').classList.add('hidden-modal'); };
+        window.executeMoveTask = function(tId) { if (!currentMoveTarget) return; const sDay = scheduleData.find(d => d.id === currentMoveTarget.dId); const tDay = scheduleData.find(d => d.id === tId); const tObj = sDay.tasks.splice(currentMoveTarget.tIdx, 1)[0]; tDay.tasks.push(tObj); saveToStorage(); closeMoveModal(); showToast('درس منتقل شد!'); renderDaysMenu(); renderFocusedDay(); };
 
         function getPlayIcon() { return `<svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
         function getPauseIcon() { return `<svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`; }
+        
+        function showToast(m) { const c = document.getElementById('toast-container'); const t = document.createElement('div'); t.className = 'bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 text-sm font-bold flex items-center gap-3 border border-slate-700 z-[99999]'; t.innerHTML = `<div class="bg-indigo-500/20 p-1.5 rounded-lg flex-shrink-0"><svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><span>${m}</span>`; c.appendChild(t); requestAnimationFrame(() => t.classList.remove('translate-y-10', 'opacity-0')); setTimeout(() => { t.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => t.remove(), 300); }, 3500); }
 
-        function showToast(msg) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 text-sm font-bold flex items-center gap-3 border border-slate-700';
-            toast.innerHTML = `<div class="bg-indigo-500/20 p-1.5 rounded-lg flex-shrink-0"><svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><span>${msg}</span>`;
-            container.appendChild(toast);
-            requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
-            setTimeout(() => { toast.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3500); 
-        }
+        function updateOverallProgressBars() { let tT = 0, tD = 0, aT = 0, aD = 0; scheduleData.forEach(d => { if (d.id >= activeDayId - 30 && d.id <= activeDayId + 30) { d.tasks.forEach((t) => { tT++; const done = userProgress[t.origKey]?.completed || false; if (done) tD++; if (d.id === activeDayId) { aT++; if (done) aD++; } }); } }); const tp = aT > 0 ? Math.round((aD / aT) * 100) : 0; document.getElementById('today-progress-percent').innerText = `${tp}%`; document.getElementById('today-progress-bar').style.width = `${tp}%`; const totP = tT > 0 ? Math.round((tD / tT) * 100) : 0; document.getElementById('total-progress-percent').innerText = `${totP}%`; document.getElementById('total-progress-bar').style.width = `${totP}%`; }
 
-        window.toggleUserMusic = function() {
-            isMusicWantedByUser = !isMusicWantedByUser;
-            const btnOn = document.getElementById('music-icon-on');
-            const btnOff = document.getElementById('music-icon-off');
-            const btnText = document.getElementById('music-btn-text');
-            const btnWrap = document.getElementById('music-btn');
-
-            if (audio.paused) audio.play().catch(() => console.log("Waiting for user interaction"));
-
-            if (isMusicWantedByUser) {
-                btnOn.classList.remove('hidden'); btnOff.classList.add('hidden');
-                btnText.innerText = "موسیقی: فعال (هماهنگ با تایمر)";
-                btnWrap.classList.replace('text-slate-500', 'text-indigo-700'); btnWrap.classList.replace('bg-slate-100', 'bg-indigo-100');
-                if (activeTimerObj.taskKey) audio.muted = false; else audio.muted = true;
-            } else {
-                btnOn.classList.add('hidden'); btnOff.classList.remove('hidden');
-                btnText.innerText = "موسیقی: قطع";
-                btnWrap.classList.replace('text-indigo-700', 'text-slate-500'); btnWrap.classList.replace('bg-indigo-100', 'bg-slate-100');
-                audio.muted = true;
-            }
-        };
-
-        function updateOverallProgressBars() {
-            let totalTasks = 0, totalDone = 0, activeTasks = 0, activeDone = 0;
-            scheduleData.forEach(day => {
-                day.tasks.forEach((taskObj) => {
-                    totalTasks++;
-                    const done = userProgress[taskObj.origKey]?.completed || false;
-                    if (done) totalDone++;
-                    if (day.id === activeDayId) { activeTasks++; if (done) activeDone++; }
-                });
-            });
-            const tp = activeTasks > 0 ? Math.round((activeDone / activeTasks) * 100) : 0;
-            document.getElementById('today-progress-percent').innerText = `${tp}%`;
-            document.getElementById('today-progress-bar').style.width = `${tp}%`;
-            const totP = totalTasks > 0 ? Math.round((totalDone / totalTasks) * 100) : 0;
-            document.getElementById('total-progress-percent').innerText = `${totP}%`;
-            document.getElementById('total-progress-bar').style.width = `${totP}%`;
-        }
-
-        function renderStatistics(autoScroll = false) {
-            const container = document.getElementById('stats-chart-container');
-            container.innerHTML = '';
-            let maxMinutes = 0, grandTotal = 0;
-            const dayStats = scheduleData.map(day => {
-                let daily = 0;
-                day.tasks.forEach((taskObj) => {
-                    const tk = taskObj.origKey;
-                    if (userProgress[tk]?.completed && userProgress[tk]?.minutes) daily += parseInt(userProgress[tk].minutes) || 0;
-                });
-                if (daily > maxMinutes) maxMinutes = daily;
-                grandTotal += daily;
-                return { id: day.id, label: day.dateStr, minutes: daily, isRest: day.label === "استراحت" };
-            });
-            
-            document.getElementById('grand-total-minutes').innerText = grandTotal;
-            document.getElementById('grand-total-hours').innerText = `(${Math.floor(grandTotal/60)} ساعت و ${grandTotal%60} دقیقه)`;
-            const scale = maxMinutes === 0 ? 100 : maxMinutes;
-            
-            dayStats.forEach(stat => {
-                const h = stat.minutes > 0 ? Math.max((stat.minutes / scale) * 100, 4) : 2;
-                const wrapper = document.createElement('div');
-                
-                // افزودن کلاس نشانه برای پیدا کردن ستون روز فعال جهت اسکرول
-                let activeClass = stat.id === activeDayId ? 'active-chart-bar' : '';
-                wrapper.className = `flex flex-col items-center flex-shrink-0 w-10 sm:w-12 group cursor-pointer ${activeClass}`;
-                
-                wrapper.onclick = () => { 
-                    activeDayId = stat.id; 
-                    renderDaysMenu(); 
-                    renderFocusedDay(); 
-                    renderStatistics(true);
-                    document.getElementById('main-panel-area').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
-                };
-                
-                let barColor = stat.minutes > 0 ? 'from-fuchsia-500 to-purple-400 group-hover:to-purple-300' : (stat.isRest ? 'bg-slate-100 border border-dashed border-slate-300' : 'bg-slate-200');
-                wrapper.innerHTML = `<div class="relative w-full flex justify-center h-32 items-end mb-2 rounded-t-lg transition-all duration-300 group-hover:-translate-y-1"><div class="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-xs py-1.5 px-3 rounded-xl whitespace-nowrap z-10 pointer-events-none shadow-lg">${stat.minutes} دقیقه<div class="w-2 h-2 bg-slate-800 rotate-45 absolute -bottom-1 left-1/2 transform -translate-x-1/2"></div></div><div class="w-full rounded-t-md transition-all duration-700 ease-out ${stat.minutes > 0 ? 'bg-gradient-to-t ' + barColor + ' shadow-md shadow-fuchsia-200' : barColor}" style="height: ${h}%"></div></div><span class="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap mt-2 ${stat.id === activeDayId ? 'text-fuchsia-600 font-bold' : ''}">${stat.label}</span>`;
-                container.appendChild(wrapper);
-            });
-
-            // اجرای اسکرول نرم برای نمودار مطالعه به سمت روز فعال، فقط در مواقع نیاز
-            if (autoScroll) {
-                setTimeout(() => {
-                    const activeBar = container.querySelector('.active-chart-bar');
-                    if (activeBar) {
-                        activeBar.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                    }
-                }, 50);
-            }
-        }
-
-        let confettiTimer = null;
-        function launchConfetti() {
-            const container = document.getElementById('confetti-container');
-            container.innerHTML = '';
-            const colors = ['#EF4444', '#F97316', '#EAB308', '#22C55E', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6'];
-            const count = 65;
-            const frag = document.createDocumentFragment();
-            for (let i = 0; i < count; i++) {
-                const el = document.createElement('div');
-                el.className = 'confetti-piece';
-                el.style.width = (6 + Math.random() * 10) + 'px'; el.style.height = (4 + Math.random() * 7) + 'px';
-                el.style.background = colors[Math.floor(Math.random() * colors.length)];
-                el.style.left = Math.random() * 100 + '%'; el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                el.style.animationDuration = (1.6 + Math.random() * 1.0) + 's'; el.style.animationDelay = (Math.random() * 0.35) + 's';
-                el.style.transform = `rotate(${Math.random() * 360}deg)`; frag.appendChild(el);
-            }
-            container.appendChild(frag);
-            clearTimeout(confettiTimer); confettiTimer = setTimeout(() => { container.innerHTML = ''; }, 2800);
-        }
+        function renderStatistics(aScr = false) { const c = document.getElementById('stats-chart-container'); c.innerHTML = ''; let mx = 0, grnd = 0; const vDays = scheduleData.filter(d => d.id >= activeDayId - 15 && d.id <= activeDayId + 15); const stats = vDays.map(d => { let daily = 0; d.tasks.forEach((t) => { if (userProgress[t.origKey]?.completed && userProgress[t.origKey]?.minutes) daily += parseInt(userProgress[t.origKey].minutes) || 0; }); if (daily > mx) mx = daily; grnd += daily; return { id: d.id, label: d.dateStr, minutes: daily }; }); document.getElementById('grand-total-minutes').innerText = grnd; const scale = mx === 0 ? 100 : mx; stats.forEach(s => { const h = s.minutes > 0 ? Math.max((s.minutes / scale) * 100, 4) : 2; const w = document.createElement('div'); w.className = `flex flex-col items-center flex-shrink-0 w-10 sm:w-12 group cursor-pointer ${s.id === activeDayId ? 'active-chart-bar' : ''}`; w.onclick = () => { activeDayId = s.id; renderDaysMenu(); renderFocusedDay(); renderStatistics(true); }; let bg = s.minutes > 0 ? 'from-fuchsia-500 to-purple-400 group-hover:to-purple-300 shadow-md shadow-fuchsia-200' : 'bg-slate-200'; w.innerHTML = `<div class="relative w-full flex justify-center h-32 items-end mb-2 rounded-t-lg transition-all duration-300 group-hover:-translate-y-1"><div class="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-xs py-1.5 px-3 rounded-xl whitespace-nowrap z-10 pointer-events-none shadow-lg">${s.minutes} دقیقه</div><div class="w-full rounded-t-md transition-all duration-700 ease-out ${s.minutes > 0 ? 'bg-gradient-to-t ' + bg : bg}" style="height: ${h}%"></div></div><span class="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap mt-2 ${s.id === activeDayId ? 'text-fuchsia-600 font-bold' : ''}">${s.label}</span>`; c.appendChild(w); }); if (aScr) { setTimeout(() => { const aB = c.querySelector('.active-chart-bar'); if (aB) aB.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); }, 50); } }
 
         function openSettings() { document.getElementById('settings-overlay').classList.remove('opacity-0', 'pointer-events-none'); document.getElementById('settings-overlay').classList.add('opacity-100', 'pointer-events-auto'); document.getElementById('settings-modal').classList.remove('hidden-modal'); document.getElementById('settings-modal').classList.add('visible-modal'); document.getElementById('import-status').innerText = ''; }
         function closeSettings() { document.getElementById('settings-overlay').classList.remove('opacity-100', 'pointer-events-auto'); document.getElementById('settings-overlay').classList.add('opacity-0', 'pointer-events-none'); document.getElementById('settings-modal').classList.remove('visible-modal'); document.getElementById('settings-modal').classList.add('hidden-modal'); }
         
-        function exportData() { 
-            try { 
-                const exportObj = { progress: userProgress, schedule: scheduleData };
-                const dataStr = JSON.stringify(exportObj, null, 2); 
-                const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); 
-                document.getElementById('import-status').innerText = '✅ خروجی ذخیره شد.'; document.getElementById('import-status').className = 'text-sm text-center text-emerald-600 min-h-[24px]'; 
-            } catch (_) { document.getElementById('import-status').innerText = '❌ خطا در خروجی گرفتن.'; document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]'; } 
-        }
-        
+        function exportData() { try { const e = { progress: userProgress, schedule: scheduleData }; const b = new Blob([JSON.stringify(e, null, 2)], { type: 'application/json' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `konkur_backup_${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); document.getElementById('import-status').innerText = '✅ ذخیره شد.'; document.getElementById('import-status').className = 'text-sm text-center text-emerald-600 min-h-[24px]'; } catch (_) { document.getElementById('import-status').innerText = '❌ خطا در خروجی.'; document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]'; } }
         function importData() { document.getElementById('file-input').click(); }
-        function handleFileImport(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                try {
-                    const imported = JSON.parse(ev.target.result);
-                    if (typeof imported === 'object' && imported !== null) {
-                        if (imported.progress) {
-                            userProgress = imported.progress;
-                            if (imported.schedule) {
-                                scheduleData = imported.schedule;
-                            }
-                        } else {
-                            userProgress = imported;
-                        }
-                        saveToStorage(); renderDaysMenu(); renderFocusedDay(); renderStatistics(true);
-                        document.getElementById('import-status').innerText = '✅ اطلاعات بازیابی شد.'; document.getElementById('import-status').className = 'text-sm text-center text-emerald-600 min-h-[24px]';
-                    } else throw new Error();
-                } catch (_) { document.getElementById('import-status').innerText = '❌ فایل معتبر نیست.'; document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]'; }
-            };
-            reader.readAsText(file); e.target.value = '';
-        }
+        function handleFileImport(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = function(ev) { try { const i = JSON.parse(ev.target.result); if (typeof i === 'object' && i !== null) { if (i.progress) { userProgress = i.progress; if (i.schedule) scheduleData = i.schedule; } else userProgress = i; saveToStorage(); renderDaysMenu(); renderFocusedDay(); renderStatistics(true); document.getElementById('import-status').innerText = '✅ بازیابی شد.'; document.getElementById('import-status').className = 'text-sm text-center text-emerald-600 min-h-[24px]'; } else throw new Error(); } catch (_) { document.getElementById('import-status').innerText = '❌ فایل نامعتبر.'; document.getElementById('import-status').className = 'text-sm text-center text-red-500 min-h-[24px]'; } }; r.readAsText(f); e.target.value = ''; }
+
+        let confettiTimer = null;
+        function launchConfetti() { const c = document.getElementById('confetti-container'); c.innerHTML = ''; const col = ['#EF4444', '#F97316', '#EAB308', '#22C55E', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6']; const frag = document.createDocumentFragment(); for (let i = 0; i < 65; i++) { const el = document.createElement('div'); el.className = 'confetti-piece'; el.style.width = (6 + Math.random() * 10) + 'px'; el.style.height = (4 + Math.random() * 7) + 'px'; el.style.background = col[Math.floor(Math.random() * col.length)]; el.style.left = Math.random() * 100 + '%'; el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px'; el.style.animationDuration = (1.6 + Math.random() * 1.0) + 's'; el.style.animationDelay = (Math.random() * 0.35) + 's'; el.style.transform = `rotate(${Math.random() * 360}deg)`; frag.appendChild(el); } c.appendChild(frag); clearTimeout(confettiTimer); confettiTimer = setTimeout(() => { c.innerHTML = ''; }, 2800); }
 
         document.addEventListener('DOMContentLoaded', () => {
             initSchedule(); initCurrentDateDetection(); renderDaysMenu(); renderFocusedDay(); updateOverallProgressBars(); renderStatistics(true);
             
-            document.getElementById('settings-toggle-btn').addEventListener('click', openSettings);
-            document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
+            // مدیریت رویداد دکمه موسیقی
+            document.getElementById('music-toggle-btn').addEventListener('click', toggleMusicButton);
             
+            document.getElementById('settings-toggle-btn').addEventListener('click', openSettings); document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
             document.getElementById('settings-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSettings(); });
+            document.getElementById('task-modal-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeTaskModal(); });
             document.getElementById('timer-choice-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeTimerChoiceModal(); });
-            document.getElementById('books-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeBooksModal(); });
             document.getElementById('move-task-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeMoveModal(); });
-            
-            document.getElementById('export-data-btn').addEventListener('click', exportData);
-            document.getElementById('import-data-btn').addEventListener('click', importData);
-            document.getElementById('file-input').addEventListener('change', handleFileImport);
-            
-            document.addEventListener('keydown', (e) => { 
-                if (e.key === 'Escape') { closeSettings(); closeTimerChoiceModal(); closeBooksModal(); closeMoveModal(); } 
-            });
+            document.getElementById('confirm-modal-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeConfirmModal(); });
+            document.getElementById('export-data-btn').addEventListener('click', exportData); document.getElementById('import-data-btn').addEventListener('click', importData); document.getElementById('file-input').addEventListener('change', handleFileImport);
         });
     </script>
 </body>
